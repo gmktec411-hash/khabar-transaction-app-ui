@@ -1,0 +1,560 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.report-container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+/* Header Section */
+.report-header {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem 2rem;
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.report-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 0.375rem 0;
+}
+
+.report-subtitle {
+  color: #718096;
+  font-size: 0.875rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Filter Section */
+.report-filter-section {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem 1.75rem;
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1.25rem;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.filter-btn:hover {
+  border-color: #667eea;
+  background: #f7fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: white;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Custom Range Picker */
+.custom-range-picker {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.date-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.date-input-group label {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.9rem;
+}
+
+.date-input-group input[type="date"] {
+  padding: 0.625rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.date-input-group input[type="date"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.active-filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4a5568;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.active-filter-label strong {
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* Summary Stats Grid */
+.report-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.summary-stat-card.stat-primary::before {
+  background: linear-gradient(180deg, #ed8936, #dd6b20);
+}
+
+.summary-stat-card.stat-success::before {
+  background: linear-gradient(180deg, #48bb78, #38a169);
+}
+
+.summary-stat-card.stat-info::before {
+  background: linear-gradient(180deg, #4299e1, #3182ce);
+}
+
+.summary-stat-card.stat-accent::before {
+  background: linear-gradient(180deg, #667eea, #764ba2);
+}
+
+.summary-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-primary .stat-icon {
+  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+  color: white;
+}
+
+.stat-success .stat-icon {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+}
+
+.stat-info .stat-icon {
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  color: white;
+}
+
+.stat-accent .stat-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: #718096;
+  margin: 0 0 0.375rem 0;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+/* Report Section */
+.report-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-title h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.section-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Table Styling */
+.report-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.report-table thead {
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+}
+
+.report-table thead tr th {
+  padding: 1rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #2d3748;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #cbd5e0;
+}
+
+.report-table tbody tr {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.report-table tbody tr:hover {
+  background: #f7fafc;
+}
+
+.report-table tbody tr.expandable-row {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.report-table tbody tr.expandable-row:hover {
+  background: #edf2f7;
+}
+
+.report-table tbody tr td {
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Expand Icon */
+.expand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  transition: transform 0.3s ease;
+  color: #667eea;
+}
+
+.expand-icon.expanded {
+  transform: rotate(90deg);
+}
+
+/* App Type Tag */
+.app-type-tag {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.375rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.player-name-text {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* Sub Rows */
+.sub-row {
+  background: #f7fafc !important;
+  font-weight: 400 !important;
+}
+
+.sub-row:hover {
+  background: #edf2f7 !important;
+}
+
+.sub-name {
+  padding-left: 3.5rem !important;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.sub-row.level-1 .sub-name {
+  padding-left: 3.5rem !important;
+}
+
+.sub-sub-name {
+  padding-left: 5rem !important;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.sub-row.level-2 {
+  background: #edf2f7 !important;
+}
+
+.sub-row.level-2:hover {
+  background: #e2e8f0 !important;
+}
+
+/* Amount Styling */
+.amount-received {
+  color: #38a169;
+  font-weight: 600;
+}
+
+.amount-sent {
+  color: #e53e3e;
+  font-weight: 600;
+}
+
+.net-positive {
+  color: #38a169;
+  font-weight: 600;
+}
+
+.net-negative {
+  color: #e53e3e;
+  font-weight: 600;
+}
+
+.balance-arrow {
+  margin-left: 0.5rem;
+  font-size: 1.1rem;
+}
+
+/* Grand Total Row */
+.grand-total-row {
+  background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%) !important;
+  color: white !important;
+  font-weight: 700 !important;
+}
+
+.grand-total-row td {
+  color: white !important;
+  font-size: 1rem !important;
+  padding: 1.5rem 1.5rem !important;
+}
+
+.grand-total-row strong {
+  font-weight: 700;
+}
+
+.grand-total-row .net-positive,
+.grand-total-row .net-negative {
+  color: white !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .report-container {
+    padding: 1rem;
+  }
+
+  .report-header {
+    padding: 1.5rem;
+  }
+
+  .report-title {
+    font-size: 1.75rem;
+  }
+
+  .report-filter-section {
+    padding: 1.25rem;
+  }
+
+  .filter-buttons {
+    flex-direction: column;
+  }
+
+  .filter-btn {
+    width: 100%;
+  }
+
+  .custom-range-picker {
+    flex-direction: column;
+  }
+
+  .report-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-section {
+    padding: 1.25rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .report-table thead tr th,
+  .report-table tbody tr td {
+    padding: 0.875rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .sub-name {
+    padding-left: 2.5rem !important;
+  }
+
+  .sub-sub-name {
+    padding-left: 3.5rem !important;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.report-section {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.summary-stat-card {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* See More Button */
+.see-more-btn {
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.see-more-btn:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+}

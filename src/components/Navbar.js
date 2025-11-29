@@ -1,11 +1,29 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { RotateCcw, LogOut, Settings, User } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
+import AppConfig from "../config/appConfig";
 import "./Navbar.css";
+
+// Professional Custom Logo SVG
+const FinaesthLogo = () => (
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#667eea" />
+        <stop offset="100%" stopColor="#764ba2" />
+      </linearGradient>
+    </defs>
+    {/* Hexagon shape */}
+    <path d="M20 2L35 11V29L20 38L5 29V11L20 2Z" fill="url(#logoGradient)" />
+    {/* Greek Xi (Ξ) symbol */}
+    <path d="M15 13H25M15 20H25M15 27H25" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+  </svg>
+);
 
 const Navbar = ({ onLogout, onRefresh, role }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -34,14 +52,21 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
     <nav className="navbar">
       {/* Left: Logo */}
       <div className="navbar-left" onClick={() => navigate("/")}>
-        <label className="navbar-logo"> المعاملات</label>
+        <FinaesthLogo />
+        <div className="logo-text">
+          <span className="navbar-logo">{AppConfig.APP_NAME}</span>
+          <span className="navbar-logo-tagline">{AppConfig.APP_TAGLINE}</span>
+        </div>
       </div>
 
       {/* Center Links */}
       <div className="navbar-center desktop-menu">
-        <Link to="/" className="nav-link">Home</Link>
-        {role === "admin" && <Link to="/report" className="nav-link">Report</Link>}
-        <Link to="/inactive-players" className="nav-link">Inactive Players</Link>
+        {role === "admin" && <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>}
+        <Link to="/transactions" className={`nav-link ${location.pathname === '/transactions' ? 'active' : ''}`}>Transactions</Link>
+        {role === "admin" && <Link to="/report" className={`nav-link ${location.pathname === '/report' ? 'active' : ''}`}>Report</Link>}
+        {role === "admin" && <Link to="/limits" className={`nav-link ${location.pathname === '/limits' ? 'active' : ''}`}>Limits</Link>}
+        {role === "admin" && <Link to="/email-integration" className={`nav-link ${location.pathname === '/email-integration' ? 'active' : ''}`}>Email Integration</Link>}
+        <Link to="/inactive-players" className={`nav-link ${location.pathname === '/inactive-players' ? 'active' : ''}`}>Inactive Players</Link>
 
         <button className="refresh-btn" onClick={onRefresh}>
           <RotateCcw size={16} style={{ marginRight: "6px" }} />
@@ -96,9 +121,12 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
 
       {menuOpen && (
         <div className="mobile-menu">
-          <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>Home</Link>
-          {role === "admin" && <Link to="/report" className="nav-link" onClick={() => setMenuOpen(false)}>Report</Link>}
-          <Link to="/inactive-players" className="nav-link" onClick={() => setMenuOpen(false)}>Inactive Players</Link>
+          {role === "admin" && <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Home</Link>}
+          <Link to="/transactions" className={`nav-link ${location.pathname === '/transactions' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Transactions</Link>
+          {role === "admin" && <Link to="/report" className={`nav-link ${location.pathname === '/report' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Report</Link>}
+          {role === "admin" && <Link to="/limits" className={`nav-link ${location.pathname === '/limits' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Limits</Link>}
+          {role === "admin" && <Link to="/email-integration" className={`nav-link ${location.pathname === '/email-integration' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Email Integration</Link>}
+          <Link to="/inactive-players" className={`nav-link ${location.pathname === '/inactive-players' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Inactive Players</Link>
           <button className="refresh-btn" onClick={() => { onRefresh(); setMenuOpen(false); }}>
             <RotateCcw size={16} style={{ marginRight: "6px" }} />
             Refresh

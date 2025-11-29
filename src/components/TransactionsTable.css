@@ -7,6 +7,20 @@
   background-color: #f3f4f6;
 }
 
+/* Player name styling - same as other columns, no special styling */
+.player-name-bold {
+  font-weight: 400;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+/* Remove hover effect - make player name same as other values */
+.player-name {
+  color: #4a5568;
+  font-weight: 400;
+  font-size: 14px;
+}
+
 /* Page Title */
 .page-title {
   font-size: 32px;
@@ -173,6 +187,28 @@
 .show-more-btn:hover {
   background-color: #374151;
   transform: translateY(-1px);
+}
+
+/* See More Button */
+.see-more-btn {
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.see-more-btn:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
 }
 
 /* Suggestions dropdown */

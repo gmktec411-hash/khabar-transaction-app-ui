@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
-import "../components/TransactionsTable.css";
+import { FileText, Calendar, TrendingUp, TrendingDown, Users, Package, ChevronRight } from "lucide-react";
+import "./Report.css";
 
 const Report = ({ transactions = [] }) => {
   const safeTransactions = Array.isArray(transactions)
@@ -11,6 +12,8 @@ const Report = ({ transactions = [] }) => {
   const [customEndDate, setCustomEndDate] = useState("");
   const [expandedAppTypes, setExpandedAppTypes] = useState({});
   const [expandedPlayers, setExpandedPlayers] = useState({});
+  const [visibleAppTypes, setVisibleAppTypes] = useState(50);
+  const [visiblePlayers, setVisiblePlayers] = useState(50);
 
   const filteredTransactions = useMemo(() => {
     const now = new Date();
@@ -23,13 +26,13 @@ const Report = ({ transactions = [] }) => {
 
     switch (filterOption) {
       case "today": startDate = startOfDay(now); endDate = endOfDay(now); break;
-      case "yesterday": 
+      case "yesterday":
         const y = new Date(now); y.setDate(now.getDate() - 1);
         startDate = startOfDay(y); endDate = endOfDay(y); break;
       case "thisWeek": startDate = startOfWeek(now); endDate = endOfWeek(now); break;
-      case "lastWeek": 
-        const lwEnd = new Date(now); lwEnd.setDate(now.getDate() - now.getDay() - 1); 
-        const lwStart = new Date(lwEnd); lwStart.setDate(lwEnd.getDate() - 6); 
+      case "lastWeek":
+        const lwEnd = new Date(now); lwEnd.setDate(now.getDate() - now.getDay() - 1);
+        const lwStart = new Date(lwEnd); lwStart.setDate(lwEnd.getDate() - 6);
         startDate = startOfDay(lwStart); endDate = endOfDay(lwEnd); break;
       case "custom":
         if (customStartDate && customEndDate) {
@@ -59,13 +62,28 @@ const Report = ({ transactions = [] }) => {
   const appTypeTotals = useMemo(() => {
     const map = {};
     filteredTransactions.forEach(tx => {
-      if (!map[tx.appType]) map[tx.appType] = { totalSent: 0, totalReceived: 0, apps: {} };
-      if (tx.status === "I") map[tx.appType].totalSent += tx.amount;
-      if (["S", "C"].includes(tx.status)) map[tx.appType].totalReceived += tx.amount;
+      // Skip NA app types
+      if (!tx.appType || tx.appType.toUpperCase() === 'NA') return;
 
-      if (!map[tx.appType].apps[tx.appName]) map[tx.appType].apps[tx.appName] = { sent: 0, received: 0 };
-      if (tx.status === "I") map[tx.appType].apps[tx.appName].sent += tx.amount;
-      if (["S", "C"].includes(tx.status)) map[tx.appType].apps[tx.appName].received += tx.amount;
+      if (!map[tx.appType]) map[tx.appType] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, apps: {} };
+      if (tx.status === "I") {
+        map[tx.appType].totalSent += tx.amount;
+        map[tx.appType].sentCount++;
+      }
+      if (["S", "C"].includes(tx.status)) {
+        map[tx.appType].totalReceived += tx.amount;
+        map[tx.appType].receivedCount++;
+      }
+
+      if (!map[tx.appType].apps[tx.appName]) map[tx.appType].apps[tx.appName] = { sent: 0, received: 0, sentCount: 0, receivedCount: 0 };
+      if (tx.status === "I") {
+        map[tx.appType].apps[tx.appName].sent += tx.amount;
+        map[tx.appType].apps[tx.appName].sentCount++;
+      }
+      if (["S", "C"].includes(tx.status)) {
+        map[tx.appType].apps[tx.appName].received += tx.amount;
+        map[tx.appType].apps[tx.appName].receivedCount++;
+      }
     });
     return map;
   }, [filteredTransactions]);
@@ -73,196 +91,438 @@ const Report = ({ transactions = [] }) => {
   const playerTotals = useMemo(() => {
     const map = {};
     filteredTransactions.forEach(tx => {
-      if (!map[tx.sender]) map[tx.sender] = { totalSent: 0, totalReceived: 0, appTypes: {} };
-      if (tx.status === "I") map[tx.sender].totalSent += tx.amount;
-      if (["S", "C"].includes(tx.status)) map[tx.sender].totalReceived += tx.amount;
+      if (!map[tx.sender]) map[tx.sender] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, appTypes: {} };
+      if (tx.status === "I") {
+        map[tx.sender].totalSent += tx.amount;
+        map[tx.sender].sentCount++;
+      }
+      if (["S", "C"].includes(tx.status)) {
+        map[tx.sender].totalReceived += tx.amount;
+        map[tx.sender].receivedCount++;
+      }
 
-      if (!map[tx.sender].appTypes[tx.appType])
-        map[tx.sender].appTypes[tx.appType] = { totalSent: 0, totalReceived: 0, apps: {} };
+      // Skip NA app types in player breakdown
+      if (tx.appType && tx.appType.toUpperCase() !== 'NA') {
+        if (!map[tx.sender].appTypes[tx.appType])
+          map[tx.sender].appTypes[tx.appType] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, apps: {} };
 
-      if (tx.status === "I") map[tx.sender].appTypes[tx.appType].totalSent += tx.amount;
-      if (["S", "C"].includes(tx.status))
-        map[tx.sender].appTypes[tx.appType].totalReceived += tx.amount;
+        if (tx.status === "I") {
+          map[tx.sender].appTypes[tx.appType].totalSent += tx.amount;
+          map[tx.sender].appTypes[tx.appType].sentCount++;
+        }
+        if (["S", "C"].includes(tx.status)) {
+          map[tx.sender].appTypes[tx.appType].totalReceived += tx.amount;
+          map[tx.sender].appTypes[tx.appType].receivedCount++;
+        }
 
-      if (!map[tx.sender].appTypes[tx.appType].apps[tx.appName])
-        map[tx.sender].appTypes[tx.appType].apps[tx.appName] = { sent: 0, received: 0 };
+        if (!map[tx.sender].appTypes[tx.appType].apps[tx.appName])
+          map[tx.sender].appTypes[tx.appType].apps[tx.appName] = { sent: 0, received: 0, sentCount: 0, receivedCount: 0 };
 
-      if (tx.status === "I")
-        map[tx.sender].appTypes[tx.appType].apps[tx.appName].sent += tx.amount;
-      if (["S", "C"].includes(tx.status))
-        map[tx.sender].appTypes[tx.appType].apps[tx.appName].received += tx.amount;
+        if (tx.status === "I") {
+          map[tx.sender].appTypes[tx.appType].apps[tx.appName].sent += tx.amount;
+          map[tx.sender].appTypes[tx.appType].apps[tx.appName].sentCount++;
+        }
+        if (["S", "C"].includes(tx.status)) {
+          map[tx.sender].appTypes[tx.appType].apps[tx.appName].received += tx.amount;
+          map[tx.sender].appTypes[tx.appType].apps[tx.appName].receivedCount++;
+        }
+      }
     });
     return map;
   }, [filteredTransactions]);
 
   const grandTotalsApp = useMemo(() => {
-    let sent = 0, received = 0;
-    Object.values(appTypeTotals).forEach(v => { sent += v.totalSent; received += v.totalReceived; });
-    return { sent, received };
+    let sent = 0, received = 0, sentCount = 0, receivedCount = 0;
+    Object.values(appTypeTotals).forEach(v => {
+      sent += v.totalSent;
+      received += v.totalReceived;
+      sentCount += v.sentCount;
+      receivedCount += v.receivedCount;
+    });
+    return { sent, received, sentCount, receivedCount };
   }, [appTypeTotals]);
 
   const grandTotalsPlayer = useMemo(() => {
-    let sent = 0, received = 0;
-    Object.values(playerTotals).forEach(v => { sent += v.totalSent; received += v.totalReceived; });
-    return { sent, received };
+    let sent = 0, received = 0, sentCount = 0, receivedCount = 0;
+    Object.values(playerTotals).forEach(v => {
+      sent += v.totalSent;
+      received += v.totalReceived;
+      sentCount += v.sentCount;
+      receivedCount += v.receivedCount;
+    });
+    return { sent, received, sentCount, receivedCount };
   }, [playerTotals]);
 
+  const getFilterLabel = () => {
+    switch (filterOption) {
+      case "today": return "Today";
+      case "yesterday": return "Yesterday";
+      case "thisWeek": return "This Week";
+      case "lastWeek": return "Last Week";
+      case "custom":
+        if (customStartDate && customEndDate) {
+          return `${new Date(customStartDate).toLocaleDateString()} - ${new Date(customEndDate).toLocaleDateString()}`;
+        }
+        return "Custom Range";
+      default: return "All Time";
+    }
+  };
+
   return (
-    <div className="page-container">
-      <h1 className="page-title"> Transaction Report</h1>
-
-      {/* Filter Buttons */}
-      <div className="filter-buttons" style={{ textAlign: "center", marginBottom: "30px" }}>
-        {["today", "yesterday", "thisWeek", "lastWeek"].map(option => (
-          <button
-            key={option}
-            className={`filter-btn ${filterOption === option ? "active" : ""}`}
-            onClick={() => setFilterOption(option)}
-          >
-            {option === "today"
-              ? "Today"
-              : option === "yesterday"
-              ? "Yesterday"
-              : option === "thisWeek"
-              ? "This Week"
-              : "Last Week"}
-          </button>
-        ))}
-
-        {/* Custom Range Button */}
-        <button
-          className={`filter-btn ${filterOption === "custom" ? "active" : ""}`}
-          onClick={() => setFilterOption("custom")}
-        >
-          Custom Range
-        </button>
+    <div className="report-container">
+      {/* Header Section */}
+      <div className="report-header">
+        <div>
+          <h1 className="report-title">
+            <FileText size={36} />
+            Transaction Report
+          </h1>
+          <p className="report-subtitle">Detailed breakdown of all transactions and performance metrics</p>
+        </div>
       </div>
 
-      {/* Custom Range Picker */}
-      {filterOption === "custom" && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "15px",
-            marginBottom: "25px",
-            flexWrap: "wrap",
-          }}
-        >
-          <div>
-            <label style={{ fontWeight: "500", marginRight: "8px" }}>From:</label>
-            <input
-              type="date"
-              value={customStartDate}
-              onChange={(e) => setCustomStartDate(e.target.value)}
-              className="date-input"
-            />
+      {/* Filter Section */}
+      <div className="report-filter-section">
+        <div className="filter-header">
+          <Calendar size={20} />
+          <span>Select Time Period</span>
+        </div>
+        <div className="filter-buttons">
+          {["today", "yesterday", "thisWeek", "lastWeek", "custom"].map(option => (
+            <button
+              key={option}
+              className={`filter-btn ${filterOption === option ? "active" : ""}`}
+              onClick={() => setFilterOption(option)}
+            >
+              {option === "today" ? "Today" :
+               option === "yesterday" ? "Yesterday" :
+               option === "thisWeek" ? "This Week" :
+               option === "lastWeek" ? "Last Week" : "Custom Range"}
+            </button>
+          ))}
+        </div>
+
+        {filterOption === "custom" && (
+          <div className="custom-range-picker">
+            <div className="date-input-group">
+              <label>From:</label>
+              <input
+                type="date"
+                value={customStartDate}
+                onChange={(e) => setCustomStartDate(e.target.value)}
+              />
+            </div>
+            <div className="date-input-group">
+              <label>To:</label>
+              <input
+                type="date"
+                value={customEndDate}
+                onChange={(e) => setCustomEndDate(e.target.value)}
+              />
+            </div>
           </div>
-          <div>
-            <label style={{ fontWeight: "500", marginRight: "8px" }}>To:</label>
-            <input
-              type="date"
-              value={customEndDate}
-              onChange={(e) => setCustomEndDate(e.target.value)}
-              className="date-input"
-            />
+        )}
+
+        <div className="active-filter-label">
+          <Calendar size={16} />
+          <span>Showing data for: <strong>{getFilterLabel()}</strong></span>
+        </div>
+      </div>
+
+      {/* Summary Stats */}
+      <div className="report-summary-grid">
+        <div className="summary-stat-card stat-primary">
+          <div className="stat-icon">
+            <TrendingDown size={24} />
+          </div>
+          <div className="stat-content">
+            <p className="stat-label">Total Sent</p>
+            <h3 className="stat-value">${grandTotalsApp.sent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
           </div>
         </div>
-      )}
+        <div className="summary-stat-card stat-success">
+          <div className="stat-icon">
+            <TrendingUp size={24} />
+          </div>
+          <div className="stat-content">
+            <p className="stat-label">Total Received</p>
+            <h3 className="stat-value">${grandTotalsApp.received.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+          </div>
+        </div>
+        <div className="summary-stat-card stat-info">
+          <div className="stat-icon">
+            <Package size={24} />
+          </div>
+          <div className="stat-content">
+            <p className="stat-label">App Types</p>
+            <h3 className="stat-value">{Object.keys(appTypeTotals).length}</h3>
+          </div>
+        </div>
+        <div className="summary-stat-card stat-accent">
+          <div className="stat-icon">
+            <Users size={24} />
+          </div>
+          <div className="stat-content">
+            <p className="stat-label">Active Players</p>
+            <h3 className="stat-value">{Object.keys(playerTotals).length}</h3>
+          </div>
+        </div>
+      </div>
 
-      {/* ---- Tables ---- */}
-      <div className="table-card" style={{ marginBottom: "40px" }}>
-        <h2 className="table-title">App Type Totals</h2>
-        <table className="transactions-table">
-          <thead>
-            <tr>
-              <th>App Type</th>
-              <th>Total Received</th>
-              <th>Total Sent</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(appTypeTotals).map(([type, data]) => (
-              <React.Fragment key={type}>
-                <tr className="expandable-row" onClick={() => toggleExpandAppType(type)}>
-                  <td className="text-left" style={{ paddingLeft: "15px" }}>
-                    <span className={`expand-arrow ${expandedAppTypes[type] ? "expanded" : ""}`}>▶</span>
-                    {type}
-                  </td>
-                  <td>${data.totalReceived.toFixed(2)}</td>
-                  <td>${data.totalSent.toFixed(2)}</td>
-                </tr>
-                {expandedAppTypes[type] &&
-                  Object.entries(data.apps).map(([appName, aData]) => (
-                    <tr key={appName} className="sub-row hover-sub-row">
-                      <td className="text-left" style={{ paddingLeft: "30px" }}>{appName}</td>
-                      <td>${aData.received.toFixed(2)}</td>
-                      <td>${aData.sent.toFixed(2)}</td>
-                    </tr>
-                  ))}
-              </React.Fragment>
-            ))}
-            <tr className="grand-total-row">
-              <td className="text-left" style={{ paddingLeft: "15px" }}>Grand Total</td>
-              <td>${grandTotalsApp.received.toFixed(2)}</td>
-              <td>${grandTotalsApp.sent.toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
+      {/* App Type Totals Table */}
+      <div className="report-section">
+        <div className="section-header">
+          <div className="section-title">
+            <Package size={24} />
+            <h2>App Type Breakdown</h2>
+          </div>
+          <span className="section-badge">{Object.keys(appTypeTotals).length} types</span>
+        </div>
+        <div className="report-table-wrapper">
+          <table className="report-table">
+            <thead>
+              <tr>
+                <th className="text-left">App Type</th>
+                <th className="text-center">Total Received</th>
+                <th className="text-center">Total Sent</th>
+                <th className="text-center">Net Balance</th>
+                <th className="text-center">Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(appTypeTotals)
+                .sort((a, b) => b[1].totalReceived - a[1].totalReceived)
+                .slice(0, visibleAppTypes)
+                .map(([type, data]) => {
+                  const netBalance = data.totalReceived - data.totalSent;
+                  return (
+                    <React.Fragment key={type}>
+                      <tr className="expandable-row" onClick={() => toggleExpandAppType(type)}>
+                        <td className="text-left">
+                          <span className={`expand-icon ${expandedAppTypes[type] ? "expanded" : ""}`}>
+                            <ChevronRight size={18} />
+                          </span>
+                          <span className="app-type-tag">{type}</span>
+                        </td>
+                        <td className="text-center amount-received">
+                          ${data.totalReceived.toFixed(2)}
+                          <span className="count-badge">{data.receivedCount}</span>
+                        </td>
+                        <td className="text-center amount-sent">
+                          ${data.totalSent.toFixed(2)}
+                          <span className="count-badge">{data.sentCount}</span>
+                        </td>
+                        <td className={`text-center ${netBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
+                          ${Math.abs(netBalance).toFixed(2)}
+                          <span className="balance-arrow">{netBalance >= 0 ? '↑' : '↓'}</span>
+                        </td>
+                        <td className="text-center transaction-count">
+                          {data.receivedCount + data.sentCount}
+                        </td>
+                      </tr>
+                      {expandedAppTypes[type] &&
+                        Object.entries(data.apps).map(([appName, aData]) => {
+                          const appNet = aData.received - aData.sent;
+                          return (
+                            <tr key={appName} className="sub-row">
+                              <td className="text-left sub-name">{appName}</td>
+                              <td className="text-center amount-received">
+                                ${aData.received.toFixed(2)}
+                                <span className="count-badge">{aData.receivedCount}</span>
+                              </td>
+                              <td className="text-center amount-sent">
+                                ${aData.sent.toFixed(2)}
+                                <span className="count-badge">{aData.sentCount}</span>
+                              </td>
+                              <td className={`text-center ${appNet >= 0 ? 'net-positive' : 'net-negative'}`}>
+                                ${Math.abs(appNet).toFixed(2)}
+                                <span className="balance-arrow">{appNet >= 0 ? '↑' : '↓'}</span>
+                              </td>
+                              <td className="text-center transaction-count">
+                                {aData.receivedCount + aData.sentCount}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </React.Fragment>
+                  );
+                })}
+              <tr className="grand-total-row">
+                <td className="text-left"><strong>Grand Total</strong></td>
+                <td className="text-center">
+                  <strong>${grandTotalsApp.received.toFixed(2)}</strong>
+                  <span className="count-badge">{grandTotalsApp.receivedCount}</span>
+                </td>
+                <td className="text-center">
+                  <strong>${grandTotalsApp.sent.toFixed(2)}</strong>
+                  <span className="count-badge">{grandTotalsApp.sentCount}</span>
+                </td>
+                <td className={`text-center ${(grandTotalsApp.received - grandTotalsApp.sent) >= 0 ? 'net-positive' : 'net-negative'}`}>
+                  <strong>
+                    ${Math.abs(grandTotalsApp.received - grandTotalsApp.sent).toFixed(2)}
+                    <span className="balance-arrow">{(grandTotalsApp.received - grandTotalsApp.sent) >= 0 ? '↑' : '↓'}</span>
+                  </strong>
+                </td>
+                <td className="text-center">
+                  <strong>{grandTotalsApp.receivedCount + grandTotalsApp.sentCount}</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* See More Button for App Types */}
+        {Object.keys(appTypeTotals).length > visibleAppTypes && (
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <button
+              className="see-more-btn"
+              onClick={() => setVisibleAppTypes(prev => prev + 50)}
+            >
+              See More (Showing {visibleAppTypes} of {Object.keys(appTypeTotals).length})
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Player Totals Table */}
-      <div className="table-card">
-        <h2 className="table-title">Player Totals</h2>
-        <table className="transactions-table">
-          <thead>
-            <tr>
-              <th>Player Name</th>
-              <th>Total Received</th>
-              <th>Total Sent</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(playerTotals)
-              .sort((a, b) => b[1].totalReceived - a[1].totalReceived)
-              .map(([player, data]) => (
-                <React.Fragment key={player}>
-                  <tr className="expandable-row" onClick={() => toggleExpandPlayer(player)}>
-                    <td className="text-left" style={{ paddingLeft: "15px" }}>
-                      <span className={`expand-arrow ${expandedPlayers[player] ? "expanded" : ""}`}>▶</span>
-                      {player}
-                    </td>
-                    <td>${data.totalReceived.toFixed(2)}</td>
-                    <td>${data.totalSent.toFixed(2)}</td>
-                  </tr>
+      <div className="report-section">
+        <div className="section-header">
+          <div className="section-title">
+            <Users size={24} />
+            <h2>Player Performance</h2>
+          </div>
+          <span className="section-badge">{Object.keys(playerTotals).length} players</span>
+        </div>
+        <div className="report-table-wrapper">
+          <table className="report-table">
+            <thead>
+              <tr>
+                <th className="text-left">Player Name</th>
+                <th className="text-center">Total Received</th>
+                <th className="text-center">Total Sent</th>
+                <th className="text-center">Net Balance</th>
+                <th className="text-center">Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(playerTotals)
+                .sort((a, b) => b[1].totalReceived - a[1].totalReceived)
+                .slice(0, visiblePlayers)
+                .map(([player, data]) => {
+                  const playerNet = data.totalReceived - data.totalSent;
+                  return (
+                    <React.Fragment key={player}>
+                      <tr className="expandable-row" onClick={() => toggleExpandPlayer(player)}>
+                        <td className="text-left">
+                          <span className={`expand-icon ${expandedPlayers[player] ? "expanded" : ""}`}>
+                            <ChevronRight size={18} />
+                          </span>
+                          <span className="player-name-text">{player}</span>
+                        </td>
+                        <td className="text-center amount-received">
+                          ${data.totalReceived.toFixed(2)}
+                          <span className="count-badge">{data.receivedCount}</span>
+                        </td>
+                        <td className="text-center amount-sent">
+                          ${data.totalSent.toFixed(2)}
+                          <span className="count-badge">{data.sentCount}</span>
+                        </td>
+                        <td className={`text-center ${playerNet >= 0 ? 'net-positive' : 'net-negative'}`}>
+                          ${Math.abs(playerNet).toFixed(2)}
+                          <span className="balance-arrow">{playerNet >= 0 ? '↑' : '↓'}</span>
+                        </td>
+                        <td className="text-center transaction-count">
+                          {data.receivedCount + data.sentCount}
+                        </td>
+                      </tr>
 
-                  {expandedPlayers[player] &&
-                    Object.entries(data.appTypes).map(([appType, aData]) => (
-                      <React.Fragment key={appType}>
-                        <tr className="sub-row hover-sub-row">
-                          <td className="text-left" style={{ paddingLeft: "30px" }}>{appType}</td>
-                          <td>${aData.totalReceived.toFixed(2)}</td>
-                          <td>${aData.totalSent.toFixed(2)}</td>
-                        </tr>
-                        {Object.entries(aData.apps).map(([appName, appData]) => (
-                          <tr key={appName} className="sub-row hover-sub-row">
-                            <td className="text-left" style={{ paddingLeft: "50px" }}>{appName}</td>
-                            <td>${appData.received.toFixed(2)}</td>
-                            <td>${appData.sent.toFixed(2)}</td>
-                          </tr>
-                        ))}
-                      </React.Fragment>
-                    ))}
-                </React.Fragment>
-              ))}
-            <tr className="grand-total-row">
-              <td className="text-left" style={{ paddingLeft: "15px" }}>Grand Total</td>
-              <td>${grandTotalsPlayer.received.toFixed(2)}</td>
-              <td>${grandTotalsPlayer.sent.toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
+                      {expandedPlayers[player] &&
+                        Object.entries(data.appTypes).map(([appType, aData]) => {
+                          const typeNet = aData.totalReceived - aData.totalSent;
+                          return (
+                            <React.Fragment key={appType}>
+                              <tr className="sub-row level-1">
+                                <td className="text-left sub-name">{appType}</td>
+                                <td className="text-center amount-received">
+                                  ${aData.totalReceived.toFixed(2)}
+                                  <span className="count-badge">{aData.receivedCount}</span>
+                                </td>
+                                <td className="text-center amount-sent">
+                                  ${aData.totalSent.toFixed(2)}
+                                  <span className="count-badge">{aData.sentCount}</span>
+                                </td>
+                                <td className={`text-center ${typeNet >= 0 ? 'net-positive' : 'net-negative'}`}>
+                                  ${Math.abs(typeNet).toFixed(2)}
+                                  <span className="balance-arrow">{typeNet >= 0 ? '↑' : '↓'}</span>
+                                </td>
+                                <td className="text-center transaction-count">
+                                  {aData.receivedCount + aData.sentCount}
+                                </td>
+                              </tr>
+                              {Object.entries(aData.apps).map(([appName, appData]) => {
+                                const appNetBalance = appData.received - appData.sent;
+                                return (
+                                  <tr key={appName} className="sub-row level-2">
+                                    <td className="text-left sub-sub-name">{appName}</td>
+                                    <td className="text-center amount-received">
+                                      ${appData.received.toFixed(2)}
+                                      <span className="count-badge">{appData.receivedCount}</span>
+                                    </td>
+                                    <td className="text-center amount-sent">
+                                      ${appData.sent.toFixed(2)}
+                                      <span className="count-badge">{appData.sentCount}</span>
+                                    </td>
+                                    <td className={`text-center ${appNetBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
+                                      ${Math.abs(appNetBalance).toFixed(2)}
+                                      <span className="balance-arrow">{appNetBalance >= 0 ? '↑' : '↓'}</span>
+                                    </td>
+                                    <td className="text-center transaction-count">
+                                      {appData.receivedCount + appData.sentCount}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </React.Fragment>
+                          );
+                        })}
+                    </React.Fragment>
+                  );
+                })}
+              <tr className="grand-total-row">
+                <td className="text-left"><strong>Grand Total</strong></td>
+                <td className="text-center">
+                  <strong>${grandTotalsPlayer.received.toFixed(2)}</strong>
+                  <span className="count-badge">{grandTotalsPlayer.receivedCount}</span>
+                </td>
+                <td className="text-center">
+                  <strong>${grandTotalsPlayer.sent.toFixed(2)}</strong>
+                  <span className="count-badge">{grandTotalsPlayer.sentCount}</span>
+                </td>
+                <td className={`text-center ${(grandTotalsPlayer.received - grandTotalsPlayer.sent) >= 0 ? 'net-positive' : 'net-negative'}`}>
+                  <strong>
+                    ${Math.abs(grandTotalsPlayer.received - grandTotalsPlayer.sent).toFixed(2)}
+                    <span className="balance-arrow">{(grandTotalsPlayer.received - grandTotalsPlayer.sent) >= 0 ? '↑' : '↓'}</span>
+                  </strong>
+                </td>
+                <td className="text-center">
+                  <strong>{grandTotalsPlayer.receivedCount + grandTotalsPlayer.sentCount}</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* See More Button for Players */}
+        {Object.keys(playerTotals).length > visiblePlayers && (
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <button
+              className="see-more-btn"
+              onClick={() => setVisiblePlayers(prev => prev + 50)}
+            >
+              See More (Showing {visiblePlayers} of {Object.keys(playerTotals).length})
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

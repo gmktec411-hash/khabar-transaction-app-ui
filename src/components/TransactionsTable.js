@@ -3,7 +3,7 @@ import "./TransactionsTable.css";
 
 const TransactionsTable = ({ transactions = [], onRefresh }) => {
   const [sortConfig, setSortConfig] = useState({ key: "id", direction: "desc" });
-  const [visibleCount, setVisibleCount] = useState(100);
+  const [visibleCount, setVisibleCount] = useState(50);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchBy, setSearchBy] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -231,7 +231,7 @@ const TransactionsTable = ({ transactions = [], onRefresh }) => {
 
                     <td className="text-left player-cell">
                       <span className="player-name">
-                        {highlightText(tx.sender)}
+                        {tx.sender}
                         {tx.subject && (
                           <span className="subject-tooltip">{tx.subject}</span>
                         )}
@@ -239,7 +239,7 @@ const TransactionsTable = ({ transactions = [], onRefresh }) => {
                     </td>
 
 
-                    <td className="text-left">{highlightText(tx.receiver)}</td>
+                    <td className="text-left player-name">{tx.receiver}</td>
                     <td className="text-left">{highlightText(tx.appName)}</td>
                     <td>{tx.appType}</td>
                     <td className="amount">${tx.amount.toFixed(2)}</td>
@@ -263,9 +263,11 @@ const TransactionsTable = ({ transactions = [], onRefresh }) => {
           </table>
         </div>
 
-        {visibleCount < transactions.length && (
+        {visibleCount < filteredTransactions.length && (
           <div style={{ marginTop: "20px", textAlign: "center" }}>
-            <button className="show-more-btn" onClick={() => setVisibleCount(prev => prev + 100)}>Show More</button>
+            <button className="see-more-btn" onClick={() => setVisibleCount(prev => prev + 50)}>
+              See More (Showing {visibleCount} of {filteredTransactions.length})
+            </button>
           </div>
         )}
       </div>

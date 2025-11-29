@@ -3,9 +3,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import TransactionsTable from "./components/TransactionsTable";
 import Report from "./pages/Report";
+import Home from "./pages/Home";
+import Limits from "./pages/Limits";
 import LoginPage from "./pages/LoginPage";
 import Navbar from "./components/Navbar";
 import InactivePlayers from "./pages/InactivePlayers";
+import EmailIntegration from "./pages/EmailIntegration";
+import ActivePlayers from "./pages/ActivePlayers";
 import { fetchTransactions } from "./api/transactionsApi";
 
 const LOCAL_CACHE_KEY = "transactionsCache";
@@ -73,18 +77,45 @@ const AppRoutes = () => {
       )}
 
       <Routes>
-        <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
+        <Route
+          path="/login"
+          element={
+            user
+              ? (user.role === "admin" ? <Navigate to="/" /> : <Navigate to="/transactions" />)
+              : <LoginPage />
+          }
+        />
         <Route
           path="/"
+          element={
+            user
+              ? (user.role === "admin" ? <Home transactions={transactions} /> : <Navigate to="/transactions" />)
+              : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/transactions"
           element={user ? <TransactionsTable transactions={transactions} /> : <Navigate to="/login" />}
         />
         <Route
           path="/report"
-          element={user && user.role === "admin" ? <Report transactions={transactions} /> : <Navigate to="/" />}
+          element={user && user.role === "admin" ? <Report transactions={transactions} /> : <Navigate to="/transactions" />}
+        />
+        <Route
+          path="/limits"
+          element={user && user.role === "admin" ? <Limits transactions={transactions} /> : <Navigate to="/transactions" />}
+        />
+        <Route
+          path="/email-integration"
+          element={user && user.role === "admin" ? <EmailIntegration /> : <Navigate to="/transactions" />}
         />
         <Route
           path="/inactive-players"
           element={user ? <InactivePlayers transactions={transactions} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/active-players"
+          element={user ? <ActivePlayers transactions={transactions} /> : <Navigate to="/login" />}
         />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
