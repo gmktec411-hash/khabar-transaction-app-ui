@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import TransactionsTable from "./components/TransactionsTable";
@@ -18,6 +18,8 @@ const LOCAL_LASTID_KEY = "transactionsLastId";
 const AppRoutes = () => {
   const { user, logout } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
+  const hasLoadedRef = useRef(false);
+  const currentUserRef = useRef(null);
 
   const refreshTransactions = useCallback(async () => {
     if (!user?.adminId) return;
@@ -46,9 +48,36 @@ const AppRoutes = () => {
     }
   }, [user]);
 
+  // Load transactions only once when user logs in
   useEffect(() => {
+    if (!user?.adminId) {
+      // User logged out, reset state
+      hasLoadedRef.current = false;
+      currentUserRef.current = null;
+      setTransactions([]);
+      return;
+    }
+
+    // Check if we already loaded data for this user
+    if (hasLoadedRef.current && currentUserRef.current === user.adminId) {
+      return;
+    }
+
+    // Load cached data first if available
+    const cachedData = localStorage.getItem(LOCAL_CACHE_KEY);
+    if (cachedData) {
+      try {
+        setTransactions(JSON.parse(cachedData));
+      } catch (err) {
+        console.error("Error parsing cached data:", err);
+      }
+    }
+
+    // Fetch fresh data only once
+    hasLoadedRef.current = true;
+    currentUserRef.current = user.adminId;
     refreshTransactions();
-  }, [refreshTransactions]);
+  }, [user, refreshTransactions]);
 
   useEffect(() => {
     const interval = setInterval(() => {
