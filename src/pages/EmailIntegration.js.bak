@@ -53,8 +53,6 @@ const EmailIntegration = () => {
       setLoadingTokens(true);
       const response = await getTokensByAdmin(user.adminId);
 
-      console.log("Fetched tokens response:", response);
-
       // Map backend response to frontend format
       const accounts = response.tokens.map((token, index) => ({
         id: index + 1,
@@ -67,7 +65,6 @@ const EmailIntegration = () => {
         updatedAt: token.updatedAt
       }));
 
-      console.log("Mapped accounts:", accounts);
       setEmailAccounts(accounts);
     } catch (error) {
       console.error("Failed to fetch tokens:", error);
@@ -115,7 +112,7 @@ const EmailIntegration = () => {
       setShowAddModal(false);
       setShowAuthModal(true);
 
-      showNotification("success", response.message || "Device code generated successfully!");
+      showNotification("success", "Device code generated successfully!");
     } catch (error) {
       showNotification("error", "Failed to start authentication: " + (error.response?.data?.message || error.message));
     } finally {
@@ -137,20 +134,15 @@ const EmailIntegration = () => {
 
       if (response.success) {
         setAuthStep("success");
-        showNotification("success", response.message || "Email account added successfully!");
-
-        // Wait a bit for backend to finalize the token
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        showNotification("success", "Email account added successfully!");
 
         // Refresh token list from backend
         await fetchTokens();
 
-        setTimeout(async () => {
+        setTimeout(() => {
           setShowAuthModal(false);
           setAuthStep("idle");
           resetNewEmailForm();
-          // Final refresh to ensure data is up to date
-          await fetchTokens();
         }, 2000);
       }
     } catch (error) {
@@ -171,7 +163,7 @@ const EmailIntegration = () => {
     try {
       setLoading(true);
       const response = await manualEmailCheck(user.adminId, account.userId, account.emailType);
-      showNotification("success", response.message || `Checked emails: ${response.messagesProcessed || 0} messages processed`);
+      showNotification("success", `Checked emails: ${response.messagesProcessed} messages processed`);
     } catch (error) {
       showNotification("error", "Failed to check emails: " + (error.response?.data?.message || error.message));
     } finally {
@@ -195,9 +187,9 @@ const EmailIntegration = () => {
 
     try {
       setLoading(true);
-      const response = await deleteToken(user.adminId, account.userId, account.emailType);
+      await deleteToken(user.adminId, account.userId, account.emailType);
 
-      showNotification("success", response.message || "Email account deleted successfully!");
+      showNotification("success", "Email account deleted successfully!");
 
       // Refresh token list from backend
       await fetchTokens();
@@ -218,14 +210,14 @@ const EmailIntegration = () => {
       setLoading(true);
 
       // Call API to update both userId and name
-      const response = await updateTokenName(
+      await updateTokenName(
         user.adminId,
         editingAccount.userId,
         editingAccount.emailType,
         editingAccount.name || ""
       );
 
-      showNotification("success", response.message || "Account updated successfully!");
+      showNotification("success", "Account updated successfully!");
 
       // Refresh token list from backend
       await fetchTokens();
@@ -322,7 +314,6 @@ const EmailIntegration = () => {
             <table className="email-integration-table">
               <thead>
                 <tr>
-                  <th>SN</th>
                   <th>Account Name (User ID)</th>
                   <th>Email Address</th>
                   <th>Provider</th>
@@ -337,7 +328,7 @@ const EmailIntegration = () => {
               <tbody>
                 {emailAccounts.length === 0 ? (
                   <tr>
-                    <td colSpan="10" className="empty-state">
+                    <td colSpan="9" className="empty-state">
                       <Mail size={48} />
                       <p>No email integrations configured</p>
                       <button className="btn-secondary" onClick={() => setShowAddModal(true)}>
@@ -351,7 +342,6 @@ const EmailIntegration = () => {
                     const tokenStatus = getTokenStatus(account.tokenExpiresOn);
                     return (
                       <tr key={account.id}>
-                        <td className="text-center">{account.id}</td>
                         <td className="text-left font-semibold">{account.userId}</td>
                         <td className="text-left">{account.name || 'N/A'}</td>
                         <td>
@@ -520,7 +510,7 @@ const EmailIntegration = () => {
       {/* Authentication Modal */}
       {showAuthModal && (
         <div className="modal-overlay">
-          <div className="modal-content auth-modal-compact" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content auth-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Email Authentication</h2>
               <button
@@ -533,68 +523,58 @@ const EmailIntegration = () => {
             </div>
             <div className="modal-body">
               {authStep === "device-code" && (
-                <div className="auth-step-compact">
-                  <div className="auth-icon-small">🔐</div>
-                  <p className="auth-description">Complete these steps to authorize your email:</p>
+                <div className="auth-step">
+                  <div className="auth-icon">🔐</div>
+                  <h3>Authorization Required</h3>
+                  <p>Please complete the following steps to authorize your email account:</p>
 
-                  <div className="code-box-compact">
-                    <label>Your Authorization Code</label>
-                    <div className="code-display-compact">
-                      <span className="user-code-large">{authData.userCode}</span>
+                  <div className="code-box">
+                    <label>User Code:</label>
+                    <div className="code-display">
+                      <span className="user-code">{authData.userCode}</span>
                       <button
                         className="icon-btn icon-btn-secondary"
                         onClick={() => copyToClipboard(authData.userCode)}
                         title="Copy code"
                       >
-                        <Copy size={18} />
+                        <Copy size={16} />
                       </button>
                     </div>
                   </div>
 
-                  <div className="instructions-compact">
-                    <div className="instruction-step">
-                      <span className="step-number">1</span>
-                      <span>Click "Open Authorization Page" below</span>
-                    </div>
-                    <div className="instruction-step">
-                      <span className="step-number">2</span>
-                      <span>Enter the code: <strong>{authData.userCode}</strong></span>
-                    </div>
-                    <div className="instruction-step">
-                      <span className="step-number">3</span>
-                      <span>Sign in and grant permissions</span>
-                    </div>
-                    <div className="instruction-step">
-                      <span className="step-number">4</span>
-                      <span>Return here and click "Check Authorization"</span>
-                    </div>
+                  <div className="instructions">
+                    <h4>Steps to authorize:</h4>
+                    <ol>
+                      <li>Click the button below to open the authorization page</li>
+                      <li>Enter the User Code: <strong>{authData.userCode}</strong></li>
+                      <li>Sign in with your email account</li>
+                      <li>Grant the requested permissions</li>
+                      <li>Return here and click "Check Authorization"</li>
+                    </ol>
                   </div>
 
-                  <div className="auth-link-box">
-                    <p className="auth-link-label">Authorization URL:</p>
-                    <a
-                      href={authData.verificationUri}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="auth-link"
-                    >
-                      {authData.verificationUri}
-                    </a>
-                  </div>
+                  <a
+                    href={authData.verificationUri}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary btn-large"
+                  >
+                    Open Authorization Page
+                  </a>
                 </div>
               )}
 
               {authStep === "polling" && (
-                <div className="auth-step-compact">
-                  <div className="spinner"></div>
+                <div className="auth-step">
+                  <div className="auth-icon spinner">⏳</div>
                   <h3>Checking Authorization...</h3>
                   <p>Please wait while we verify your authorization</p>
                 </div>
               )}
 
               {authStep === "success" && (
-                <div className="auth-step-compact">
-                  <div className="auth-icon-small success">✅</div>
+                <div className="auth-step">
+                  <div className="auth-icon success">✅</div>
                   <h3>Success!</h3>
                   <p>Your email account has been authorized and added successfully</p>
                 </div>
@@ -612,14 +592,6 @@ const EmailIntegration = () => {
                   >
                     Cancel
                   </button>
-                  <a
-                    href={authData.verificationUri}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary"
-                  >
-                    Open Authorization Page
-                  </a>
                   <button
                     className="btn-primary"
                     onClick={handlePollToken}

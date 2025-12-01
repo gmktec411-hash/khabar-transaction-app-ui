@@ -626,6 +626,131 @@
   font-weight: 700;
 }
 
+/* Compact Auth Modal Styles */
+.auth-modal-compact {
+  max-width: 550px;
+}
+
+.auth-step-compact {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.auth-icon-small {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.auth-icon-small.success {
+  animation: scaleIn 0.5s ease-out;
+}
+
+.auth-description {
+  color: #64748b;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.code-box-compact {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.code-box-compact label {
+  display: block;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 12px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.code-display-compact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.user-code-large {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #2563eb;
+  font-family: 'Courier New', monospace;
+}
+
+.instructions-compact {
+  text-align: left;
+  margin: 20px 0;
+}
+
+.instruction-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #475569;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.instruction-step strong {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.auth-link-box {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.auth-link-label {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.auth-link {
+  display: block;
+  color: #2563eb;
+  font-size: 13px;
+  word-break: break-all;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .email-integration-table {
@@ -662,5 +787,18 @@
   .user-code {
     font-size: 24px;
     letter-spacing: 2px;
+  }
+
+  .user-code-large {
+    font-size: 22px;
+    letter-spacing: 2px;
+  }
+
+  .instruction-step {
+    font-size: 13px;
+  }
+
+  .auth-modal-compact {
+    max-width: 95%;
   }
 }

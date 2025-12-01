@@ -8,13 +8,13 @@ const AppConfig = {
   // ==================== API Configuration ====================
 
   // Main API Base URL - Primary backend server
-  API_BASE_URL: window._env_?.API_BASE_URL || "http://localhost:8848/api",
+  API_BASE_URL: process.env.REACT_APP_API_BASE_URL || window._env_?.API_BASE_URL || "https://khabarayoapi.ngrok.io",
 
   // Transaction API Endpoint
-  API_TRANSACTION_PATH: window._env_?.API_TRANSACTION_PATH || "/transactions/getAllTransactionsByAdmin",
+  API_TRANSACTION_PATH: process.env.REACT_APP_API_TRANSACTION_PATH || window._env_?.API_TRANSACTION_PATH || "/khabar/transactions/getAllTransactionsByAdminId",
 
   // Outlook/Email Integration API Base URL
-  OUTLOOK_API_BASE_URL: window._env_?.OUTLOOK_API_BASE_URL || "http://localhost:8080",
+  OUTLOOK_API_BASE_URL: process.env.REACT_APP_OUTLOOK_API_BASE_URL || window._env_?.OUTLOOK_API_BASE_URL || "https://khabarayoapioutlook.ngrok.io",
 
   // ==================== Application Branding ====================
 

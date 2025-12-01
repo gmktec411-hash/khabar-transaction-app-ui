@@ -1,7 +1,52 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback, memo } from "react";
+import { Search, Calendar, Filter, TrendingUp, DollarSign, X } from "lucide-react";
 import "./TransactionsTable.css";
 
-const TransactionsTable = ({ transactions = [], onRefresh }) => {
+// Memoized Table Row Component for better performance
+const TableRow = memo(({ tx, index, highlightText, getStatusClass, getStatusText }) => {
+  const dateObj = new Date(tx.sentAt);
+  const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getDate().toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
+  const timeString = dateObj.toTimeString().split(" ")[0];
+
+  return (
+    <tr className="table-row-animated">
+      <td className="text-center">{index + 1}</td>
+      <td className="text-center date-cell">
+        <div className="date-time">
+          <span className="date">{formattedDate}</span>
+          <span className="time">{timeString}</span>
+        </div>
+      </td>
+      <td className="text-left player-cell">
+        <span className="player-name">
+          {tx.sender}
+          {tx.subject && (
+            <span className="subject-tooltip">{tx.subject}</span>
+          )}
+        </span>
+      </td>
+      <td className="text-left player-name">{tx.receiver}</td>
+      <td className="text-left app-name-cell">{highlightText(tx.appName)}</td>
+      <td className="text-center">
+        <span className={`app-badge app-badge-${tx.appType.toLowerCase()}`}>
+          {tx.appType}
+        </span>
+      </td>
+      <td className="text-right amount-cell">
+        <span className="amount-value">${tx.amount.toFixed(2)}</span>
+      </td>
+      <td className="text-center">
+        <span className={`status-badge ${getStatusClass(tx.status)}`}>
+          {getStatusText(tx.status)}
+        </span>
+      </td>
+    </tr>
+  );
+});
+
+TableRow.displayName = 'TableRow';
+
+const TransactionsTable = ({ transactions = [] }) => {
   const [sortConfig, setSortConfig] = useState({ key: "id", direction: "desc" });
   const [visibleCount, setVisibleCount] = useState(50);
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,88 +55,126 @@ const TransactionsTable = ({ transactions = [], onRefresh }) => {
   const [appTypeFilter, setAppTypeFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
-  const requestSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") direction = "desc";
-    setSortConfig({ key, direction });
-  };
+  const requestSort = useCallback((key) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc"
+    }));
+  }, []);
 
-  const highlightText = (text) => {
-    if (!searchTerm) return text;
+  const highlightText = useCallback((text) => {
+    if (!searchTerm || !text) return text;
     const regex = new RegExp(`(${searchTerm})`, "gi");
     const parts = text.split(regex);
     return parts.map((part, index) =>
-      regex.test(part) ? <span key={index} className="highlight">{part}</span> : part
+      regex.test(part) ? <mark key={index} className="highlight">{part}</mark> : part
     );
-  };
+  }, [searchTerm]);
 
-  // 🔹 Filter transactions
+  const getStatusClass = useCallback((status) => {
+    const statusMap = {
+      "S": "status-success",
+      "F": "status-failed",
+      "C": "status-confirm",
+      "I": "status-sent",
+      "A": "status-accept",
+      "R": "status-request",
+      "E": "status-checkemail"
+    };
+    return statusMap[status] || "";
+  }, []);
+
+  const getStatusText = useCallback((status) => {
+    const statusTextMap = {
+      "S": "Success",
+      "F": "Failed",
+      "C": "Confirm",
+      "I": "Sent",
+      "A": "Accept",
+      "R": "Request",
+      "E": "Check Email"
+    };
+    return statusTextMap[status] || status;
+  }, []);
+
+  // Clear all filters
+  const clearFilters = useCallback(() => {
+    setSearchTerm("");
+    setSearchBy("all");
+    setStatusFilter("all");
+    setAppTypeFilter("all");
+    setDateFrom("");
+    setDateTo("");
+  }, []);
+
+  // Filter transactions with optimized logic
   const filteredTransactions = useMemo(() => {
     const safeTransactions = Array.isArray(transactions) ? transactions : [];
-    let filtered = [...safeTransactions];
+    let filtered = safeTransactions;
 
-    if (searchTerm.trim() !== "") {
+    if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter((tx) => {
-        if (searchBy === "sender") return tx.sender.toLowerCase().includes(term);
-        if (searchBy === "receiver") return tx.receiver.toLowerCase().includes(term);
-        if (searchBy === "appName") return tx.appName.toLowerCase().includes(term);
+        if (searchBy === "sender") return tx.sender?.toLowerCase().includes(term);
+        if (searchBy === "receiver") return tx.receiver?.toLowerCase().includes(term);
+        if (searchBy === "appName") return tx.appName?.toLowerCase().includes(term);
         return (
-          tx.sender.toLowerCase().includes(term) ||
-          tx.receiver.toLowerCase().includes(term) ||
-          tx.appName.toLowerCase().includes(term)
+          tx.sender?.toLowerCase().includes(term) ||
+          tx.receiver?.toLowerCase().includes(term) ||
+          tx.appName?.toLowerCase().includes(term)
         );
       });
     }
 
-    if (statusFilter !== "all") filtered = filtered.filter((tx) => tx.status === statusFilter);
-    if (appTypeFilter !== "all") filtered = filtered.filter((tx) => tx.appType === appTypeFilter);
-    // if (dateFrom) filtered = filtered.filter((tx) => new Date(tx.sentAt) >= new Date(dateFrom));
-    // if (dateTo) filtered = filtered.filter((tx) => new Date(tx.sentAt) <= new Date(dateTo));
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((tx) => tx.status === statusFilter);
+    }
+
+    if (appTypeFilter !== "all") {
+      filtered = filtered.filter((tx) => tx.appType === appTypeFilter);
+    }
+
     if (dateFrom) {
       const [year, month, day] = dateFrom.split("-").map(Number);
-      const from = new Date(year, month - 1, day, 0, 0, 0, 0); // start of day
+      const from = new Date(year, month - 1, day, 0, 0, 0, 0);
       filtered = filtered.filter(tx => new Date(tx.sentAt) >= from);
     }
 
     if (dateTo) {
       const [year, month, day] = dateTo.split("-").map(Number);
-      const to = new Date(year, month - 1, day, 23, 59, 59, 999); // end of day
+      const to = new Date(year, month - 1, day, 23, 59, 59, 999);
       filtered = filtered.filter(tx => new Date(tx.sentAt) <= to);
     }
-
 
     return filtered;
   }, [transactions, searchTerm, searchBy, statusFilter, appTypeFilter, dateFrom, dateTo]);
 
-  // 🔹 Sort transactions
+  // Sort transactions with optimized comparisons
   const sortedTransactions = useMemo(() => {
     let sorted = [...filteredTransactions];
 
     if (sortConfig.key) {
       sorted.sort((a, b) => {
-        let aValue = a[sortConfig.key];
-        let bValue = b[sortConfig.key];
+        const aValue = a[sortConfig.key];
+        const bValue = b[sortConfig.key];
 
-        // Numeric sort for amount or id
         if (sortConfig.key === "amount" || sortConfig.key === "id") {
           return sortConfig.direction === "asc" ? aValue - bValue : bValue - aValue;
         }
 
-        // Date sort for sentAt
         if (sortConfig.key === "sentAt") {
           return sortConfig.direction === "asc"
             ? new Date(aValue) - new Date(bValue)
             : new Date(bValue) - new Date(aValue);
         }
 
-        // String sort for everything else
-        aValue = aValue ? aValue.toString().toLowerCase() : "";
-        bValue = bValue ? bValue.toString().toLowerCase() : "";
-        if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
-        if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+        const aStr = aValue?.toString().toLowerCase() || "";
+        const bStr = bValue?.toString().toLowerCase() || "";
+
+        if (aStr < bStr) return sortConfig.direction === "asc" ? -1 : 1;
+        if (aStr > bStr) return sortConfig.direction === "asc" ? 1 : -1;
         return 0;
       });
     }
@@ -99,174 +182,217 @@ const TransactionsTable = ({ transactions = [], onRefresh }) => {
     return sorted.slice(0, visibleCount);
   }, [filteredTransactions, sortConfig, visibleCount]);
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "S": return "status-success";
-      case "F": return "status-failed";
-      case "C": return "status-confirm";
-      case "I": return "status-sent";
-      case "A": return "status-accept";
-      case "R": return "status-request";
-      case "E": return "status-checkemail";
-      default: return "";
-    }
-  };
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (searchTerm) count++;
+    if (statusFilter !== "all") count++;
+    if (appTypeFilter !== "all") count++;
+    if (dateFrom || dateTo) count++;
+    return count;
+  }, [searchTerm, statusFilter, appTypeFilter, dateFrom, dateTo]);
 
-  const getStatusText = (status) => {
-    switch (status) {
-      case "S": return "Success";
-      case "F": return "Failed";
-      case "C": return "Confirm";
-      case "I": return "Sent";
-      case "A": return "Accept";
-      case "R": return "Request";
-      case "E": return "Check_Email";
-      default: return status;
-    }
-  };
-
-  const suggestions = useMemo(() => {
-    if (!searchTerm) return [];
-    const term = searchTerm.toLowerCase();
-    let values = [];
-    if (searchBy === "sender" || searchBy === "all") values.push(...transactions.map((tx) => tx.sender));
-    if (searchBy === "receiver" || searchBy === "all") values.push(...transactions.map((tx) => tx.receiver));
-    if (searchBy === "appName" || searchBy === "all") values.push(...transactions.map((tx) => tx.appName));
-    return [...new Set(values)].filter((v) => v.toLowerCase().includes(term));
-  }, [transactions, searchTerm, searchBy]);
-
-  const totalAmount = sortedTransactions.reduce((sum, tx) => sum + tx.amount, 0);
-
+  const appTypes = useMemo(() =>
+    Array.from(new Set(transactions.map(tx => tx.appType))).sort(),
+    [transactions]
+  );
 
   return (
-    <div className="page-container">
-      <div className="page-title">Customer Transactions</div>
+    <div className="page-container transactions-page">
+      {/* Modern Header */}
+      <div className="transactions-header">
+        <div className="header-content">
+          <h1 className="page-title">
+            <DollarSign size={32} />
+            Customer Transactions
+          </h1>
+          <div className="header-stats">
+            <div className="stat-card">
+              <span className="stat-label">Total Transactions</span>
+              <span className="stat-value">{filteredTransactions.length.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+        <button
+          className="filter-toggle-btn"
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          <Filter size={18} />
+          Filters {activeFiltersCount > 0 && <span className="filter-badge">{activeFiltersCount}</span>}
+        </button>
+      </div>
+
       <div className="table-card">
-        <div className="filters">
-          <div style={{ flex: "1 1 200px", position: "relative" }}>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value); setShowSuggestions(true); }}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-            />
-            {showSuggestions && suggestions.length > 0 && (
-              <ul className="suggestions-list">
-                {suggestions.map((s) => (
-                  <li key={s} onMouseDown={() => { setSearchTerm(s); setShowSuggestions(false); }}>{s}</li>
+        {/* Modern Filters */}
+        {showFilters && (
+          <div className="modern-filters">
+            <div className="filter-section">
+              <label className="filter-label">
+                <Search size={16} />
+                Search
+              </label>
+              <div className="search-wrapper">
+                <input
+                  type="text"
+                  className="modern-input search-input"
+                  placeholder="Search transactions..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {searchTerm && (
+                  <button className="clear-btn" onClick={() => setSearchTerm("")}>
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="filter-section">
+              <label className="filter-label">Search By</label>
+              <select
+                className="modern-select"
+                value={searchBy}
+                onChange={(e) => setSearchBy(e.target.value)}
+              >
+                <option value="all">All Fields</option>
+                <option value="sender">Player Name</option>
+                <option value="receiver">Receiver</option>
+                <option value="appName">App Name</option>
+              </select>
+            </div>
+
+            <div className="filter-section">
+              <label className="filter-label">
+                <Calendar size={16} />
+                Date Range
+              </label>
+              <div className="date-range">
+                <input
+                  type="date"
+                  className="modern-input date-input"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                />
+                <span className="date-separator">to</span>
+                <input
+                  type="date"
+                  className="modern-input date-input"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="filter-section">
+              <label className="filter-label">Status</label>
+              <select
+                className="modern-select"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="all">All Statuses</option>
+                <option value="S">Success</option>
+                <option value="F">Failed</option>
+                <option value="C">Confirm</option>
+                <option value="I">Sent</option>
+                <option value="A">Accept</option>
+                <option value="R">Request</option>
+                <option value="E">Check Email</option>
+              </select>
+            </div>
+
+            <div className="filter-section">
+              <label className="filter-label">App Type</label>
+              <select
+                className="modern-select"
+                value={appTypeFilter}
+                onChange={(e) => setAppTypeFilter(e.target.value)}
+              >
+                <option value="all">All Types</option>
+                {appTypes.map((type) => (
+                  <option key={type} value={type}>{type}</option>
                 ))}
-              </ul>
+              </select>
+            </div>
+
+            {activeFiltersCount > 0 && (
+              <div className="filter-section">
+                <button className="clear-all-btn" onClick={clearFilters}>
+                  <X size={16} />
+                  Clear All
+                </button>
+              </div>
             )}
           </div>
+        )}
 
-
-          <select value={searchBy} onChange={(e) => setSearchBy(e.target.value)}>
-            <option value="all">ALL</option>
-            <option value="sender">PLAYER_NAME</option>
-            <option value="receiver">RECEIVER</option>
-            <option value="appName">APP_NAME</option>
-          </select>
-          <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
-          <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
-
-
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="all">All Statuses</option>
-            <option value="S">Success</option>
-            <option value="F">Failed</option>
-            <option value="C">Confirm</option>
-            <option value="I">Sent</option>
-            <option value="A">Accept</option>
-            <option value="R">Request</option>
-            <option value="E">Check_Email</option>
-          </select>
-
-          <select value={appTypeFilter} onChange={(e) => setAppTypeFilter(e.target.value)}>
-            <option value="all">All App Types</option>
-            {Array.from(new Set(transactions.map(tx => tx.appType))).map((type) => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
-
-
-        </div>
-
+        {/* Modern Table */}
         <div className="table-wrapper">
-          <table className="transactions-table">
+          <table className="transactions-table modern-table">
             <thead>
               <tr>
-                {[{ key: "id", label: "SN" },
-                { key: "sentAt", label: "RECEIVED_DATE" },
-                { key: "sender", label: "PLAYER_NAME" },
-                { key: "receiver", label: "RECEIVER" },
-                { key: "appName", label: "APP_NAME" },
-                { key: "appType", label: "APP_TYPE" },
-                { key: "amount", label: "AMOUNT" },
-                { key: "status", label: "STATUS" },
-                ].map((col) => {
-                  let thClass = "";
-                  if (sortConfig.key === col.key) {
-                    thClass = sortConfig.direction === "asc" ? "sorted-asc" : "sorted-desc";
-                  }
-                  return (
-                    <th key={col.key} onClick={() => requestSort(col.key)} className={thClass}>
-                      {col.label}{sortConfig.key === col.key ? (sortConfig.direction === "asc" ? " ▲" : " ▼") : ""}
-                    </th>
-                  );
-                })}
+                {[
+                  { key: "id", label: "SN" },
+                  { key: "sentAt", label: "Date & Time" },
+                  { key: "sender", label: "Player Name" },
+                  { key: "receiver", label: "Receiver" },
+                  { key: "appName", label: "App Name" },
+                  { key: "appType", label: "App Type" },
+                  { key: "amount", label: "Amount" },
+                  { key: "status", label: "Status" },
+                ].map((col) => (
+                  <th
+                    key={col.key}
+                    onClick={() => requestSort(col.key)}
+                    className={sortConfig.key === col.key ? `sorted sorted-${sortConfig.direction}` : ""}
+                  >
+                    <div className="th-content">
+                      {col.label}
+                      {sortConfig.key === col.key && (
+                        <span className="sort-icon">
+                          {sortConfig.direction === "asc" ? "↑" : "↓"}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {sortedTransactions.map((tx, index) => {
-                const dateObj = new Date(tx.sentAt);
-                const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getDate().toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
-                const timeString = dateObj.toTimeString().split(" ")[0];
-                return (
-                  <tr key={tx.id}>
-                    <td>{index + 1}</td>
-                    <td>{formattedDate} {timeString}</td>
-
-                    {/* Player name with subject tooltip */}
-
-                    <td className="text-left player-cell">
-                      <span className="player-name">
-                        {tx.sender}
-                        {tx.subject && (
-                          <span className="subject-tooltip">{tx.subject}</span>
-                        )}
-                      </span>
-                    </td>
-
-
-                    <td className="text-left player-name">{tx.receiver}</td>
-                    <td className="text-left">{highlightText(tx.appName)}</td>
-                    <td>{tx.appType}</td>
-                    <td className="amount">${tx.amount.toFixed(2)}</td>
-                    <td>
-                      <span className={`status-badge ${getStatusClass(tx.status)}`}>
-                        {getStatusText(tx.status)}
-                      </span>
-                    </td>
-                  </tr>
-
-                );
-              })}
+              {sortedTransactions.length > 0 ? (
+                sortedTransactions.map((tx, index) => (
+                  <TableRow
+                    key={tx.id}
+                    tx={tx}
+                    index={index}
+                    highlightText={highlightText}
+                    getStatusClass={getStatusClass}
+                    getStatusText={getStatusText}
+                  />
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="empty-state">
+                    <div className="empty-content">
+                      <TrendingUp size={48} />
+                      <p>No transactions found</p>
+                      <span>Try adjusting your filters</span>
+                    </div>
+                  </td>
+                </tr>
+              )}
             </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="6" style={{ textAlign: "right", fontWeight: "bold" }}>Total Amount:</td>
-                <td className="amount" style={{ fontWeight: "bold" }}>${totalAmount.toFixed(2)}</td>
-                <td colSpan="2"></td>
-              </tr>
-            </tfoot>
           </table>
         </div>
 
+        {/* Load More */}
         {visibleCount < filteredTransactions.length && (
-          <div style={{ marginTop: "20px", textAlign: "center" }}>
-            <button className="see-more-btn" onClick={() => setVisibleCount(prev => prev + 50)}>
-              See More (Showing {visibleCount} of {filteredTransactions.length})
+          <div className="load-more-section">
+            <button
+              className="load-more-btn"
+              onClick={() => setVisibleCount(prev => prev + 50)}
+            >
+              <TrendingUp size={18} />
+              Load More ({visibleCount} of {filteredTransactions.length})
             </button>
           </div>
         )}
@@ -275,4 +401,4 @@ const TransactionsTable = ({ transactions = [], onRefresh }) => {
   );
 };
 
-export default TransactionsTable;
+export default memo(TransactionsTable);

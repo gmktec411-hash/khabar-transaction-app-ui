@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { RotateCcw, LogOut, Settings, User } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import AppConfig from "../config/appConfig";
+import { getAvatarUrl } from "../utils/avatarUtils";
 import "./Navbar.css";
 
 // Professional Custom Logo SVG
@@ -29,9 +30,7 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const avatarUrl = user
-    ? `https://api.dicebear.com/8.x/identicon/svg?seed=${encodeURIComponent(user.username)}`
-    : "";
+  const avatarUrl = user ? getAvatarUrl(user.username) : "";
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -43,6 +42,11 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleProfileClick = () => {
+    setDropdownOpen(false);
+    navigate("/profile");
+  };
 
   const handleComingSoon = () => {
     alert("🚧 Feature coming soon!");
@@ -93,13 +97,9 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
 
             {dropdownOpen && (
               <div className="dropdown-menu">
-                <div className="dropdown-item" onClick={handleComingSoon}>
+                <div className="dropdown-item" onClick={handleProfileClick}>
                   <User size={16} />
                   <span>Profile</span>
-                </div>
-                <div className="dropdown-item" onClick={handleComingSoon}>
-                  <Settings size={16} />
-                  <span>Settings</span>
                 </div>
                 <div className="dropdown-divider"></div>
                 <div className="dropdown-item logout" onClick={onLogout}>

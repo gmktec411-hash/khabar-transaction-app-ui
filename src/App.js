@@ -6,6 +6,8 @@ import Report from "./pages/Report";
 import Home from "./pages/Home";
 import Limits from "./pages/Limits";
 import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import ProfilePage from "./pages/ProfilePage";
 import Navbar from "./components/Navbar";
 import InactivePlayers from "./pages/InactivePlayers";
 import EmailIntegration from "./pages/EmailIntegration";
@@ -115,6 +117,14 @@ const AppRoutes = () => {
           }
         />
         <Route
+          path="/signup"
+          element={
+            user
+              ? (user.role === "admin" ? <Navigate to="/" /> : <Navigate to="/transactions" />)
+              : <SignupPage />
+          }
+        />
+        <Route
           path="/"
           element={
             user
@@ -145,6 +155,10 @@ const AppRoutes = () => {
         <Route
           path="/active-players"
           element={user ? <ActivePlayers transactions={transactions} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile"
+          element={user ? <ProfilePage /> : <Navigate to="/login" />}
         />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
