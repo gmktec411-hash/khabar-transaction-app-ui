@@ -9,6 +9,7 @@ import {
   deleteToken,
   updateTokenName
 } from "../api/outlookApi";
+import LoadingScreen from "../components/LoadingScreen";
 import "./EmailIntegration.css";
 
 const EmailIntegration = () => {
@@ -270,8 +271,11 @@ const EmailIntegration = () => {
   };
 
   return (
-    <div className="page-container">
-      <div className="email-integration-header">
+    <>
+      {loadingTokens && <LoadingScreen message="Loading email integrations..." />}
+
+      <div className="page-container">
+        <div className="email-integration-header">
         <div>
           <h1 className="page-title">
             <Server size={32} style={{ marginRight: "12px" }} />
@@ -633,7 +637,8 @@ const EmailIntegration = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

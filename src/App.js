@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar";
 import InactivePlayers from "./pages/InactivePlayers";
 import EmailIntegration from "./pages/EmailIntegration";
 import ActivePlayers from "./pages/ActivePlayers";
+import LoadingScreen from "./components/LoadingScreen";
 import { fetchTransactions } from "./api/transactionsApi";
 
 const LOCAL_CACHE_KEY = "transactionsCache";
@@ -20,6 +21,7 @@ const LOCAL_LASTID_KEY = "transactionsLastId";
 const AppRoutes = () => {
   const { user, logout } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const hasLoadedRef = useRef(false);
   const currentUserRef = useRef(null);
 
@@ -31,6 +33,7 @@ const AppRoutes = () => {
       : 0;
 
     try {
+      setIsLoading(true);
       const data = await fetchTransactions(user.adminId, lastId);
 
       const existingCache = lastId
@@ -47,6 +50,8 @@ const AppRoutes = () => {
       localStorage.setItem(LOCAL_LASTID_KEY, newLastId);
     } catch (err) {
       console.error("Error fetching transactions:", err);
+    } finally {
+      setIsLoading(false);
     }
   }, [user]);
 
@@ -95,6 +100,8 @@ const AppRoutes = () => {
 
   return (
     <>
+      {isLoading && <LoadingScreen message="Loading transaction data..." />}
+
       {user && (
         <Navbar
           onLogout={() => {
