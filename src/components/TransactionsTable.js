@@ -112,7 +112,16 @@ const TransactionsTable = ({ transactions = [] }) => {
   // Filter transactions with optimized logic
   const filteredTransactions = useMemo(() => {
     const safeTransactions = Array.isArray(transactions) ? transactions : [];
-    let filtered = safeTransactions;
+
+    // Filter for current month only
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    let filtered = safeTransactions.filter(tx => {
+      const txDate = new Date(tx.sentAt);
+      return txDate >= startOfMonth && txDate <= endOfMonth;
+    });
 
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
@@ -203,14 +212,8 @@ const TransactionsTable = ({ transactions = [] }) => {
         <div className="header-content">
           <h1 className="page-title">
             <DollarSign size={32} />
-            Customer Transactions
+            Customer Transactions - {new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })}
           </h1>
-          <div className="header-stats">
-            <div className="stat-card">
-              <span className="stat-label">Total Transactions</span>
-              <span className="stat-value">{filteredTransactions.length.toLocaleString()}</span>
-            </div>
-          </div>
         </div>
         <button
           className="filter-toggle-btn"
