@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, memo } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { Search, Calendar, Filter, TrendingUp, DollarSign, X } from "lucide-react";
 import "./TransactionsTable.css";
 
@@ -7,6 +7,7 @@ const TableRow = memo(({ tx, index, highlightText, getStatusClass, getStatusText
   const dateObj = new Date(tx.sentAt);
   const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getDate().toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
   const timeString = dateObj.toTimeString().split(" ")[0];
+  // Subject will be shown inline as a compact one-line element next to player name
 
   return (
     <tr className="table-row-animated">

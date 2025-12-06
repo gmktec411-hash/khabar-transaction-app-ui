@@ -1,0 +1,55 @@
+.confirm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.confirm-modal-content {
+  width: 92%;
+  max-width: 560px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 30px 60px rgba(16,24,40,0.3);
+  overflow: hidden;
+  animation: confirmSlideUp 240ms ease-out;
+}
+
+@keyframes confirmSlideUp {
+  from { transform: translateY(12px); opacity: 0 }
+  to { transform: translateY(0); opacity: 1 }
+}
+
+.confirm-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid #eef2f7;
+  background: linear-gradient(180deg, #fbfcfd 0%, #ffffff 100%);
+}
+
+.confirm-modal-title-group { display:flex; gap:12px; align-items:center }
+.confirm-modal-logo { width:48px; height:48px; border-radius:10px; object-fit:cover }
+.confirm-modal-title { margin:0; font-size:18px; color:#0f172a }
+.confirm-modal-subtitle { font-size:13px; color:#64748b }
+.confirm-modal-close { border:none; background:#f1f5f9; width:36px; height:36px; border-radius:8px; cursor:pointer }
+
+.confirm-modal-body { display:flex; gap:18px; padding:20px }
+.confirm-modal-icon { width:56px; height:56px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#fff5f5 0%,#fff1f2 100%); border-radius:12px; font-size:24px; color:#b91c1c }
+.confirm-modal-text { flex:1 }
+.confirm-modal-desc { margin:0; color:#334155; line-height:1.6; font-size:15px }
+
+.confirm-modal-footer { display:flex; gap:12px; justify-content:flex-end; padding:16px 20px; border-top:1px solid #f1f5f9; background:#fff }
+
+.confirm-modal-content.danger .confirm-modal-icon { background: linear-gradient(180deg,#fff1f0 0%,#fee2e2 100%); color:#b91c1c }
+.confirm-modal-content.danger .btn-primary { background: linear-gradient(135deg,#ef4444 0%, #dc2626 100%); box-shadow: 0 8px 20px rgba(220,38,38,0.12) }
+
+@media (max-width:480px) {
+  .confirm-modal-body { padding:14px; gap:12px }
+  .confirm-modal-desc { font-size:14px }
+}

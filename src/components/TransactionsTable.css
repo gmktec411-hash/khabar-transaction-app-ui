@@ -357,6 +357,7 @@
 /* Player Cell */
 .player-cell {
   position: relative;
+  overflow: visible; /* ensure tooltip can escape the cell */
 }
 
 .player-name {
@@ -366,10 +367,11 @@
   cursor: pointer;
 }
 
+/* Subject tooltip appears to the right (side) of the player name */
 .subject-tooltip {
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 8px);
+  top: calc(100% + 6px);
   transform: translateX(-50%);
   padding: 8px 12px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -378,29 +380,30 @@
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
-  max-width: 300px;
+  max-width: 320px;
   opacity: 0;
   pointer-events: none;
   transition: all var(--transition-normal);
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.18);
 }
 
 .subject-tooltip::after {
   content: '';
   position: absolute;
-  top: 100%;
+  top: -6px;
   left: 50%;
   transform: translateX(-50%);
   border: 6px solid transparent;
-  border-top-color: #764ba2;
+  border-bottom-color: #764ba2;
 }
 
-.player-name:hover .subject-tooltip,
-.player-name:active .subject-tooltip {
+.player-name:hover .subject-tooltip {
   opacity: 1;
-  bottom: calc(100% + 12px);
+  pointer-events: auto;
 }
+
+/* remove inline pill styles — tooltip below on hover */
 
 /* Amount Cell */
 .amount-cell {
@@ -598,10 +601,11 @@ mark.highlight {
   }
 
   .subject-tooltip {
-    left: 50%;
-    bottom: calc(100% + 8px);
-    transform: translateX(-50%);
-    max-width: 250px;
+    /* On small screens, keep the tooltip to the right but use smaller max width */
+    left: calc(100% + 6px);
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 220px;
     font-size: 11px;
     padding: 6px 10px;
     white-space: normal;

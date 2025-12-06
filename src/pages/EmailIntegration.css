@@ -161,7 +161,8 @@
   width: 100%;
   border-collapse: collapse;
   background: white;
-  min-width: 1200px;
+  /* allow table to flex and avoid forcing a large min-width */
+  min-width: 0;
 }
 
 .email-integration-table thead {
@@ -170,22 +171,24 @@
 }
 
 .email-integration-table th {
-  padding: 16px 12px;
+  padding: 10px 8px;
   text-align: left;
   font-weight: 700;
   color: #334155;
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
+  letter-spacing: 0.4px;
 }
 
 .email-integration-table td {
-  padding: 16px 12px;
+  padding: 8px 8px;
   border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
+  font-size: 13px;
   color: #334155;
-  white-space: nowrap;
+  vertical-align: middle;
+  /* allow wrapping / truncation rather than forcing huge widths */
+  white-space: normal;
+  word-break: break-word;
 }
 
 .email-integration-table tbody tr {
@@ -324,19 +327,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   flex-shrink: 0;
+  padding: 0;
 }
 
 .icon-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(16,24,40,0.06);
 }
+
+/* Compact dates column */
+.compact-dates .date-created {
+  font-weight: 600;
+}
+.compact-dates .date-updated {
+  font-size: 12px;
+  color: #64748b;
+}
+.muted { color: #64748b; font-size: 12px }
 
 .icon-btn:disabled {
   opacity: 0.5;
@@ -462,6 +476,41 @@
 
 .modal-body {
   padding: 24px;
+}
+
+/* Confirm Modal Specific */
+.confirm-modal .modal-header {
+  background: linear-gradient(90deg, #fff5f5 0%, #fff1f2 100%);
+}
+
+.confirm-modal .danger-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg,#fff1f0 0%, #fee2e2 100%);
+  border-radius: 12px;
+  color: #b91c1c;
+  font-size: 22px;
+  box-shadow: 0 6px 20px rgba(185,28,28,0.12);
+}
+
+.confirm-modal .modal-body p {
+  line-height: 1.6;
+}
+
+.confirm-modal .modal-footer {
+  background: transparent;
+}
+
+.confirm-modal .btn-primary {
+  background: linear-gradient(135deg,#ef4444 0%, #dc2626 100%);
+  box-shadow: 0 8px 20px rgba(220,38,38,0.15);
+}
+
+.confirm-modal .btn-primary:hover {
+  transform: translateY(-2px);
 }
 
 .modal-footer {
@@ -754,8 +803,10 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .email-integration-table {
-    min-width: 1000px;
+    min-width: 0;
+    font-size: 13px;
   }
+  .email-integration-table th, .email-integration-table td { padding: 8px 6px }
 }
 
 @media (max-width: 768px) {
@@ -771,12 +822,12 @@
 
   .email-integration-table {
     font-size: 12px;
-    min-width: 900px;
+    min-width: 0;
   }
 
   .email-integration-table th,
   .email-integration-table td {
-    padding: 12px 8px;
+    padding: 10px 6px;
   }
 
   .modal-content {

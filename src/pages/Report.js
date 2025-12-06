@@ -91,40 +91,45 @@ const Report = ({ transactions = [] }) => {
   const playerTotals = useMemo(() => {
     const map = {};
     filteredTransactions.forEach(tx => {
-      if (!map[tx.sender]) map[tx.sender] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, appTypes: {} };
+      // determine target player for this transaction: for received (S/C) it's the sender,
+      // for sent (I) it's the receiver (if available), otherwise fall back to sender
+      const targetPlayer = (["S", "C"].includes(tx.status)) ? tx.sender : (tx.receiver || tx.sender);
+
+      if (!map[targetPlayer]) map[targetPlayer] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, appTypes: {} };
+
       if (tx.status === "I") {
-        map[tx.sender].totalSent += tx.amount;
-        map[tx.sender].sentCount++;
+        map[targetPlayer].totalSent += tx.amount;
+        map[targetPlayer].sentCount++;
       }
       if (["S", "C"].includes(tx.status)) {
-        map[tx.sender].totalReceived += tx.amount;
-        map[tx.sender].receivedCount++;
+        map[targetPlayer].totalReceived += tx.amount;
+        map[targetPlayer].receivedCount++;
       }
 
       // Skip NA app types in player breakdown
       if (tx.appType && tx.appType.toUpperCase() !== 'NA') {
-        if (!map[tx.sender].appTypes[tx.appType])
-          map[tx.sender].appTypes[tx.appType] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, apps: {} };
+        if (!map[targetPlayer].appTypes[tx.appType])
+          map[targetPlayer].appTypes[tx.appType] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, apps: {} };
 
         if (tx.status === "I") {
-          map[tx.sender].appTypes[tx.appType].totalSent += tx.amount;
-          map[tx.sender].appTypes[tx.appType].sentCount++;
+          map[targetPlayer].appTypes[tx.appType].totalSent += tx.amount;
+          map[targetPlayer].appTypes[tx.appType].sentCount++;
         }
         if (["S", "C"].includes(tx.status)) {
-          map[tx.sender].appTypes[tx.appType].totalReceived += tx.amount;
-          map[tx.sender].appTypes[tx.appType].receivedCount++;
+          map[targetPlayer].appTypes[tx.appType].totalReceived += tx.amount;
+          map[targetPlayer].appTypes[tx.appType].receivedCount++;
         }
 
-        if (!map[tx.sender].appTypes[tx.appType].apps[tx.appName])
-          map[tx.sender].appTypes[tx.appType].apps[tx.appName] = { sent: 0, received: 0, sentCount: 0, receivedCount: 0 };
+        if (!map[targetPlayer].appTypes[tx.appType].apps[tx.appName])
+          map[targetPlayer].appTypes[tx.appType].apps[tx.appName] = { sent: 0, received: 0, sentCount: 0, receivedCount: 0 };
 
         if (tx.status === "I") {
-          map[tx.sender].appTypes[tx.appType].apps[tx.appName].sent += tx.amount;
-          map[tx.sender].appTypes[tx.appType].apps[tx.appName].sentCount++;
+          map[targetPlayer].appTypes[tx.appType].apps[tx.appName].sent += tx.amount;
+          map[targetPlayer].appTypes[tx.appType].apps[tx.appName].sentCount++;
         }
         if (["S", "C"].includes(tx.status)) {
-          map[tx.sender].appTypes[tx.appType].apps[tx.appName].received += tx.amount;
-          map[tx.sender].appTypes[tx.appType].apps[tx.appName].receivedCount++;
+          map[targetPlayer].appTypes[tx.appType].apps[tx.appName].received += tx.amount;
+          map[targetPlayer].appTypes[tx.appType].apps[tx.appName].receivedCount++;
         }
       }
     });

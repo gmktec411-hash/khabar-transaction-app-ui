@@ -10,6 +10,7 @@ import {
   updateTokenName
 } from "../api/outlookApi";
 import LoadingScreen from "../components/LoadingScreen";
+import ConfirmModal from "../components/ConfirmModal";
 import "./EmailIntegration.css";
 
 const EmailIntegration = () => {
@@ -22,6 +23,8 @@ const EmailIntegration = () => {
   const [loading, setLoading] = useState(false);
   const [loadingTokens, setLoadingTokens] = useState(true);
   const [notification, setNotification] = useState({ show: false, type: "", message: "" });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [accountToDelete, setAccountToDelete] = useState(null);
 
   // Add Email Form State - 3 fields
   const [newEmail, setNewEmail] = useState({
@@ -181,32 +184,35 @@ const EmailIntegration = () => {
   };
 
   const handleDeleteToken = async (account) => {
-    // First confirmation
-    const firstConfirm = window.confirm(`Do you want to delete the email "${account.name}" from the system?\n\nClick OK to continue or Cancel to abort.`);
-    if (!firstConfirm) {
-      return;
-    }
+    // Open modern confirmation modal instead of browser confirm dialogs
+    setAccountToDelete(account);
+    setShowDeleteModal(true);
+  };
 
-    // Second confirmation with warning
-    const secondConfirm = window.confirm(`⚠️ WARNING ⚠️\n\nThis email will be PERMANENTLY DELETED from the system.\n\nYou will need to RE-AUTHENTICATE this email if you want to add it again.\n\nAre you absolutely sure you want to proceed?`);
-    if (!secondConfirm) {
-      showNotification("info", "Deletion cancelled");
-      return;
-    }
+  const confirmDeleteToken = async () => {
+    if (!accountToDelete) return;
 
     try {
       setLoading(true);
-      const response = await deleteToken(user.adminId, account.userId, account.emailType);
+      const response = await deleteToken(user.adminId, accountToDelete.userId, accountToDelete.emailType);
 
       showNotification("success", response.message || "Email account deleted successfully!");
 
-      // Refresh token list from backend
+      // Close modal and refresh token list from backend
+      setShowDeleteModal(false);
+      setAccountToDelete(null);
       await fetchTokens();
     } catch (error) {
       showNotification("error", "Failed to delete token: " + (error.response?.data?.message || error.message));
     } finally {
       setLoading(false);
     }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setAccountToDelete(null);
+    showNotification("info", "Deletion cancelled");
   };
 
   const handleEditAccount = async () => {
@@ -327,21 +333,20 @@ const EmailIntegration = () => {
               <thead>
                 <tr>
                   <th>SN</th>
-                  <th>Account Name (User ID)</th>
-                  <th>Email Address</th>
+                  <th>Account</th>
+                  <th>Email</th>
                   <th>Provider</th>
-                  <th>Token Status</th>
+                  <th>Status</th>
                   <th>Subscription</th>
-                  <th>Token Expires</th>
-                  <th>Created Date</th>
-                  <th>Last Updated</th>
+                  <th>Expires</th>
+                  <th>Registered Date</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {emailAccounts.length === 0 ? (
                   <tr>
-                    <td colSpan="10" className="empty-state">
+                    <td colSpan="9" className="empty-state">
                       <Mail size={48} />
                       <p>No email integrations configured</p>
                       <button className="btn-secondary" onClick={() => setShowAddModal(true)}>
@@ -374,8 +379,10 @@ const EmailIntegration = () => {
                           </span>
                         </td>
                         <td className="text-sm">{formatDateTime(account.tokenExpiresOn)}</td>
-                        <td className="text-sm">{formatDateTime(account.createdAt)}</td>
-                        <td className="text-sm">{formatDateTime(account.updatedAt)}</td>
+                        <td className="text-sm compact-dates">
+                          <div className="date-created">{formatDateTime(account.createdAt)}</div>
+                          <div className="date-updated muted">{formatDateTime(account.updatedAt)}</div>
+                        </td>
                         <td>
                           <div className="action-buttons">
                             <button
@@ -473,6 +480,20 @@ const EmailIntegration = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        open={showDeleteModal}
+        onClose={cancelDelete}
+        title={"Delete Email Integration"}
+        subtitle={document.title || 'Application'}
+        description={accountToDelete ? `${accountToDelete.name || accountToDelete.userId} will be removed from the system and you will need to re-authenticate it to add it back.` : ''}
+        onConfirm={confirmDeleteToken}
+        confirmText={"Delete Permanently"}
+        cancelText={"Cancel"}
+        loading={loading}
+        danger={true}
+        logoSrc={'/logo192.png'}
+      />
 
       {/* Edit Account Modal */}
       {showEditModal && editingAccount && (

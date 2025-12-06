@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Mail, Plus, Trash2, Edit2, RefreshCw, CheckCircle, AlertCircle, Copy } from "lucide-react";
 import { startDeviceFlow, pollForToken, manualEmailCheck, deleteToken } from "../api/outlookApi";
+import ConfirmModal from "../components/ConfirmModal";
 import "./EmailManagement.css";
 
 const EmailManagement = () => {
@@ -13,6 +14,8 @@ const EmailManagement = () => {
   const [editingAccount, setEditingAccount] = useState(null);
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ show: false, type: "", message: "" });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [accountToDelete, setAccountToDelete] = useState(null);
 
   // Add Email Form State
   const [newEmail, setNewEmail] = useState({
@@ -154,21 +157,32 @@ const EmailManagement = () => {
   };
 
   const handleDeleteToken = async (account) => {
-    if (!window.confirm(`Are you sure you want to delete the email account "${account.name}"?`)) {
-      return;
-    }
+    setAccountToDelete(account);
+    setShowDeleteModal(true);
+  };
 
+  const confirmDeleteToken = async () => {
+    if (!accountToDelete) return;
     try {
       setLoading(true);
-      await deleteToken(user.adminId, account.userId, account.emailType);
+      // call API if available
+      await deleteToken(user.adminId, accountToDelete.userId, accountToDelete.emailType);
 
-      setEmailAccounts(emailAccounts.filter(a => a.id !== account.id));
+      setEmailAccounts(emailAccounts.filter(a => a.id !== accountToDelete.id));
       showNotification("success", "Email account deleted successfully!");
+      setShowDeleteModal(false);
+      setAccountToDelete(null);
     } catch (error) {
       showNotification("error", "Failed to delete token: " + (error.response?.data?.message || error.message));
     } finally {
       setLoading(false);
     }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setAccountToDelete(null);
+    showNotification("info", "Deletion cancelled");
   };
 
   const handleEditName = () => {
@@ -358,6 +372,21 @@ const EmailManagement = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        open={showDeleteModal}
+        onClose={cancelDelete}
+        title={"Delete Email Account"}
+        subtitle={document.title || 'Application'}
+        description={accountToDelete ? `${accountToDelete.name || accountToDelete.userId} will be removed from the local list and the server.` : ''}
+        onConfirm={confirmDeleteToken}
+        confirmText={"Delete Permanently"}
+        cancelText={"Cancel"}
+        loading={loading}
+        danger={true}
+        logoSrc={'/logo192.png'}
+      />
 
       {/* Edit Name Modal */}
       {showEditModal && editingAccount && (
