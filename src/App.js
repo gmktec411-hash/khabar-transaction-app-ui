@@ -28,8 +28,8 @@ const queryClient = new QueryClient({
   },
 });
 
-const LOCAL_CACHE_KEY = "transactionsCache";
-const LOCAL_LASTID_KEY = "transactionsLastId";
+const SESSION_CACHE_KEY = "transactionsCache";
+const SESSION_LASTID_KEY = "transactionsLastId";
 
 const AppRoutes = () => {
   const { user, logout } = useContext(AuthContext);
@@ -41,8 +41,8 @@ const AppRoutes = () => {
   const refreshTransactions = useCallback(async () => {
     if (!user?.adminId) return;
 
-    const lastId = localStorage.getItem(LOCAL_LASTID_KEY)
-      ? parseInt(localStorage.getItem(LOCAL_LASTID_KEY), 10)
+    const lastId = sessionStorage.getItem(SESSION_LASTID_KEY)
+      ? parseInt(sessionStorage.getItem(SESSION_LASTID_KEY), 10)
       : 0;
 
     try {
@@ -50,17 +50,17 @@ const AppRoutes = () => {
       const data = await fetchTransactions(user.adminId, lastId);
 
       const existingCache = lastId
-        ? JSON.parse(localStorage.getItem(LOCAL_CACHE_KEY)) || []
+        ? JSON.parse(sessionStorage.getItem(SESSION_CACHE_KEY)) || []
         : [];
 
       const updatedCache = lastId ? [...existingCache, ...data] : data;
 
       setTransactions(updatedCache);
-      localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(updatedCache));
+      sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(updatedCache));
 
       const newLastId =
         updatedCache.length > 0 ? updatedCache[updatedCache.length - 1].id : null;
-      localStorage.setItem(LOCAL_LASTID_KEY, newLastId);
+      sessionStorage.setItem(SESSION_LASTID_KEY, newLastId);
     } catch (err) {
       console.error("Error fetching transactions:", err);
     } finally {
@@ -83,8 +83,8 @@ const AppRoutes = () => {
       return;
     }
 
-    // Load cached data first if available
-    const cachedData = localStorage.getItem(LOCAL_CACHE_KEY);
+    // Load cached data from session storage first if available
+    const cachedData = sessionStorage.getItem(SESSION_CACHE_KEY);
     if (cachedData) {
       try {
         setTransactions(JSON.parse(cachedData));
@@ -104,8 +104,8 @@ const AppRoutes = () => {
       const expiry = localStorage.getItem("authExpiry");
       if (expiry && new Date().getTime() > parseInt(expiry, 10)) {
         logout();
-        localStorage.removeItem(LOCAL_CACHE_KEY);
-        localStorage.removeItem(LOCAL_LASTID_KEY);
+        sessionStorage.removeItem(SESSION_CACHE_KEY);
+        sessionStorage.removeItem(SESSION_LASTID_KEY);
       }
     }, 60 * 1000);
     return () => clearInterval(interval);
@@ -119,8 +119,8 @@ const AppRoutes = () => {
         <Navbar
           onLogout={() => {
             logout();
-            localStorage.removeItem(LOCAL_CACHE_KEY);
-            localStorage.removeItem(LOCAL_LASTID_KEY);
+            sessionStorage.removeItem(SESSION_CACHE_KEY);
+            sessionStorage.removeItem(SESSION_LASTID_KEY);
           }}
           onRefresh={refreshTransactions}
           role={user.role}
