@@ -5,20 +5,20 @@
 /* Metrics Grid */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-bottom: 30px;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
 .metric-card {
   background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
-  gap: 20px;
-  transition: all 0.3s ease;
+  gap: 12px;
+  transition: all 0.18s ease;
   position: relative;
   overflow: hidden;
 }
@@ -57,9 +57,9 @@
 }
 
 .metric-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,19 +91,28 @@
 }
 
 .metric-value {
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 700;
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
   color: #1e293b;
   line-height: 1;
 }
 
 .metric-label {
-  font-size: 14px;
+  font-size: 12px;
   color: #64748b;
-  margin: 0 0 8px 0;
+  margin: 0;
   font-weight: 500;
 }
+
+/* Compact table used in Recent Transactions */
+.compact-card .card-header { padding: 12px 14px }
+.compact-body { padding: 10px 14px; max-height: 420px; overflow-y: auto }
+.compact-table { width: 100%; border-collapse: collapse; font-size: 13px }
+.compact-table thead th { text-align: left; font-size: 12px; padding: 8px 6px; color: #475569 }
+.compact-table td { padding: 8px 6px; border-bottom: 1px solid #f1f5f9 }
+.compact-row td.player-cell { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.compact-row td.app-cell { max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
 
 .metric-badge {
   display: inline-block;
@@ -436,4 +445,60 @@
 
 .card-body::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Compact overrides: make dashboard denser and show more data */
+.metrics-grid.compact, .metrics-grid {
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.metric-card.compact, .metric-card {
+  padding: 12px 14px;
+  border-radius: 12px;
+  gap: 12px;
+}
+
+.metric-icon { width: 48px; height: 48px }
+.metric-value { font-size: 20px }
+.metric-label { font-size: 12px }
+
+/* Compact recent transactions table */
+.compact-card .card-header { padding: 12px 14px }
+.compact-body { padding: 10px 14px; max-height: 420px; overflow-y: auto }
+.compact-table { width: 100%; border-collapse: collapse; font-size: 13px }
+.compact-table thead th { text-align: left; font-size: 12px; padding: 8px 6px; color: #475569 }
+.compact-table td { padding: 8px 6px; border-bottom: 1px solid #f1f5f9 }
+.compact-row td.player-cell { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.compact-row td.app-cell { max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+
+/* Stats and grid density */
+.stats-row { grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px }
+.stat-card { padding: 10px 12px; border-radius: 10px }
+.dashboard-grid { grid-template-columns: repeat(3, 1fr); gap: 12px }
+.dashboard-card { border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06) }
+.card-header { padding: 12px 14px }
+.card-body { padding: 12px 14px; max-height: 520px }
+
+/* Top lists compact */
+.top-list { gap: 8px }
+.top-item { padding: 10px; gap: 12px; border-radius: 10px }
+.top-rank { width: 36px; height: 36px; font-size: 13px }
+
+/* Hide original heavy transaction items when compact table is used */
+.transaction-list.compact-hidden { display: none }
+
+@media (max-width: 1024px) {
+  .dashboard-grid { grid-template-columns: repeat(2, 1fr) }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr) }
+}
+
+@media (max-width: 768px) {
+  .metrics-grid { grid-template-columns: 1fr }
+  .dashboard-grid { grid-template-columns: 1fr }
+  .stats-row { grid-template-columns: 1fr }
+  .metric-card { padding: 14px }
+  .metric-value { font-size: 18px }
+  .card-body { max-height: 420px }
 }

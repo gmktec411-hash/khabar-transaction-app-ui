@@ -1,0 +1,65 @@
+/* Compact theme overrides to increase information density across the app */
+
+:root {
+  /* Reduce spacing */
+  --spacing-xs: 6px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+
+  /* Reduce radii */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+
+  /* Slightly smaller font scale for denser UI */
+  --font-xs: 0.7rem;
+  --font-sm: 0.82rem;
+  --font-base: 0.95rem;
+  --font-lg: 1.05rem;
+  --font-2xl: 1.35rem;
+  --font-3xl: 1.7rem;
+}
+
+/* Compact page container */
+.page-container {
+  padding: calc(var(--spacing-lg) + 4px);
+  max-width: 1300px;
+}
+
+/* Tables: reduce padding and font size */
+table { font-size: var(--font-sm); }
+th { padding: 8px 10px; }
+td { padding: 8px 10px; }
+
+/* Buttons: slightly tighter */
+.btn-primary, .btn-secondary { padding: 8px 12px; font-size: var(--font-sm); }
+
+/* Cards */
+.table-card, .content-card, .dashboard-card, .metric-card { padding: 10px 12px; border-radius: var(--radius-md); }
+
+/* Compact lists */
+.transaction-item, .top-item { padding: 8px; gap: 8px; }
+
+/* Reduce modal paddings */
+.modal-content, .confirm-modal-content { padding: 12px; max-width: 560px; }
+
+/* Make headers slightly smaller */
+.page-title { font-size: var(--font-2xl); }
+.card-header h2 { font-size: 15px; }
+
+/* Utility: compact table rows */
+.compact-row td { padding: 6px 8px; font-size: var(--font-sm); }
+
+/* Ensure compact tables scroll smoothly */
+.compact-body { max-height: 420px; overflow-y: auto; }
+
+@media (max-width: 1024px) {
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .page-container { padding: 12px; }
+  .metrics-grid, .dashboard-grid { grid-template-columns: 1fr; }
+}

@@ -2,9 +2,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 12px;
 }
 
 .page-subtitle {
@@ -17,15 +17,15 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 24px;
+  padding: 8px 12px;
   background: #2563eb;
   color: white;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
-  font-size: 14px;
+  transition: all 0.15s;
+  font-size: 13px;
 }
 
 .btn-primary:hover {
@@ -125,17 +125,17 @@
 }
 
 .email-accounts-table th {
-  padding: 16px;
+  padding: 10px 12px;
   text-align: left;
   font-weight: 600;
   color: #475569;
-  font-size: 13px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .email-accounts-table td {
-  padding: 16px;
+  padding: 10px 12px;
   border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
   color: #334155;
@@ -335,7 +335,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px;
+  padding: 12px;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -366,7 +366,7 @@
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 12px;
 }
 
 .modal-footer {

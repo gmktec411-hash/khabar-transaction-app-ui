@@ -45,7 +45,7 @@ const Dashboard = ({ transactions = [] }) => {
     const safeTransactions = Array.isArray(transactions) ? transactions : [];
     return [...safeTransactions]
       .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
-      .slice(0, 10);
+      .slice(0, 15);
   }, [transactions]);
 
   // Top players by transaction count
@@ -62,7 +62,7 @@ const Dashboard = ({ transactions = [] }) => {
     return Object.entries(playerMap)
       .map(([name, data]) => ({ name, ...data }))
       .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
+      .slice(0, 7);
   }, [transactions]);
 
   // Top apps by transaction count
@@ -79,7 +79,7 @@ const Dashboard = ({ transactions = [] }) => {
     return Object.entries(appMap)
       .map(([name, data]) => ({ name, ...data }))
       .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
+      .slice(0, 7);
   }, [transactions]);
 
   const getStatusText = (status) => {
@@ -195,31 +195,37 @@ const Dashboard = ({ transactions = [] }) => {
       {/* Content Grid */}
       <div className="dashboard-grid">
         {/* Recent Transactions */}
-        <div className="dashboard-card">
+        <div className="dashboard-card compact-card">
           <div className="card-header">
             <h2>Recent Transactions</h2>
             <span className="card-badge">{recentTransactions.length} latest</span>
           </div>
-          <div className="card-body">
+          <div className="card-body compact-body">
             {recentTransactions.length === 0 ? (
               <p className="empty-message">No recent transactions</p>
             ) : (
-              <div className="transaction-list">
-                {recentTransactions.map((tx) => (
-                  <div key={tx.id} className="transaction-item">
-                    <div className="transaction-info">
-                      <p className="transaction-player">{tx.sender}</p>
-                      <p className="transaction-app">{tx.appName}</p>
-                    </div>
-                    <div className="transaction-details">
-                      <p className="transaction-amount">${tx.amount.toFixed(2)}</p>
-                      <span className={`status-badge ${getStatusClass(tx.status)}`}>
-                        {getStatusText(tx.status)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <table className="compact-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Player</th>
+                    <th>App</th>
+                    <th className="text-right">Amount</th>
+                    <th className="text-center">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentTransactions.map((tx) => (
+                    <tr key={tx.id} className="compact-row">
+                      <td>{formatDate(tx.sentAt)}</td>
+                      <td className="player-cell">{tx.sender}</td>
+                      <td className="app-cell">{tx.appName}</td>
+                      <td className="text-right">${tx.amount.toFixed(2)}</td>
+                      <td className="text-center"><span className={`status-badge ${getStatusClass(tx.status)}`}>{getStatusText(tx.status)}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         </div>

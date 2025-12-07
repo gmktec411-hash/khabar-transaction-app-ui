@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo, useRef } from "react";
 import { Search, Calendar, Filter, TrendingUp, DollarSign, X } from "lucide-react";
+import debounce from "lodash.debounce";
 import "./TransactionsTable.css";
 
 // Memoized Table Row Component for better performance
@@ -49,14 +50,32 @@ TableRow.displayName = 'TableRow';
 
 const TransactionsTable = ({ transactions = [] }) => {
   const [sortConfig, setSortConfig] = useState({ key: "id", direction: "desc" });
-  const [visibleCount, setVisibleCount] = useState(50);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const [searchBy, setSearchBy] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [appTypeFilter, setAppTypeFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [showFilters, setShowFilters] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(50);
+
+  // Debounced search update
+  const debouncedSetSearch = useRef(
+    debounce((value) => {
+      setDebouncedSearchTerm(value);
+    }, 300)
+  ).current;
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSetSearch.cancel();
+    };
+  }, [debouncedSetSearch]);
 
   const requestSort = useCallback((key) => {
     setSortConfig(prev => ({
@@ -66,13 +85,47 @@ const TransactionsTable = ({ transactions = [] }) => {
   }, []);
 
   const highlightText = useCallback((text) => {
-    if (!searchTerm || !text) return text;
-    const regex = new RegExp(`(${searchTerm})`, "gi");
+    if (!debouncedSearchTerm || !text) return text;
+    const regex = new RegExp(`(${debouncedSearchTerm})`, "gi");
     const parts = text.split(regex);
     return parts.map((part, index) =>
       regex.test(part) ? <mark key={index} className="highlight">{part}</mark> : part
     );
-  }, [searchTerm]);
+  }, [debouncedSearchTerm]);
+
+  // Build player suggestions based on transactions and current appTypeFilter
+  useEffect(() => {
+    if (!Array.isArray(transactions)) return;
+    const names = new Set();
+    transactions.forEach(tx => {
+      if (!tx || !tx.sender) return;
+      if (appTypeFilter !== 'all' && tx.appType !== appTypeFilter) return;
+      names.add(tx.sender);
+    });
+    const list = Array.from(names).sort((a,b) => a.localeCompare(b));
+    setSuggestions(list);
+  }, [transactions, appTypeFilter]);
+
+  // Handle keyboard navigation in suggestion list
+  const handleSearchKeyDown = useCallback((e) => {
+    if (!showSuggestions) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveSuggestion(prev => Math.min(prev + 1, suggestions.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveSuggestion(prev => Math.max(prev - 1, 0));
+    } else if (e.key === 'Enter') {
+      if (activeSuggestion >= 0 && activeSuggestion < suggestions.length) {
+        setSearchTerm(suggestions[activeSuggestion]);
+      }
+      setShowSuggestions(false);
+      setActiveSuggestion(-1);
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+      setActiveSuggestion(-1);
+    }
+  }, [showSuggestions, suggestions, activeSuggestion]);
 
   const getStatusClass = useCallback((status) => {
     const statusMap = {
@@ -103,12 +156,14 @@ const TransactionsTable = ({ transactions = [] }) => {
   // Clear all filters
   const clearFilters = useCallback(() => {
     setSearchTerm("");
+    setDebouncedSearchTerm("");
+    debouncedSetSearch.cancel();
     setSearchBy("all");
     setStatusFilter("all");
     setAppTypeFilter("all");
     setDateFrom("");
     setDateTo("");
-  }, []);
+  }, [debouncedSetSearch]);
 
   // Filter transactions with optimized logic
   const filteredTransactions = useMemo(() => {
@@ -124,8 +179,8 @@ const TransactionsTable = ({ transactions = [] }) => {
       return txDate >= startOfMonth && txDate <= endOfMonth;
     });
 
-    if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase();
+    if (debouncedSearchTerm.trim()) {
+      const term = debouncedSearchTerm.toLowerCase();
       filtered = filtered.filter((tx) => {
         if (searchBy === "sender") return tx.sender?.toLowerCase().includes(term);
         if (searchBy === "receiver") return tx.receiver?.toLowerCase().includes(term);
@@ -159,7 +214,7 @@ const TransactionsTable = ({ transactions = [] }) => {
     }
 
     return filtered;
-  }, [transactions, searchTerm, searchBy, statusFilter, appTypeFilter, dateFrom, dateTo]);
+  }, [transactions, debouncedSearchTerm, searchBy, statusFilter, appTypeFilter, dateFrom, dateTo]);
 
   // Sort transactions with optimized comparisons
   const sortedTransactions = useMemo(() => {
@@ -189,8 +244,17 @@ const TransactionsTable = ({ transactions = [] }) => {
       });
     }
 
-    return sorted.slice(0, visibleCount);
-  }, [filteredTransactions, sortConfig, visibleCount]);
+    return sorted;
+  }, [filteredTransactions, sortConfig]);
+
+  // Paginated transactions - only show visibleCount items
+  const paginatedTransactions = useMemo(() => {
+    return sortedTransactions.slice(0, visibleCount);
+  }, [sortedTransactions, visibleCount]);
+
+  const loadMore = useCallback(() => {
+    setVisibleCount(prev => prev + 50);
+  }, []);
 
   const activeFiltersCount = useMemo(() => {
     let count = 0;
@@ -212,8 +276,8 @@ const TransactionsTable = ({ transactions = [] }) => {
       <div className="transactions-header">
         <div className="header-content">
           <h1 className="page-title">
-            <DollarSign size={32} />
-            Customer Transactions - {new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })}
+            <DollarSign size={28} />
+            Transactions
           </h1>
         </div>
         <button
@@ -240,15 +304,50 @@ const TransactionsTable = ({ transactions = [] }) => {
                   className="modern-input search-input"
                   placeholder="Search transactions..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSearchTerm(value);
+                    debouncedSetSearch(value);
+                    setShowSuggestions(true);
+                    setActiveSuggestion(-1);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onKeyDown={handleSearchKeyDown}
                 />
                 {searchTerm && (
-                  <button className="clear-btn" onClick={() => setSearchTerm("")}>
+                  <button className="clear-btn" onClick={() => {
+                    setSearchTerm("");
+                    setDebouncedSearchTerm("");
+                    debouncedSetSearch.cancel();
+                  }}>
                     <X size={16} />
                   </button>
                 )}
               </div>
             </div>
+
+              {/* Suggestions dropdown - only when searching by player or all and user has typed something */}
+              {showSuggestions && searchTerm.trim() && (searchBy === 'all' || searchBy === 'sender') && suggestions.length > 0 && (() => {
+                const filteredSuggestions = suggestions
+                  .filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()))
+                  .slice(0, 10);
+                return filteredSuggestions.length > 0 && (
+                  <div className="suggestions-wrapper">
+                    <ul className="suggestions-list">
+                      {filteredSuggestions.map((name, idx) => (
+                        <li
+                          key={name}
+                          className={`suggestion-item ${idx === activeSuggestion ? 'active' : ''}`}
+                          onMouseDown={(e) => { e.preventDefault(); setSearchTerm(name); setShowSuggestions(false); setActiveSuggestion(-1); }}
+                          onMouseEnter={() => setActiveSuggestion(idx)}
+                        >
+                          {name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })()}
 
             <div className="filter-section">
               <label className="filter-label">Search By</label>
@@ -362,8 +461,8 @@ const TransactionsTable = ({ transactions = [] }) => {
               </tr>
             </thead>
             <tbody>
-              {sortedTransactions.length > 0 ? (
-                sortedTransactions.map((tx, index) => (
+              {paginatedTransactions.length > 0 ? (
+                paginatedTransactions.map((tx, index) => (
                   <TableRow
                     key={tx.id}
                     tx={tx}
@@ -388,16 +487,22 @@ const TransactionsTable = ({ transactions = [] }) => {
           </table>
         </div>
 
-        {/* Load More */}
-        {visibleCount < filteredTransactions.length && (
+        {/* Load More Button */}
+        {visibleCount < sortedTransactions.length && (
           <div className="load-more-section">
-            <button
-              className="load-more-btn"
-              onClick={() => setVisibleCount(prev => prev + 50)}
-            >
-              <TrendingUp size={18} />
-              Load More ({visibleCount} of {filteredTransactions.length})
+            <button className="load-more-btn" onClick={loadMore}>
+              Load More ({Math.min(50, sortedTransactions.length - visibleCount)} more)
             </button>
+          </div>
+        )}
+
+        {/* Total Count Footer */}
+        {sortedTransactions.length > 0 && (
+          <div className="total-info">
+            Showing <strong>{paginatedTransactions.length}</strong> of <strong>{sortedTransactions.length}</strong> transactions
+            {filteredTransactions.length < transactions.length && (
+              <span className="filtered-note"> (filtered from {transactions.length} total)</span>
+            )}
           </div>
         )}
       </div>

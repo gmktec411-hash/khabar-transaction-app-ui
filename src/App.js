@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import TransactionsTable from "./components/TransactionsTable";
 import Report from "./pages/Report";
@@ -14,6 +16,17 @@ import EmailIntegration from "./pages/EmailIntegration";
 import ActivePlayers from "./pages/ActivePlayers";
 import LoadingScreen from "./components/LoadingScreen";
 import { fetchTransactions } from "./api/transactionsApi";
+
+// Create a client for React Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 const LOCAL_CACHE_KEY = "transactionsCache";
 const LOCAL_LASTID_KEY = "transactionsLastId";
@@ -174,11 +187,38 @@ const AppRoutes = () => {
 };
 
 const App = () => (
-  <AuthProvider>
-    <Router>
-      <AppRoutes />
-    </Router>
-  </AuthProvider>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <Router>
+        <AppRoutes />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#fff',
+              color: '#111827',
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            },
+            success: {
+              iconTheme: {
+                primary: '#10b981',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+      </Router>
+    </AuthProvider>
+  </QueryClientProvider>
 );
 
 export default App;

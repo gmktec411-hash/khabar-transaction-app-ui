@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { RotateCcw, LogOut, Settings, User } from "lucide-react";
+import { RotateCcw, LogOut, User } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import AppConfig from "../config/appConfig";
 import { getAvatarUrl } from "../utils/avatarUtils";
