@@ -232,42 +232,40 @@ const AppRoutes = () => {
         <Route
           path="/login"
           element={
-            user
-              ? (user.role === "admin" ? <Navigate to="/" /> : <Navigate to="/transactions" />)
-              : <LoginPage />
+            user ? <Navigate to="/" /> : <LoginPage />
           }
         />
         <Route
           path="/signup"
           element={
-            user
-              ? (user.role === "admin" ? <Navigate to="/" /> : <Navigate to="/transactions" />)
-              : <SignupPage />
+            user ? <Navigate to="/" /> : <SignupPage />
           }
         />
         <Route
           path="/"
           element={
-            user
-              ? (user.role === "admin" ? <Home transactions={transactions} dashboardSummary={dashboardSummary} /> : <Navigate to="/transactions" />)
-              : <Navigate to="/login" />
+            user ? <TransactionsTable transactions={transactions} /> : <Navigate to="/login" />
           }
         />
         <Route
-          path="/transactions"
-          element={user ? <TransactionsTable transactions={transactions} /> : <Navigate to="/login" />}
+          path="/dashboard"
+          element={
+            user && user.role === "admin"
+              ? <Home transactions={transactions} dashboardSummary={dashboardSummary} />
+              : <Navigate to="/" />
+          }
         />
         <Route
           path="/report"
-          element={user && user.role === "admin" ? <Report transactions={transactions} /> : <Navigate to="/transactions" />}
+          element={user && user.role === "admin" ? <Report transactions={transactions} /> : <Navigate to="/" />}
         />
         <Route
           path="/limits"
-          element={user && user.role === "admin" ? <Limits transactions={transactions} /> : <Navigate to="/transactions" />}
+          element={user && user.role === "admin" ? <Limits transactions={transactions} /> : <Navigate to="/" />}
         />
         <Route
           path="/email-integration"
-          element={user && user.role === "admin" ? <EmailIntegration /> : <Navigate to="/transactions" />}
+          element={user && user.role === "admin" ? <EmailIntegration /> : <Navigate to="/" />}
         />
         <Route
           path="/inactive-players"

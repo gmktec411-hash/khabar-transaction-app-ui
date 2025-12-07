@@ -65,8 +65,8 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
 
       {/* Center Links */}
       <div className="navbar-center desktop-menu">
-        {role === "admin" && <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>}
-        <Link to="/transactions" className={`nav-link ${location.pathname === '/transactions' ? 'active' : ''}`}>Transactions</Link>
+        <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Transactions</Link>
+        {role === "admin" && <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>Dashboard</Link>}
         {role === "admin" && <Link to="/report" className={`nav-link ${location.pathname === '/report' ? 'active' : ''}`}>Report</Link>}
         {role === "admin" && <Link to="/limits" className={`nav-link ${location.pathname === '/limits' ? 'active' : ''}`}>Limits</Link>}
         {role === "admin" && <Link to="/email-integration" className={`nav-link ${location.pathname === '/email-integration' ? 'active' : ''}`}>Email Integration</Link>}
@@ -121,8 +121,8 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
 
       {menuOpen && (
         <div className="mobile-menu">
-          {role === "admin" && <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Home</Link>}
-          <Link to="/transactions" className={`nav-link ${location.pathname === '/transactions' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Transactions</Link>
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Transactions</Link>
+          {role === "admin" && <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Dashboard</Link>}
           {role === "admin" && <Link to="/report" className={`nav-link ${location.pathname === '/report' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Report</Link>}
           {role === "admin" && <Link to="/limits" className={`nav-link ${location.pathname === '/limits' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Limits</Link>}
           {role === "admin" && <Link to="/email-integration" className={`nav-link ${location.pathname === '/email-integration' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Email Integration</Link>}
