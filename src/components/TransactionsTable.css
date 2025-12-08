@@ -283,6 +283,34 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* Table Card - Absolutely NO scroll restrictions */
+.transactions-page .table-card {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+.transactions-page .table-wrapper {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+.transactions-page .modern-table {
+  max-height: none !important;
+  height: auto !important;
+}
+
+.transactions-page tbody {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
 /* Modern Table */
 .modern-table {
   width: 100%;
@@ -294,9 +322,6 @@
 .modern-table thead {
   background: var(--primary-gradient);
   color: white;
-  position: sticky;
-  top: 0;
-  z-index: 10;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -337,8 +362,7 @@
 
 /* Table Row Animation */
 .table-row-animated {
-  animation: fadeInUp 0.3s ease-out both;
-  transition: all var(--transition-fast);
+  transition: background-color 0.15s ease;
 }
 
 .table-row-animated:nth-child(even) {
@@ -351,17 +375,7 @@
 
 .table-row-animated:hover {
   background: var(--bg-table-hover) !important;
-  transform: scale(1.002);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
-  position: relative;
-  z-index: 1;
 }
-
-.table-row-animated:nth-child(1) { animation-delay: 0.05s; }
-.table-row-animated:nth-child(2) { animation-delay: 0.1s; }
-.table-row-animated:nth-child(3) { animation-delay: 0.15s; }
-.table-row-animated:nth-child(4) { animation-delay: 0.2s; }
-.table-row-animated:nth-child(5) { animation-delay: 0.25s; }
 
 /* Text Alignment Utilities */
 .text-center {

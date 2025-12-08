@@ -206,9 +206,7 @@
 /* Tables */
 .table-wrapper {
   overflow-x: auto;
-  overflow-y: auto;
   border-radius: var(--radius-md);
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -255,10 +253,6 @@ tbody tr:nth-child(odd) {
 
 tbody tr:hover {
   background: var(--bg-table-hover) !important;
-  transform: scale(1.002);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
-  position: relative;
-  z-index: 1;
 }
 
 tbody tr:last-child td {

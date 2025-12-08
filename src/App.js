@@ -15,7 +15,7 @@ import InactivePlayers from "./pages/InactivePlayers";
 import EmailIntegration from "./pages/EmailIntegration";
 import ActivePlayers from "./pages/ActivePlayers";
 import LoadingScreen from "./components/LoadingScreen";
-import { fetchTransactions } from "./api/transactionsApi";
+import { fetchLatestTransactions, fetchAllTransactions, fetchNewTransactions } from "./api/transactionsApi";
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -30,6 +30,7 @@ const queryClient = new QueryClient({
 
 const LOCAL_CACHE_KEY = "transactionsCache";
 const LOCAL_LASTID_KEY = "transactionsLastId";
+const LOCAL_USER_KEY = "cachedUserId";
 
 const AppRoutes = () => {
   const { user, logout } = useContext(AuthContext);
@@ -37,7 +38,77 @@ const AppRoutes = () => {
   const [isLoading, setIsLoading] = useState(false);
   const hasLoadedRef = useRef(false);
   const currentUserRef = useRef(null);
+  const backgroundLoadingRef = useRef(false);
 
+  /**
+   * PHASE 2: BACKGROUND LOAD - Fetch ALL data silently
+   * Updates pages without blocking user
+   */
+  const backgroundLoad = useCallback(async () => {
+    if (!user?.adminId) return;
+
+    try {
+      console.log('🔄 PHASE 2: Loading all data in background...');
+
+      // Get ALL transactions
+      const allData = await fetchAllTransactions(user.adminId);
+
+      if (allData && allData.length > 0) {
+        // Update with complete data silently
+        setTransactions(allData);
+        localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(allData));
+        localStorage.setItem(LOCAL_USER_KEY, user.adminId.toString());
+
+        // Update lastId
+        const newLastId = allData[allData.length - 1].id;
+        localStorage.setItem(LOCAL_LASTID_KEY, newLastId.toString());
+
+        console.log(`✅ PHASE 2 COMPLETE: Loaded all ${allData.length} transactions`);
+      }
+
+      backgroundLoadingRef.current = false;
+    } catch (err) {
+      console.error("❌ Error in background load:", err);
+      backgroundLoadingRef.current = false;
+    }
+  }, [user]);
+
+  /**
+   * PHASE 1: INSTANT LOAD - Fetch latest transactions (FAST!)
+   * User sees data immediately
+   */
+  const instantLoad = useCallback(async () => {
+    if (!user?.adminId) return;
+
+    try {
+      setIsLoading(true);
+      console.log('⚡ PHASE 1: Fetching latest transactions...');
+
+      // Get latest 100 transactions
+      const latestData = await fetchLatestTransactions(user.adminId, 100);
+
+      if (latestData && latestData.length > 0) {
+        // Show latest data immediately
+        setTransactions(latestData);
+        console.log(`✅ PHASE 1 COMPLETE: Showing ${latestData.length} latest transactions`);
+      }
+
+      setIsLoading(false);
+
+      // PHASE 2: Start background load (user won't notice)
+      if (!backgroundLoadingRef.current) {
+        backgroundLoadingRef.current = true;
+        backgroundLoad();
+      }
+    } catch (err) {
+      console.error("❌ Error in instant load:", err);
+      setIsLoading(false);
+    }
+  }, [user, backgroundLoad]);
+
+  /**
+   * Refresh - Get only new transactions since last load
+   */
   const refreshTransactions = useCallback(async () => {
     if (!user?.adminId) return;
 
@@ -47,57 +118,81 @@ const AppRoutes = () => {
 
     try {
       setIsLoading(true);
-      const data = await fetchTransactions(user.adminId, lastId);
+      console.log(`🔄 REFRESH: Fetching new transactions (lastId: ${lastId})`);
 
-      const existingCache = lastId
-        ? JSON.parse(localStorage.getItem(LOCAL_CACHE_KEY)) || []
-        : [];
+      const data = await fetchNewTransactions(user.adminId, lastId);
 
-      const updatedCache = lastId ? [...existingCache, ...data] : data;
+      if (data.length === 0) {
+        console.log('✅ REFRESH: No new transactions');
+        setIsLoading(false);
+        return;
+      }
 
+      // Append new transactions to existing cache
+      const existingCache = JSON.parse(localStorage.getItem(LOCAL_CACHE_KEY)) || [];
+      const updatedCache = [...existingCache, ...data];
+
+      console.log(`✅ REFRESH: ${data.length} new transactions (Total: ${updatedCache.length})`);
+
+      // Update state and cache
       setTransactions(updatedCache);
       localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(updatedCache));
 
-      const newLastId =
-        updatedCache.length > 0 ? updatedCache[updatedCache.length - 1].id : null;
-      localStorage.setItem(LOCAL_LASTID_KEY, newLastId);
+      // Update lastId
+      if (updatedCache.length > 0) {
+        const newLastId = updatedCache[updatedCache.length - 1].id;
+        localStorage.setItem(LOCAL_LASTID_KEY, newLastId.toString());
+        console.log(`Updated lastId: ${newLastId}`);
+      }
     } catch (err) {
-      console.error("Error fetching transactions:", err);
+      console.error("❌ Error refreshing transactions:", err);
     } finally {
       setIsLoading(false);
     }
   }, [user]);
 
-  // Load transactions only once when user logs in
+  // Load transactions on user login
   useEffect(() => {
     if (!user?.adminId) {
       // User logged out, reset state
       hasLoadedRef.current = false;
       currentUserRef.current = null;
+      backgroundLoadingRef.current = false;
       setTransactions([]);
       return;
     }
 
-    // Check if we already loaded data for this user
+    // Check if we already loaded data for this user in this session
     if (hasLoadedRef.current && currentUserRef.current === user.adminId) {
       return;
     }
 
-    // Load cached data first if available
+    const cachedUserId = localStorage.getItem(LOCAL_USER_KEY);
     const cachedData = localStorage.getItem(LOCAL_CACHE_KEY);
-    if (cachedData) {
+    const hasCache = cachedUserId === user.adminId.toString() && cachedData;
+
+    // If cache exists for this user, load it immediately
+    if (hasCache) {
       try {
-        setTransactions(JSON.parse(cachedData));
+        const parsed = JSON.parse(cachedData);
+        setTransactions(parsed);
+        console.log(`📦 Loaded ${parsed.length} transactions from cache`);
+        console.log('💡 Click Refresh button to check for new transactions');
       } catch (err) {
-        console.error("Error parsing cached data:", err);
+        console.error("❌ Error parsing cached data:", err);
       }
     }
 
-    // Fetch fresh data only once
+    // Mark as loaded for this session
     hasLoadedRef.current = true;
     currentUserRef.current = user.adminId;
-    refreshTransactions();
-  }, [user, refreshTransactions]);
+
+    // If no cache, perform instant load (which triggers background load)
+    if (!hasCache) {
+      console.log('🚀 First-time login - starting instant load...');
+      instantLoad();
+    }
+  }, [user, instantLoad]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -106,6 +201,7 @@ const AppRoutes = () => {
         logout();
         localStorage.removeItem(LOCAL_CACHE_KEY);
         localStorage.removeItem(LOCAL_LASTID_KEY);
+        localStorage.removeItem(LOCAL_USER_KEY);
       }
     }, 60 * 1000);
     return () => clearInterval(interval);
@@ -121,6 +217,7 @@ const AppRoutes = () => {
             logout();
             localStorage.removeItem(LOCAL_CACHE_KEY);
             localStorage.removeItem(LOCAL_LASTID_KEY);
+            localStorage.removeItem(LOCAL_USER_KEY);
           }}
           onRefresh={refreshTransactions}
           role={user.role}
@@ -130,43 +227,31 @@ const AppRoutes = () => {
       <Routes>
         <Route
           path="/login"
-          element={
-            user
-              ? (user.role === "admin" ? <Navigate to="/" /> : <Navigate to="/transactions" />)
-              : <LoginPage />
-          }
+          element={user ? <Navigate to="/" /> : <LoginPage />}
         />
         <Route
           path="/signup"
-          element={
-            user
-              ? (user.role === "admin" ? <Navigate to="/" /> : <Navigate to="/transactions" />)
-              : <SignupPage />
-          }
+          element={user ? <Navigate to="/" /> : <SignupPage />}
         />
         <Route
           path="/"
-          element={
-            user
-              ? (user.role === "admin" ? <Home transactions={transactions} /> : <Navigate to="/transactions" />)
-              : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path="/transactions"
           element={user ? <TransactionsTable transactions={transactions} /> : <Navigate to="/login" />}
         />
         <Route
+          path="/dashboard"
+          element={user && user.role === "admin" ? <Home transactions={transactions} /> : <Navigate to="/" />}
+        />
+        <Route
           path="/report"
-          element={user && user.role === "admin" ? <Report transactions={transactions} /> : <Navigate to="/transactions" />}
+          element={user && user.role === "admin" ? <Report transactions={transactions} /> : <Navigate to="/" />}
         />
         <Route
           path="/limits"
-          element={user && user.role === "admin" ? <Limits transactions={transactions} /> : <Navigate to="/transactions" />}
+          element={user && user.role === "admin" ? <Limits transactions={transactions} /> : <Navigate to="/" />}
         />
         <Route
           path="/email-integration"
-          element={user && user.role === "admin" ? <EmailIntegration /> : <Navigate to="/transactions" />}
+          element={user && user.role === "admin" ? <EmailIntegration /> : <Navigate to="/" />}
         />
         <Route
           path="/inactive-players"

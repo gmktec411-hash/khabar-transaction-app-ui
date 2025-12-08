@@ -1,7 +1,48 @@
 import React, { useState, useEffect, useMemo, useCallback, memo, useRef } from "react";
-import { Search, Calendar, Filter, TrendingUp, DollarSign, X } from "lucide-react";
+import { Search, Calendar, Filter, TrendingUp, DollarSign, X, Receipt } from "lucide-react";
 import debounce from "lodash.debounce";
 import "./TransactionsTable.css";
+
+// Ultra Modern Transaction Logo Component
+const TransactionLogo = () => (
+  <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="transGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#667eea" />
+        <stop offset="100%" stopColor="#764ba2" />
+      </linearGradient>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    {/* Outer circle with gradient */}
+    <circle cx="17" cy="17" r="15" fill="url(#transGradient)" opacity="0.08" />
+    <circle cx="17" cy="17" r="15" stroke="url(#transGradient)" strokeWidth="1.5" fill="none" opacity="0.3" />
+
+    {/* Inner modern design - layered cards with exchange arrows */}
+    {/* Back card */}
+    <rect x="11" y="10" width="12" height="8" rx="1.5" fill="url(#transGradient)" opacity="0.2" />
+    {/* Front card */}
+    <rect x="9" y="14" width="12" height="9" rx="1.5" fill="url(#transGradient)" opacity="0.15" />
+    <rect x="9" y="14" width="12" height="9" rx="1.5" stroke="url(#transGradient)" strokeWidth="1.5" fill="none" filter="url(#glow)" />
+
+    {/* Transaction details lines on card */}
+    <line x1="11" y1="17" x2="19" y2="17" stroke="url(#transGradient)" strokeWidth="1.2" strokeLinecap="round" opacity="0.8" />
+    <line x1="11" y1="19.5" x2="16" y2="19.5" stroke="url(#transGradient)" strokeWidth="1.2" strokeLinecap="round" opacity="0.8" />
+
+    {/* Modern circular exchange arrows */}
+    <path d="M 22 15 L 25 17 L 22 19" stroke="url(#transGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    <path d="M 25 20 L 22 22 L 25 24" stroke="url(#transGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+
+    {/* Decorative dots */}
+    <circle cx="23.5" cy="17" r="1" fill="url(#transGradient)" opacity="0.6" />
+    <circle cx="23.5" cy="22" r="1" fill="url(#transGradient)" opacity="0.6" />
+  </svg>
+);
 
 // Memoized Table Row Component for better performance
 const TableRow = memo(({ tx, index, highlightText, getStatusClass, getStatusText }) => {
@@ -276,8 +317,8 @@ const TransactionsTable = ({ transactions = [] }) => {
       <div className="transactions-header">
         <div className="header-content">
           <h1 className="page-title">
-            <DollarSign size={28} />
-            Transactions
+            <TransactionLogo />
+            Transactions Record
           </h1>
         </div>
         <button

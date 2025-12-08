@@ -65,7 +65,7 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
 
       {/* Center Links */}
       <div className="navbar-center desktop-menu">
-        <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Transactions</Link>
+        <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
         {role === "admin" && <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>Dashboard</Link>}
         {role === "admin" && <Link to="/report" className={`nav-link ${location.pathname === '/report' ? 'active' : ''}`}>Report</Link>}
         {role === "admin" && <Link to="/limits" className={`nav-link ${location.pathname === '/limits' ? 'active' : ''}`}>Limits</Link>}
@@ -121,7 +121,7 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
 
       {menuOpen && (
         <div className="mobile-menu">
-          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Transactions</Link>
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Home</Link>
           {role === "admin" && <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Dashboard</Link>}
           {role === "admin" && <Link to="/report" className={`nav-link ${location.pathname === '/report' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Report</Link>}
           {role === "admin" && <Link to="/limits" className={`nav-link ${location.pathname === '/limits' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Limits</Link>}
