@@ -32,8 +32,8 @@ const queryClient = new QueryClient({
   },
 });
 
-const LOCAL_CACHE_KEY = "transactionsCache";
-const LOCAL_SUMMARY_KEY = "dashboardSummary";
+const SESSION_CACHE_KEY = "transactionsCache";
+const SESSION_SUMMARY_KEY = "dashboardSummary";
 
 const AppRoutes = () => {
   const { user, logout } = useContext(AuthContext);
@@ -63,7 +63,7 @@ const AppRoutes = () => {
 
       // Show data immediately
       setTransactions(latestData);
-      localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(latestData));
+      sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(latestData));
 
       setIsInitialLoading(false);
 
@@ -100,9 +100,9 @@ const AppRoutes = () => {
       setTransactions(allData);
       setDashboardSummary(summary);
 
-      // Cache complete data
-      localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(allData));
-      localStorage.setItem(LOCAL_SUMMARY_KEY, JSON.stringify(summary));
+      // Cache complete data in session storage
+      sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(allData));
+      sessionStorage.setItem(SESSION_SUMMARY_KEY, JSON.stringify(summary));
 
       setIsBackgroundLoading(false);
       backgroundLoadRef.current = false;
@@ -154,9 +154,9 @@ const AppRoutes = () => {
       return;
     }
 
-    // Load cached data first (instant)
-    const cachedData = localStorage.getItem(LOCAL_CACHE_KEY);
-    const cachedSummary = localStorage.getItem(LOCAL_SUMMARY_KEY);
+    // Load cached data from session storage first (instant)
+    const cachedData = sessionStorage.getItem(SESSION_CACHE_KEY);
+    const cachedSummary = sessionStorage.getItem(SESSION_SUMMARY_KEY);
 
     if (cachedData) {
       try {
@@ -186,8 +186,8 @@ const AppRoutes = () => {
       const expiry = localStorage.getItem("authExpiry");
       if (expiry && new Date().getTime() > parseInt(expiry, 10)) {
         logout();
-        localStorage.removeItem(LOCAL_CACHE_KEY);
-        localStorage.removeItem(LOCAL_SUMMARY_KEY);
+        sessionStorage.removeItem(SESSION_CACHE_KEY);
+        sessionStorage.removeItem(SESSION_SUMMARY_KEY);
       }
     }, 60 * 1000);
     return () => clearInterval(interval);
@@ -201,8 +201,8 @@ const AppRoutes = () => {
         <Navbar
           onLogout={() => {
             logout();
-            localStorage.removeItem(LOCAL_CACHE_KEY);
-            localStorage.removeItem(LOCAL_SUMMARY_KEY);
+            sessionStorage.removeItem(SESSION_CACHE_KEY);
+            sessionStorage.removeItem(SESSION_SUMMARY_KEY);
           }}
           onRefresh={refreshTransactions}
           role={user.role}

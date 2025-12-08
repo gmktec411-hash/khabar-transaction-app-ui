@@ -112,8 +112,8 @@ const AppRoutes = () => {
   const refreshTransactions = useCallback(async () => {
     if (!user?.adminId) return;
 
-    const lastId = localStorage.getItem(LOCAL_LASTID_KEY)
-      ? parseInt(localStorage.getItem(LOCAL_LASTID_KEY), 10)
+    const lastId = sessionStorage.getItem(SESSION_LASTID_KEY)
+      ? parseInt(sessionStorage.getItem(SESSION_LASTID_KEY), 10)
       : 0;
 
     try {
@@ -136,7 +136,7 @@ const AppRoutes = () => {
 
       // Update state and cache
       setTransactions(updatedCache);
-      localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(updatedCache));
+      sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(updatedCache));
 
       // Update lastId
       if (updatedCache.length > 0) {
