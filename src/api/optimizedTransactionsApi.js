@@ -1,5 +1,6 @@
 import axios from "axios";
 import AppConfig from "../config/appConfig";
+import { warn, error } from "../utils/logger";
 
 // Authorization token for API requests
 const token = "oGWc1pFEBr82no4BtiwAtw==";
@@ -31,7 +32,7 @@ export const fetchLatestTransactions = async (adminId, limit = 100) => {
   } catch (error) {
     // If v2 endpoint doesn't exist (404), fallback to v1
     if (error.response?.status === 404) {
-      console.warn('v2/latest endpoint not found, using fallback method');
+      warn('v2/latest endpoint not found, using fallback method');
       try {
         // Fetch with lastId=0 and limit
         const response = await api.get('/khabar/transactions/getAllTransactionsByAdminIdAndLastId', {
@@ -41,11 +42,11 @@ export const fetchLatestTransactions = async (adminId, limit = 100) => {
         const data = response.data;
         return Array.isArray(data) ? data.reverse().slice(0, limit) : [];
       } catch (fallbackError) {
-        console.error('Fallback method also failed:', fallbackError);
+        error('Fallback method also failed:', fallbackError);
         throw fallbackError;
       }
     }
-    console.error('Error fetching latest transactions:', error);
+    error('Error fetching latest transactions:', error);
     throw error;
   }
 };
@@ -65,10 +66,10 @@ export const fetchDashboardSummary = async (adminId) => {
   } catch (error) {
     // If v2 endpoint doesn't exist, return null
     if (error.response?.status === 404) {
-      console.warn('v2/dashboard endpoint not found, dashboard will calculate client-side');
+      warn('v2/dashboard endpoint not found, dashboard will calculate client-side');
       return null;
     }
-    console.error('Error fetching dashboard summary:', error);
+    error('Error fetching dashboard summary:', error);
     return null; // Don't throw, just return null
   }
 };
@@ -83,7 +84,7 @@ export const fetchNewTransactions = async (adminId, lastId, limit = 100) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching new transactions:', error);
+    error('Error fetching new transactions:', error);
     throw error;
   }
 };
@@ -104,18 +105,18 @@ export const fetchAllTransactions = async (adminId) => {
   } catch (error) {
     // If v2 endpoint doesn't exist (404), fallback to v1
     if (error.response?.status === 404) {
-      console.warn('v2/all endpoint not found, using v1 endpoint');
+      warn('v2/all endpoint not found, using v1 endpoint');
       try {
         const response = await api.get('/khabar/transactions/getAllTransactionsByAdminId', {
           params: { adminid: adminId } // Note: v1 uses 'adminid' (lowercase)
         });
         return response.data;
       } catch (fallbackError) {
-        console.error('Fallback method also failed:', fallbackError);
+        error('Fallback method also failed:', fallbackError);
         throw fallbackError;
       }
     }
-    console.error('Error fetching all transactions:', error);
+    error('Error fetching all transactions:', error);
     throw error;
   }
 };
@@ -130,7 +131,7 @@ export const fetchTransactionCount = async (adminId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching transaction count:', error);
+    error('Error fetching transaction count:', error);
     throw error;
   }
 };
@@ -145,7 +146,7 @@ export const fetchPaginatedTransactions = async (adminId, page = 0, size = 100) 
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching paginated transactions:', error);
+    error('Error fetching paginated transactions:', error);
     throw error;
   }
 };

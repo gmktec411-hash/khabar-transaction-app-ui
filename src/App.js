@@ -17,6 +17,7 @@ import EmailIntegration from "./pages/EmailIntegration";
 import ActivePlayers from "./pages/ActivePlayers";
 import LoadingScreen from "./components/LoadingScreen";
 import { fetchLatestTransactions, fetchAllTransactions, fetchNewTransactions } from "./api/transactionsApi";
+import { info, error } from "./utils/logger";
 import "./GlobalTableFixes.css";
 
 // Create a client for React Query
@@ -50,7 +51,7 @@ const AppRoutes = () => {
     if (!user?.adminId) return;
 
     try {
-      console.log('🔄 PHASE 2: Loading all data in background...');
+      info('🔄 PHASE 2: Loading all data in background...');
 
       // Get ALL transactions
       const allData = await fetchAllTransactions(user.adminId);
@@ -65,12 +66,12 @@ const AppRoutes = () => {
         const newLastId = allData[allData.length - 1].id;
         localStorage.setItem(LOCAL_LASTID_KEY, newLastId.toString());
 
-        console.log(`✅ PHASE 2 COMPLETE: Loaded all ${allData.length} transactions`);
+        info(`✅ PHASE 2 COMPLETE: Loaded all ${allData.length} transactions`);
       }
 
       backgroundLoadingRef.current = false;
     } catch (err) {
-      console.error("❌ Error in background load:", err);
+      error("❌ Error in background load:", err);
       backgroundLoadingRef.current = false;
     }
   }, [user]);
@@ -84,7 +85,7 @@ const AppRoutes = () => {
 
     try {
       setIsLoading(true);
-      console.log('⚡ PHASE 1: Fetching latest transactions...');
+      info('⚡ PHASE 1: Fetching latest transactions...');
 
       // Get latest 100 transactions
       const latestData = await fetchLatestTransactions(user.adminId, 100);
@@ -92,7 +93,7 @@ const AppRoutes = () => {
       if (latestData && latestData.length > 0) {
         // Show latest data immediately
         setTransactions(latestData);
-        console.log(`✅ PHASE 1 COMPLETE: Showing ${latestData.length} latest transactions`);
+        info(`✅ PHASE 1 COMPLETE: Showing ${latestData.length} latest transactions`);
       }
 
       setIsLoading(false);
@@ -103,7 +104,7 @@ const AppRoutes = () => {
         backgroundLoad();
       }
     } catch (err) {
-      console.error("❌ Error in instant load:", err);
+      error("❌ Error in instant load:", err);
       setIsLoading(false);
     }
   }, [user, backgroundLoad]);
@@ -120,12 +121,12 @@ const AppRoutes = () => {
 
     try {
       setIsLoading(true);
-      console.log(`🔄 REFRESH: Fetching new transactions (lastId: ${lastId})`);
+      info(`🔄 REFRESH: Fetching new transactions (lastId: ${lastId})`);
 
       const data = await fetchNewTransactions(user.adminId, lastId);
 
       if (data.length === 0) {
-        console.log('✅ REFRESH: No new transactions');
+        info('✅ REFRESH: No new transactions');
         setIsLoading(false);
         toast.success('Data is up to date!', {
           duration: 3000,
@@ -150,7 +151,7 @@ const AppRoutes = () => {
       const existingCache = JSON.parse(localStorage.getItem(LOCAL_CACHE_KEY)) || [];
       const updatedCache = [...existingCache, ...data];
 
-      console.log(`✅ REFRESH: ${data.length} new transactions (Total: ${updatedCache.length})`);
+      info(`✅ REFRESH: ${data.length} new transactions (Total: ${updatedCache.length})`);
 
       // Update state and cache
       setTransactions(updatedCache);
@@ -160,7 +161,7 @@ const AppRoutes = () => {
       if (updatedCache.length > 0) {
         const newLastId = updatedCache[updatedCache.length - 1].id;
         localStorage.setItem(LOCAL_LASTID_KEY, newLastId.toString());
-        console.log(`Updated lastId: ${newLastId}`);
+        info(`Updated lastId: ${newLastId}`);
       }
 
       // Show success toast with number of new records
@@ -181,7 +182,7 @@ const AppRoutes = () => {
         icon: '🔄',
       });
     } catch (err) {
-      console.error("❌ Error refreshing transactions:", err);
+      error("❌ Error refreshing transactions:", err);
       toast.error('Failed to refresh data. Please try again.', {
         duration: 4000,
         position: 'top-center',
@@ -227,10 +228,10 @@ const AppRoutes = () => {
       try {
         const parsed = JSON.parse(cachedData);
         setTransactions(parsed);
-        console.log(`📦 Loaded ${parsed.length} transactions from cache`);
-        console.log('💡 Click Refresh button to check for new transactions');
+        info(`📦 Loaded ${parsed.length} transactions from cache`);
+        info('💡 Click Refresh button to check for new transactions');
       } catch (err) {
-        console.error("❌ Error parsing cached data:", err);
+        error("❌ Error parsing cached data:", err);
       }
     }
 
@@ -240,7 +241,7 @@ const AppRoutes = () => {
 
     // If no cache, perform instant load (which triggers background load)
     if (!hasCache) {
-      console.log('🚀 First-time login - starting instant load...');
+      info('🚀 First-time login - starting instant load...');
       instantLoad();
     }
   }, [user, instantLoad]);

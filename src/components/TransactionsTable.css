@@ -349,7 +349,7 @@
 .modern-table td:nth-child(6) { width: 8%; }      /* App Type */
 
 .modern-table th:nth-child(7),
-.modern-table td:nth-child(7) { width: 13%; }     /* Amount */
+.modern-table td:nth-child(7) { width: 10%; }     /* Amount - Reduced for 8 digits */
 
 .modern-table th:nth-child(8),
 .modern-table td:nth-child(8) { width: 10%; }     /* Status */
@@ -441,19 +441,46 @@
   font-weight: 800;
 }
 
-/* Amount color matches status color */
-.amount-cell.positive {
-  color: #047857;
+/* Amount colors match status badge colors exactly */
+.amount-cell.amount-success {
+  color: #22c55e;
+  font-weight: 900;
 }
 
-.amount-cell.negative {
-  color: #dc2626;
+.amount-cell.amount-failed {
+  color: #ef4444;
+  font-weight: 900;
+}
+
+.amount-cell.amount-confirm {
+  color: #10b981;
+  font-weight: 900;
+}
+
+.amount-cell.amount-sent {
+  color: #8b5cf6;
+  font-weight: 900;
+}
+
+.amount-cell.amount-accept {
+  color: #10b981;
+  font-weight: 900;
+}
+
+.amount-cell.amount-request {
+  color: #eab308;
+  font-weight: 900;
+}
+
+.amount-cell.amount-checkemail {
+  color: #0ea5e9;
+  font-weight: 900;
 }
 
 .amount-value {
-  font-size: 12px;
-  font-weight: 800;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  font-weight: 900;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .status-col {
@@ -569,79 +596,54 @@
 
 /* App Type Color Variants - 5 Distinct Modern Colors */
 
-/* CA - CashApp - Electric Bright Green */
+/* CA - CashApp - Muted Green */
 .app-type-badge.app-type-ca {
-  background: linear-gradient(135deg, #00ff88 0%, #00d54b 50%, #00a037 100%) !important;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%) !important;
   color: white !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 3px 12px rgba(0, 213, 75, 0.5),
-              0 1px 3px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3) !important;
 }
 .app-type-badge.app-type-ca:hover {
-  box-shadow: 0 6px 24px rgba(0, 213, 75, 0.7),
-              0 3px 8px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4) !important;
 }
 
-/* CH - Chime - Vibrant Teal/Turquoise */
+/* CH - Chime - Muted Teal */
 .app-type-badge.app-type-ch {
-  background: linear-gradient(135deg, #00f5d4 0%, #00d9a6 50%, #00b386 100%) !important;
+  background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 50%, #0d9488 100%) !important;
   color: white !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 3px 12px rgba(0, 217, 166, 0.5),
-              0 1px 3px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(20, 184, 166, 0.3) !important;
 }
 .app-type-badge.app-type-ch:hover {
-  box-shadow: 0 6px 24px rgba(0, 217, 166, 0.7),
-              0 3px 8px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4) !important;
 }
 
-/* PP - PayPal - Deep Ocean Blue */
+/* PP - PayPal - Muted Blue */
 .app-type-badge.app-type-pp {
-  background: linear-gradient(135deg, #0099ff 0%, #0070ba 50%, #003087 100%) !important;
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%) !important;
   color: white !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 3px 12px rgba(0, 112, 186, 0.5),
-              0 1px 3px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
 }
 .app-type-badge.app-type-pp:hover {
-  box-shadow: 0 6px 24px rgba(0, 112, 186, 0.7),
-              0 3px 8px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
 }
 
-/* IHUB - iHub - Bright Cyan Blue */
+/* IHUB - iHub - Muted Cyan */
 .app-type-badge.app-type-ihub {
-  background: linear-gradient(135deg, #00d4ff 0%, #00b8e6 50%, #0091cc 100%) !important;
+  background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 50%, #0891b2 100%) !important;
   color: white !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 3px 12px rgba(0, 184, 230, 0.5),
-              0 1px 3px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(6, 182, 212, 0.3) !important;
 }
 .app-type-badge.app-type-ihub:hover {
-  box-shadow: 0 6px 24px rgba(0, 184, 230, 0.7),
-              0 3px 8px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4) !important;
 }
 
-/* NA - Not Available - Modern Slate Gray */
+/* NA - Not Available - Muted Gray */
 .app-type-badge.app-type-na {
   background: linear-gradient(135deg, #94a3b8 0%, #64748b 50%, #475569 100%) !important;
   color: white !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 3px 12px rgba(100, 116, 139, 0.4),
-              0 1px 3px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(100, 116, 139, 0.3) !important;
 }
 .app-type-badge.app-type-na:hover {
-  box-shadow: 0 6px 24px rgba(100, 116, 139, 0.6),
-              0 3px 8px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.4) !important;
 }
 
 .player-name {
@@ -712,25 +714,26 @@ mark.highlight {
 }
 
 
-/* Status Badges */
+/* Status Badges - Brighter and More Visible */
 .status-badge {
   display: inline-block;
-  padding: 4px var(--spacing-sm);
+  padding: 5px 10px;
   border-radius: var(--radius-sm);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   animation: scaleIn 0.2s ease-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-.status-success { background: var(--success-light); color: var(--success-color); }
-.status-failed { background: var(--error-light); color: var(--error-color); }
-.status-confirm { background: var(--info-light); color: var(--info-color); }
-.status-sent { background: var(--warning-light); color: var(--warning-color); }
-.status-accept { background: #d1fae5; color: #065f46; }
-.status-request { background: #fef3c7; color: #92400e; }
-.status-checkemail { background: #dbeafe; color: #1e40af; }
+.status-success { background: #22c55e; color: white; }
+.status-failed { background: #ef4444; color: white; }
+.status-confirm { background: #10b981; color: white; }
+.status-sent { background: #8b5cf6; color: white; }
+.status-accept { background: #10b981; color: white; }
+.status-request { background: #eab308; color: white; }
+.status-checkemail { background: #0ea5e9; color: white; }
 
 /* Total Row */
 .total-row {

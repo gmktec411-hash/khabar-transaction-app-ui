@@ -11,6 +11,7 @@ import {
 } from "../api/outlookApi";
 import LoadingScreen from "../components/LoadingScreen";
 import ConfirmModal from "../components/ConfirmModal";
+import { info, error } from "../utils/logger";
 import "./EmailIntegration.css";
 
 const EmailIntegration = () => {
@@ -57,7 +58,7 @@ const EmailIntegration = () => {
       setLoadingTokens(true);
       const response = await getTokensByAdmin(user.adminId);
 
-      console.log("Fetched tokens response:", response);
+      info("Fetched tokens response:", response);
 
       // Map backend response to frontend format
       const accounts = response.tokens.map((token, index) => ({
@@ -71,10 +72,10 @@ const EmailIntegration = () => {
         updatedAt: token.updatedAt
       }));
 
-      console.log("Mapped accounts:", accounts);
+      info("Mapped accounts:", accounts);
       setEmailAccounts(accounts);
-    } catch (error) {
-      console.error("Failed to fetch tokens:", error);
+    } catch (err) {
+      error("Failed to fetch tokens:", err);
       showNotification("error", "Failed to load email accounts from server");
     } finally {
       setLoadingTokens(false);

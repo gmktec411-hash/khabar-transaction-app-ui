@@ -50,18 +50,18 @@ const TableRow = memo(({ tx, index, highlightText, getStatusClass, getStatusText
   const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getDate().toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
   const timeString = dateObj.toTimeString().split(" ")[0];
 
-  // Determine amount color based on status - match status badge color
+  // Determine amount color based on status - match status badge color exactly
   const getAmountClass = (status) => {
-    // Success (S) and Confirm (C) = Green (positive)
-    if (status === 'S' || status === 'C' || status === 'A') {
-      return 'positive';
-    }
-    // Failed (F) = Red (negative)
-    else if (status === 'F') {
-      return 'negative';
-    }
-    // Sent (I), Request (R), Check Email (E) = Neutral (default positive)
-    return 'positive';
+    const statusMap = {
+      "S": "amount-success",
+      "F": "amount-failed",
+      "C": "amount-confirm",
+      "I": "amount-sent",
+      "A": "amount-accept",
+      "R": "amount-request",
+      "E": "amount-checkemail"
+    };
+    return statusMap[status] || "amount-success";
   };
 
   return (
@@ -88,7 +88,7 @@ const TableRow = memo(({ tx, index, highlightText, getStatusClass, getStatusText
           {tx.appType}
         </span>
       </td>
-      <td className={`text-right amount-cell ${getAmountClass(tx.status)}`}>
+      <td className={`text-center amount-cell ${getAmountClass(tx.status)}`}>
         <span className="amount-value">${tx.amount.toFixed(2)}</span>
       </td>
       <td className="text-center status-col">

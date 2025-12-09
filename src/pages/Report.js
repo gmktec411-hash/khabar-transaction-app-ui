@@ -65,14 +65,16 @@ const Report = ({ transactions = [] }) => {
       // Skip NA app types
       if (!tx.appType || tx.appType.toUpperCase() === 'NA') return;
 
-      if (!map[tx.appType]) map[tx.appType] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, apps: {} };
+      if (!map[tx.appType]) map[tx.appType] = { totalSent: 0, totalReceived: 0, sentCount: 0, receivedCount: 0, totalCount: 0, apps: {} };
       if (tx.status === "I") {
         map[tx.appType].totalSent += tx.amount;
         map[tx.appType].sentCount++;
+        map[tx.appType].totalCount++;
       }
       if (["S", "C"].includes(tx.status)) {
         map[tx.appType].totalReceived += tx.amount;
         map[tx.appType].receivedCount++;
+        map[tx.appType].totalCount++;
       }
 
       if (!map[tx.appType].apps[tx.appName]) map[tx.appType].apps[tx.appName] = { sent: 0, received: 0, sentCount: 0, receivedCount: 0 };
@@ -291,7 +293,6 @@ const Report = ({ transactions = [] }) => {
                 <th className="text-center">Total Received</th>
                 <th className="text-center">Total Sent</th>
                 <th className="text-center">Net Balance</th>
-                <th className="text-center">Transactions</th>
               </tr>
             </thead>
             <tbody>
@@ -307,7 +308,7 @@ const Report = ({ transactions = [] }) => {
                           <span className={`expand-icon ${expandedAppTypes[type] ? "expanded" : ""}`}>
                             <ChevronRight size={18} />
                           </span>
-                          <span className="app-type-tag">{type}</span>
+                          <span className={`app-type-tag app-type-${type.toLowerCase()}`}>{type}</span>
                         </td>
                         <td className="text-center amount-received">
                           ${data.totalReceived.toFixed(2)}
@@ -320,9 +321,6 @@ const Report = ({ transactions = [] }) => {
                         <td className={`text-center ${netBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
                           ${Math.abs(netBalance).toFixed(2)}
                           <span className="balance-arrow">{netBalance >= 0 ? '↑' : '↓'}</span>
-                        </td>
-                        <td className="text-center transaction-count">
-                          {data.receivedCount + data.sentCount}
                         </td>
                       </tr>
                       {expandedAppTypes[type] &&
@@ -343,9 +341,6 @@ const Report = ({ transactions = [] }) => {
                                 ${Math.abs(appNet).toFixed(2)}
                                 <span className="balance-arrow">{appNet >= 0 ? '↑' : '↓'}</span>
                               </td>
-                              <td className="text-center transaction-count">
-                                {aData.receivedCount + aData.sentCount}
-                              </td>
                             </tr>
                           );
                         })}
@@ -353,7 +348,7 @@ const Report = ({ transactions = [] }) => {
                   );
                 })}
               <tr className="grand-total-row">
-                <td className="text-left"><strong>Grand Total</strong></td>
+                <td className="text-left"><strong>Grand Total ({grandTotalsApp.receivedCount + grandTotalsApp.sentCount})</strong></td>
                 <td className="text-center">
                   <strong>${grandTotalsApp.received.toFixed(2)}</strong>
                   <span className="count-badge">{grandTotalsApp.receivedCount}</span>
@@ -367,9 +362,6 @@ const Report = ({ transactions = [] }) => {
                     ${Math.abs(grandTotalsApp.received - grandTotalsApp.sent).toFixed(2)}
                     <span className="balance-arrow">{(grandTotalsApp.received - grandTotalsApp.sent) >= 0 ? '↑' : '↓'}</span>
                   </strong>
-                </td>
-                <td className="text-center">
-                  <strong>{grandTotalsApp.receivedCount + grandTotalsApp.sentCount}</strong>
                 </td>
               </tr>
             </tbody>
@@ -406,7 +398,6 @@ const Report = ({ transactions = [] }) => {
                 <th className="text-center">Total Received</th>
                 <th className="text-center">Total Sent</th>
                 <th className="text-center">Net Balance</th>
-                <th className="text-center">Transactions</th>
               </tr>
             </thead>
             <tbody>
@@ -423,6 +414,7 @@ const Report = ({ transactions = [] }) => {
                             <ChevronRight size={18} />
                           </span>
                           <span className="player-name-text">{player}</span>
+                          <span className="count-badge">{data.receivedCount + data.sentCount}</span>
                         </td>
                         <td className="text-center amount-received">
                           ${data.totalReceived.toFixed(2)}
@@ -435,9 +427,6 @@ const Report = ({ transactions = [] }) => {
                         <td className={`text-center ${playerNet >= 0 ? 'net-positive' : 'net-negative'}`}>
                           ${Math.abs(playerNet).toFixed(2)}
                           <span className="balance-arrow">{playerNet >= 0 ? '↑' : '↓'}</span>
-                        </td>
-                        <td className="text-center transaction-count">
-                          {data.receivedCount + data.sentCount}
                         </td>
                       </tr>
 
@@ -460,9 +449,6 @@ const Report = ({ transactions = [] }) => {
                                   ${Math.abs(typeNet).toFixed(2)}
                                   <span className="balance-arrow">{typeNet >= 0 ? '↑' : '↓'}</span>
                                 </td>
-                                <td className="text-center transaction-count">
-                                  {aData.receivedCount + aData.sentCount}
-                                </td>
                               </tr>
                               {Object.entries(aData.apps).map(([appName, appData]) => {
                                 const appNetBalance = appData.received - appData.sent;
@@ -480,9 +466,6 @@ const Report = ({ transactions = [] }) => {
                                     <td className={`text-center ${appNetBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
                                       ${Math.abs(appNetBalance).toFixed(2)}
                                       <span className="balance-arrow">{appNetBalance >= 0 ? '↑' : '↓'}</span>
-                                    </td>
-                                    <td className="text-center transaction-count">
-                                      {appData.receivedCount + appData.sentCount}
                                     </td>
                                   </tr>
                                 );
@@ -508,9 +491,6 @@ const Report = ({ transactions = [] }) => {
                     ${Math.abs(grandTotalsPlayer.received - grandTotalsPlayer.sent).toFixed(2)}
                     <span className="balance-arrow">{(grandTotalsPlayer.received - grandTotalsPlayer.sent) >= 0 ? '↑' : '↓'}</span>
                   </strong>
-                </td>
-                <td className="text-center">
-                  <strong>{grandTotalsPlayer.receivedCount + grandTotalsPlayer.sentCount}</strong>
                 </td>
               </tr>
             </tbody>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import AppConfig from "../config/appConfig";
+import { error } from "../utils/logger";
 
 const OUTLOOK_API_URL = `${AppConfig.OUTLOOK_API_BASE_URL}/outlook/auth`;
 const TOKEN_API_URL = `${AppConfig.OUTLOOK_API_BASE_URL}/token`;
@@ -16,9 +17,9 @@ export const getTokensByAdmin = async (adminId) => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error("Error fetching tokens:", error);
-    throw error;
+  } catch (err) {
+    error("Error fetching tokens:", err);
+    throw err;
   }
 };
 
@@ -35,9 +36,9 @@ export const updateTokenName = async (adminId, userId, emailType, name) => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error("Error updating token name:", error);
-    throw error;
+  } catch (err) {
+    error("Error updating token name:", err);
+    throw err;
   }
 };
 
@@ -54,9 +55,9 @@ export const startDeviceFlow = async (adminId, userId, emailType) => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error("Error starting device flow:", error);
-    throw error;
+  } catch (err) {
+    error("Error starting device flow:", err);
+    throw err;
   }
 };
 
@@ -73,9 +74,9 @@ export const pollForToken = async (adminId, userId, emailType, deviceCode) => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error("Error polling for token:", error);
-    throw error;
+  } catch (err) {
+    error("Error polling for token:", err);
+    throw err;
   }
 };
 
@@ -92,9 +93,9 @@ export const manualEmailCheck = async (adminId, userId, emailType) => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error("Error checking emails:", error);
-    throw error;
+  } catch (err) {
+    error("Error checking emails:", err);
+    throw err;
   }
 };
 
@@ -111,9 +112,9 @@ export const deleteToken = async (adminId, userId, emailType) => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error("Error deleting token:", error);
-    throw error;
+  } catch (err) {
+    error("Error deleting token:", err);
+    throw err;
   }
 };
 
@@ -129,8 +130,8 @@ export const getSystemStats = async () => {
       },
     });
     return response.data;
-  } catch (error) {
-    console.error("Error getting stats:", error);
-    throw error;
+  } catch (err) {
+    error("Error getting stats:", err);
+    throw err;
   }
 };

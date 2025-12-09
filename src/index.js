@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { warn, info } from './utils/logger';
 
 const renderApp = () => {
   const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -16,11 +17,11 @@ const renderApp = () => {
 // Load external config (runtime)
 fetch("/config.js")
   .then(() => {
-    console.log("✅ Loaded external config.js");
+    info("✅ Loaded external config.js");
     renderApp();
   })
   .catch((err) => {
-    console.warn("⚠️ Could not load config.js, using defaults.", err);
+    warn("⚠️ Could not load config.js, using defaults.", err);
     window._env_ = {}; // fallback so app doesn’t crash
     renderApp();
   });

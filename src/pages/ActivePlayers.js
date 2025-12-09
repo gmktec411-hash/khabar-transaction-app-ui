@@ -334,7 +334,7 @@ const ActivePlayers = ({ transactions = [] }) => {
                       {player.appTypes.length > 0 ? (
                         <div className="app-type-badges">
                           {player.appTypes.map(appType => (
-                            <span key={appType} className="app-type-tag">{appType}</span>
+                            <span key={appType} className={`app-type-tag app-type-${appType.toLowerCase()}`}>{appType}</span>
                           ))}
                         </div>
                       ) : (

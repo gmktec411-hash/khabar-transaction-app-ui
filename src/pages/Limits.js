@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { BarChart3, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
+import { BarChart3, TrendingUp, Scale, DollarSign } from "lucide-react";
 import "./Limits.css";
 
 const Limits = ({ transactions = [] }) => {
@@ -129,17 +129,6 @@ const Limits = ({ transactions = [] }) => {
 
       {/* Summary Cards */}
       <div className="limits-summary">
-        <div className="summary-card summary-primary">
-          <div className="summary-icon">
-            <DollarSign size={24} />
-          </div>
-          <div className="summary-content">
-            <p className="summary-label">Total Sent</p>
-            <h3 className="summary-value">${grandTotals.totalSent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
-            <p className="summary-detail">{grandTotals.totalSentCount} transactions</p>
-          </div>
-        </div>
-
         <div className="summary-card summary-success">
           <div className="summary-icon">
             <TrendingUp size={24} />
@@ -151,9 +140,20 @@ const Limits = ({ transactions = [] }) => {
           </div>
         </div>
 
+        <div className="summary-card summary-primary">
+          <div className="summary-icon">
+            <DollarSign size={24} />
+          </div>
+          <div className="summary-content">
+            <p className="summary-label">Total Sent</p>
+            <h3 className="summary-value">${grandTotals.totalSent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+            <p className="summary-detail">{grandTotals.totalSentCount} transactions</p>
+          </div>
+        </div>
+
         <div className="summary-card summary-info">
           <div className="summary-icon">
-            <TrendingDown size={24} />
+            <Scale size={24} />
           </div>
           <div className="summary-content">
             <p className="summary-label">Net Balance</p>
@@ -175,8 +175,8 @@ const Limits = ({ transactions = [] }) => {
             <thead>
               <tr>
                 <th className="text-left">App Type</th>
-                <th className="text-center">Total Sent</th>
                 <th className="text-center">Total Received</th>
+                <th className="text-center">Total Sent</th>
                 <th className="text-center">Net Balance</th>
               </tr>
             </thead>
@@ -200,15 +200,15 @@ const Limits = ({ transactions = [] }) => {
                           <tr className="expandable-row" onClick={() => toggleExpandAppType(appType)}>
                             <td className="text-left app-type-cell">
                               <span className={`expand-arrow ${expandedAppTypes[appType] ? "expanded" : ""}`}>▶</span>
-                              <span className="app-type-badge">{appType}</span>
-                            </td>
-                            <td className="text-center amount-cell amount-sent">
-                              ${data.totalSent.toFixed(2)}
-                              <span className="count-badge">{data.sentCount}</span>
+                              <span className={`app-type-badge app-type-${appType.toLowerCase()}`}>{appType}</span>
                             </td>
                             <td className="text-center amount-cell amount-received">
                               ${data.totalReceived.toFixed(2)}
                               <span className="count-badge">{data.receivedCount}</span>
+                            </td>
+                            <td className="text-center amount-cell amount-sent">
+                              ${data.totalSent.toFixed(2)}
+                              <span className="count-badge">{data.sentCount}</span>
                             </td>
                             <td className={`text-center amount-cell ${netBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
                               ${Math.abs(netBalance).toFixed(2)}
@@ -222,18 +222,6 @@ const Limits = ({ transactions = [] }) => {
                               return (
                                 <tr key={appName} className="sub-row">
                                   <td className="text-left app-name-cell">{appName}</td>
-                                  <td className="text-center amount-cell amount-sent">
-                                    ${appData.sent.toFixed(2)}
-                                    {appType.toUpperCase() === 'CH' && (
-                                      <span
-                                        className={`limit-badge-top ${5000 - appData.sent < 500 ? 'limit-danger' : 'limit-safe'}`}
-                                        title={`Remaining sending limit: $${(5000 - appData.sent).toFixed(2)} out of $5,000 monthly limit`}
-                                      >
-                                        ${(5000 - appData.sent).toFixed(0)}
-                                      </span>
-                                    )}
-                                    <span className="count-badge">{appData.sentCount}</span>
-                                  </td>
                                   <td className="text-center amount-cell amount-received">
                                     ${appData.received.toFixed(2)}
                                     {appType.toUpperCase() === 'CH' && (
@@ -245,6 +233,18 @@ const Limits = ({ transactions = [] }) => {
                                       </span>
                                     )}
                                     <span className="count-badge">{appData.receivedCount}</span>
+                                  </td>
+                                  <td className="text-center amount-cell amount-sent">
+                                    ${appData.sent.toFixed(2)}
+                                    {appType.toUpperCase() === 'CH' && (
+                                      <span
+                                        className={`limit-badge-top ${5000 - appData.sent < 500 ? 'limit-danger' : 'limit-safe'}`}
+                                        title={`Remaining sending limit: $${(5000 - appData.sent).toFixed(2)} out of $5,000 monthly limit`}
+                                      >
+                                        ${(5000 - appData.sent).toFixed(0)}
+                                      </span>
+                                    )}
+                                    <span className="count-badge">{appData.sentCount}</span>
                                   </td>
                                   <td className={`text-center amount-cell ${appNetBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
                                     ${Math.abs(appNetBalance).toFixed(2)}
@@ -262,14 +262,14 @@ const Limits = ({ transactions = [] }) => {
                     <td className="text-left"><strong>Grand Total</strong></td>
                     <td className="text-center amount-cell">
                       <strong>
-                        ${grandTotals.totalSent.toFixed(2)}
-                        <span className="count-badge">{grandTotals.totalSentCount}</span>
+                        ${grandTotals.totalReceived.toFixed(2)}
+                        <span className="count-badge">{grandTotals.totalReceivedCount}</span>
                       </strong>
                     </td>
                     <td className="text-center amount-cell">
                       <strong>
-                        ${grandTotals.totalReceived.toFixed(2)}
-                        <span className="count-badge">{grandTotals.totalReceivedCount}</span>
+                        ${grandTotals.totalSent.toFixed(2)}
+                        <span className="count-badge">{grandTotals.totalSentCount}</span>
                       </strong>
                     </td>
                     <td className={`text-center amount-cell ${grandTotals.totalReceived - grandTotals.totalSent >= 0 ? 'text-success' : 'text-danger'}`}>

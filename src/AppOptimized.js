@@ -20,6 +20,7 @@ import {
   fetchAllTransactions,
   fetchDashboardSummary
 } from "./api/optimizedTransactionsApi";
+import { error } from "./utils/logger";
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -74,7 +75,7 @@ const AppRoutes = () => {
       }
 
     } catch (err) {
-      console.error("Error in instant load:", err);
+      error("Error in instant load:", err);
       setIsInitialLoading(false);
     }
   }, [user]);
@@ -108,7 +109,7 @@ const AppRoutes = () => {
       backgroundLoadRef.current = false;
 
     } catch (err) {
-      console.error("Error in background load:", err);
+      error("Error in background load:", err);
       setIsBackgroundLoading(false);
       backgroundLoadRef.current = false;
     }
@@ -132,7 +133,7 @@ const AppRoutes = () => {
 
       setIsInitialLoading(false);
     } catch (err) {
-      console.error("Error refreshing transactions:", err);
+      error("Error refreshing transactions:", err);
       setIsInitialLoading(false);
     }
   }, [user, backgroundLoad]);
@@ -162,7 +163,7 @@ const AppRoutes = () => {
       try {
         setTransactions(JSON.parse(cachedData));
       } catch (err) {
-        console.error("Error parsing cached data:", err);
+        error("Error parsing cached data:", err);
       }
     }
 
@@ -170,7 +171,7 @@ const AppRoutes = () => {
       try {
         setDashboardSummary(JSON.parse(cachedSummary));
       } catch (err) {
-        console.error("Error parsing cached summary:", err);
+        error("Error parsing cached summary:", err);
       }
     }
 

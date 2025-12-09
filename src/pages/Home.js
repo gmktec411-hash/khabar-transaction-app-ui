@@ -496,7 +496,7 @@ const Home = ({ transactions = [] }) => {
           </div>
           <div className="card-content">
             <p className="card-label">Daily Velocity</p>
-            <h3 className="card-value">{summaryStats.velocity.toFixed(1)}</h3>
+            <h3 className="card-value">{Math.round(summaryStats.velocity)}</h3>
             <p className="card-detail">transactions/day</p>
           </div>
         </div>
@@ -574,14 +574,13 @@ const Home = ({ transactions = [] }) => {
                   <th className="text-right">Sent</th>
                   <th className="text-right">Net Balance</th>
                   <th className="text-center">Apps Used</th>
-                  <th className="text-center">Total Txns</th>
                   <th className="text-right">Last Active</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPlayerMetrics.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="text-center no-results">
+                    <td colSpan="7" className="text-center no-results">
                       No players found matching "{searchTerm}"
                     </td>
                   </tr>
@@ -594,27 +593,29 @@ const Home = ({ transactions = [] }) => {
                           <span className="rank-badge">{index + 1}</span>
                         </td>
                         <td className="text-left player-name-cell">
-                          <span className={`activity-badge activity-${activity.level}`}>
-                            {activity.label}
-                          </span>
+                          <div className="activity-row">
+                            <span className={`activity-badge activity-${activity.level}`}>
+                              {activity.label}
+                            </span>
+                            <span className="count-badge">{player.totalTransactions}</span>
+                          </div>
                           <span className="player-name-text">{player.name}</span>
                         </td>
                         <td className="text-right amount-received">
-                          ${player.receivedAmount.toFixed(2)}
+                          ${Math.round(player.receivedAmount)}
                           <span className="count-badge">{player.receivedCount}</span>
                         </td>
                         <td className="text-right amount-sent">
-                          ${player.sentAmount.toFixed(2)}
+                          ${Math.round(player.sentAmount)}
                           <span className="count-badge">{player.sentCount}</span>
                         </td>
                         <td className={`text-right ${player.netBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
-                          ${Math.abs(player.netBalance).toFixed(2)}
+                          ${Math.round(Math.abs(player.netBalance))}
                           <span className="balance-arrow">{player.netBalance >= 0 ? '↑' : '↓'}</span>
                         </td>
                         <td className="text-center apps-used-cell" title={player.apps.join(', ')}>
                           {player.appCount}
                         </td>
-                        <td className="text-center">{player.totalTransactions}</td>
                         <td className="text-right last-active-cell">{formatDate(player.lastActive)}</td>
                       </tr>
                     );
@@ -674,20 +675,18 @@ const Home = ({ transactions = [] }) => {
                   <th className="text-right">Sent</th>
                   <th className="text-right">Net Balance</th>
                   <th className="text-center">Players</th>
-                  <th className="text-center">Total Txns</th>
                   <th className="text-right">Last Active</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredAppMetrics.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="text-center no-results">
+                    <td colSpan="7" className="text-center no-results">
                       No apps found matching "{searchTerm}"
                     </td>
                   </tr>
                 ) : (
                   filteredAppMetrics.slice(0, visibleCount).map((appTypeGroup, index) => {
-                    const activity = getActivityLevel(appTypeGroup.totalTransactions);
                     return (
                       <React.Fragment key={appTypeGroup.appType}>
                         {/* App Type Row - Expandable */}
@@ -697,25 +696,21 @@ const Home = ({ transactions = [] }) => {
                           </td>
                           <td className="text-left app-type-cell">
                             <span className={`expand-arrow ${expandedAppTypes[appTypeGroup.appType] ? "expanded" : ""}`}>▶</span>
-                            <span className="app-type-badge">{appTypeGroup.appType}</span>
-                            <span className={`activity-badge activity-${activity.level}`}>
-                              {activity.label}
-                            </span>
+                            <span className={`app-type-badge app-type-${appTypeGroup.appType.toLowerCase()}`}>{appTypeGroup.appType}</span>
                           </td>
                           <td className="text-right amount-received">
-                            ${appTypeGroup.receivedAmount.toFixed(2)}
+                            ${Math.round(appTypeGroup.receivedAmount)}
                             <span className="count-badge">{appTypeGroup.receivedCount}</span>
                           </td>
                           <td className="text-right amount-sent">
-                            ${appTypeGroup.sentAmount.toFixed(2)}
+                            ${Math.round(appTypeGroup.sentAmount)}
                             <span className="count-badge">{appTypeGroup.sentCount}</span>
                           </td>
                           <td className={`text-right ${appTypeGroup.netBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
-                            ${Math.abs(appTypeGroup.netBalance).toFixed(2)}
+                            ${Math.round(Math.abs(appTypeGroup.netBalance))}
                             <span className="balance-arrow">{appTypeGroup.netBalance >= 0 ? '↑' : '↓'}</span>
                           </td>
                           <td className="text-center">{appTypeGroup.playerCount}</td>
-                          <td className="text-center">{appTypeGroup.totalTransactions}</td>
                           <td className="text-right last-active-cell">{formatDate(appTypeGroup.lastActive)}</td>
                         </tr>
 
@@ -727,25 +722,27 @@ const Home = ({ transactions = [] }) => {
                               <tr key={app.name} className="sub-row">
                                 <td className="rank-col"></td>
                                 <td className="text-left app-name-cell">
-                                  <span className={`activity-badge activity-${appActivity.level}`}>
-                                    {appActivity.label}
-                                  </span>
+                                  <div className="activity-row">
+                                    <span className={`activity-badge activity-${appActivity.level}`}>
+                                      {appActivity.label}
+                                    </span>
+                                    <span className="count-badge">{app.totalTransactions}</span>
+                                  </div>
                                   <span className="app-name-text">{app.name}</span>
                                 </td>
                                 <td className="text-right amount-received">
-                                  ${app.receivedAmount.toFixed(2)}
+                                  ${Math.round(app.receivedAmount)}
                                   <span className="count-badge">{app.receivedCount}</span>
                                 </td>
                                 <td className="text-right amount-sent">
-                                  ${app.sentAmount.toFixed(2)}
+                                  ${Math.round(app.sentAmount)}
                                   <span className="count-badge">{app.sentCount}</span>
                                 </td>
                                 <td className={`text-right ${app.netBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
-                                  ${Math.abs(app.netBalance).toFixed(2)}
+                                  ${Math.round(Math.abs(app.netBalance))}
                                   <span className="balance-arrow">{app.netBalance >= 0 ? '↑' : '↓'}</span>
                                 </td>
                                 <td className="text-center">{app.playerCount}</td>
-                                <td className="text-center">{app.totalTransactions}</td>
                                 <td className="text-right last-active-cell">{formatDate(app.lastActive)}</td>
                               </tr>
                             );

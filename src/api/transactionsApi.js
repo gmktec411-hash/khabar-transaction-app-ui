@@ -1,5 +1,6 @@
 import axios from "axios";
 import AppConfig from "../config/appConfig";
+import { info, error } from "../utils/logger";
 
 const API_BASE_URL = AppConfig.API_BASE_URL;
 const API_LATEST_TRANSACTIONS = "/khabar/transactions/v2/latest";
@@ -16,7 +17,7 @@ const token = "oGWc1pFEBr82no4BtiwAtw==";
 export const fetchLatestTransactions = async (adminId, limit = 100) => {
   try {
     const url = `${API_BASE_URL}${API_LATEST_TRANSACTIONS}`;
-    console.log(`⚡ API Call: ${API_LATEST_TRANSACTIONS} (adminId: ${adminId}, limit: ${limit})`);
+    info(`⚡ API Call: ${API_LATEST_TRANSACTIONS} (adminId: ${adminId}, limit: ${limit})`);
 
     const response = await axios.get(url, {
       params: { adminId, limit },
@@ -27,11 +28,11 @@ export const fetchLatestTransactions = async (adminId, limit = 100) => {
       },
     });
 
-    console.log(`✅ Latest API Response: Received ${response.data?.length || 0} transactions`);
+    info(`✅ Latest API Response: Received ${response.data?.length || 0} transactions`);
     return response.data;
-  } catch (error) {
-    console.error("❌ Error fetching latest transactions:", error);
-    throw error;
+  } catch (err) {
+    error("❌ Error fetching latest transactions:", err);
+    throw err;
   }
 };
 
@@ -43,7 +44,7 @@ export const fetchLatestTransactions = async (adminId, limit = 100) => {
 export const fetchAllTransactions = async (adminId) => {
   try {
     const url = `${API_BASE_URL}${API_ALL_TRANSACTIONS}`;
-    console.log(`🔄 API Call: ${API_ALL_TRANSACTIONS} (adminId: ${adminId})`);
+    info(`🔄 API Call: ${API_ALL_TRANSACTIONS} (adminId: ${adminId})`);
 
     const response = await axios.get(url, {
       params: { adminId, lastId: 0 },
@@ -54,11 +55,11 @@ export const fetchAllTransactions = async (adminId) => {
       },
     });
 
-    console.log(`✅ All Data Response: Received ${response.data?.length || 0} transactions`);
+    info(`✅ All Data Response: Received ${response.data?.length || 0} transactions`);
     return response.data;
-  } catch (error) {
-    console.error("❌ Error fetching all transactions:", error);
-    throw error;
+  } catch (err) {
+    error("❌ Error fetching all transactions:", err);
+    throw err;
   }
 };
 
@@ -71,7 +72,7 @@ export const fetchAllTransactions = async (adminId) => {
 export const fetchNewTransactions = async (adminId, lastId) => {
   try {
     const url = `${API_BASE_URL}${API_REFRESH_TRANSACTIONS}`;
-    console.log(`🔄 API Call: ${API_REFRESH_TRANSACTIONS} (adminId: ${adminId}, lastId: ${lastId})`);
+    info(`🔄 API Call: ${API_REFRESH_TRANSACTIONS} (adminId: ${adminId}, lastId: ${lastId})`);
 
     const response = await axios.get(url, {
       params: { adminId, lastId },
@@ -82,11 +83,11 @@ export const fetchNewTransactions = async (adminId, lastId) => {
       },
     });
 
-    console.log(`✅ Refresh Response: Received ${response.data?.length || 0} new transactions`);
+    info(`✅ Refresh Response: Received ${response.data?.length || 0} new transactions`);
     return response.data;
-  } catch (error) {
-    console.error("❌ Error fetching new transactions:", error);
-    throw error;
+  } catch (err) {
+    error("❌ Error fetching new transactions:", err);
+    throw err;
   }
 };
 
@@ -105,8 +106,8 @@ export const loginUser = async (username, password) => {
       }
     );
     return response.data;
-  } catch (error) {
-    console.error("Error fetching transactions:", error);
+  } catch (err) {
+    error("Error fetching transactions:", err);
     return null;
   }
 };
