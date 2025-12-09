@@ -202,15 +202,15 @@ const Limits = ({ transactions = [] }) => {
                               <span className={`expand-arrow ${expandedAppTypes[appType] ? "expanded" : ""}`}>▶</span>
                               <span className="app-type-badge">{appType}</span>
                             </td>
-                            <td className="text-center amount-cell">
+                            <td className="text-center amount-cell amount-sent">
                               ${data.totalSent.toFixed(2)}
                               <span className="count-badge">{data.sentCount}</span>
                             </td>
-                            <td className="text-center amount-cell">
+                            <td className="text-center amount-cell amount-received">
                               ${data.totalReceived.toFixed(2)}
                               <span className="count-badge">{data.receivedCount}</span>
                             </td>
-                            <td className={`text-center amount-cell ${netBalance >= 0 ? 'text-success' : 'text-danger'}`}>
+                            <td className={`text-center amount-cell ${netBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
                               ${Math.abs(netBalance).toFixed(2)}
                               <span className="balance-indicator">{netBalance >= 0 ? '↑' : '↓'}</span>
                             </td>
@@ -222,7 +222,7 @@ const Limits = ({ transactions = [] }) => {
                               return (
                                 <tr key={appName} className="sub-row">
                                   <td className="text-left app-name-cell">{appName}</td>
-                                  <td className="text-center amount-cell">
+                                  <td className="text-center amount-cell amount-sent">
                                     ${appData.sent.toFixed(2)}
                                     {appType.toUpperCase() === 'CH' && (
                                       <span
@@ -234,7 +234,7 @@ const Limits = ({ transactions = [] }) => {
                                     )}
                                     <span className="count-badge">{appData.sentCount}</span>
                                   </td>
-                                  <td className="text-center amount-cell">
+                                  <td className="text-center amount-cell amount-received">
                                     ${appData.received.toFixed(2)}
                                     {appType.toUpperCase() === 'CH' && (
                                       <span
@@ -246,7 +246,7 @@ const Limits = ({ transactions = [] }) => {
                                     )}
                                     <span className="count-badge">{appData.receivedCount}</span>
                                   </td>
-                                  <td className={`text-center amount-cell ${appNetBalance >= 0 ? 'text-success' : 'text-danger'}`}>
+                                  <td className={`text-center amount-cell ${appNetBalance >= 0 ? 'net-positive' : 'net-negative'}`}>
                                     ${Math.abs(appNetBalance).toFixed(2)}
                                     <span className="balance-indicator">{appNetBalance >= 0 ? '↑' : '↓'}</span>
                                   </td>

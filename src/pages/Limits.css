@@ -175,6 +175,23 @@
   font-size: 15px;
 }
 
+/* Amount column colors */
+.amount-received {
+  color: #38a169;
+}
+
+.amount-sent {
+  color: #e53e3e;
+}
+
+.net-positive {
+  color: #38a169;
+}
+
+.net-negative {
+  color: #e53e3e;
+}
+
 .count-cell {
   text-align: center;
   color: #64748b;
@@ -342,52 +359,9 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .limits-table {
-    font-size: 13px;
-  }
 
-  .limits-table th,
-  .limits-table td {
-    padding: 14px 16px;
-  }
 
-  .summary-value {
-    font-size: 28px;
-  }
-}
 
-@media (max-width: 768px) {
-  .limits-summary {
-    grid-template-columns: 1fr;
-  }
-
-  .summary-card {
-    padding: 20px;
-  }
-
-  .summary-value {
-    font-size: 24px;
-  }
-
-  .limits-table {
-    font-size: 12px;
-  }
-
-  .limits-table th,
-  .limits-table td {
-    padding: 12px 10px;
-  }
-
-  .app-name-cell {
-    padding-left: 40px !important;
-  }
-
-  .app-type-badge {
-    font-size: 11px;
-    padding: 4px 10px;
-  }
-}
 
 /* Table Wrapper Scroll */
 .table-wrapper {

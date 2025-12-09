@@ -25,7 +25,7 @@
 /* Compact page container */
 .page-container {
   padding: calc(var(--spacing-lg) + 4px);
-  max-width: 1300px;
+  
 }
 
 /* Tables: reduce padding and font size */
@@ -55,11 +55,6 @@ td { padding: 8px 10px; }
 /* Ensure compact tables scroll smoothly */
 .compact-body { max-height: 420px; overflow-y: auto; }
 
-@media (max-width: 1024px) {
-  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-}
 
-@media (max-width: 768px) {
-  .page-container { padding: 12px; }
-  .metrics-grid, .dashboard-grid { grid-template-columns: 1fr; }
-}
+
+

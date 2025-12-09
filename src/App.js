@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext, useCallback, useRef } from "rea
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import TransactionsTable from "./components/TransactionsTable";
 import Report from "./pages/Report";
@@ -16,6 +17,7 @@ import EmailIntegration from "./pages/EmailIntegration";
 import ActivePlayers from "./pages/ActivePlayers";
 import LoadingScreen from "./components/LoadingScreen";
 import { fetchLatestTransactions, fetchAllTransactions, fetchNewTransactions } from "./api/transactionsApi";
+import "./GlobalTableFixes.css";
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -125,6 +127,22 @@ const AppRoutes = () => {
       if (data.length === 0) {
         console.log('✅ REFRESH: No new transactions');
         setIsLoading(false);
+        toast.success('Data is up to date!', {
+          duration: 3000,
+          position: 'top-center',
+          style: {
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            padding: '12px 18px',
+            borderRadius: '10px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
+            fontSize: '14px',
+            fontWeight: '500',
+            color: '#059669',
+          },
+          icon: '✓',
+        });
         return;
       }
 
@@ -144,8 +162,41 @@ const AppRoutes = () => {
         localStorage.setItem(LOCAL_LASTID_KEY, newLastId.toString());
         console.log(`Updated lastId: ${newLastId}`);
       }
+
+      // Show success toast with number of new records
+      toast.success(`${data.length} new ${data.length === 1 ? 'record' : 'records'} updated!`, {
+        duration: 4000,
+        position: 'top-center',
+        style: {
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(16, 185, 129, 0.3)',
+          padding: '12px 18px',
+          borderRadius: '10px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
+          fontSize: '14px',
+          fontWeight: '500',
+          color: '#059669',
+        },
+        icon: '🔄',
+      });
     } catch (err) {
       console.error("❌ Error refreshing transactions:", err);
+      toast.error('Failed to refresh data. Please try again.', {
+        duration: 4000,
+        position: 'top-center',
+        style: {
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          padding: '12px 18px',
+          borderRadius: '10px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
+          fontSize: '14px',
+          fontWeight: '500',
+          color: '#dc2626',
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -277,7 +328,7 @@ const App = () => (
       <Router>
         <AppRoutes />
         <Toaster
-          position="top-right"
+          position="top-center"
           toastOptions={{
             duration: 3000,
             style: {

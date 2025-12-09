@@ -11,7 +11,6 @@
 
 .profile-container {
   width: 100%;
-  max-width: 900px;
   animation: slideUp 0.5s ease-out;
 }
 
@@ -419,61 +418,6 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .profile-page {
-    padding: var(--spacing-md);
-  }
 
-  .profile-header-modern {
-    flex-direction: column;
-    text-align: center;
-    padding: var(--spacing-lg);
-  }
 
-  .profile-avatar-modern {
-    width: 100px;
-    height: 100px;
-  }
 
-  .profile-name {
-    font-size: var(--font-2xl);
-  }
-
-  .profile-tabs-modern {
-    margin: 0 var(--spacing-md);
-  }
-
-  .profile-content-modern {
-    padding: var(--spacing-lg);
-  }
-
-  .info-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-xs);
-  }
-
-  .feature-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .security-note {
-    flex-direction: column;
-    text-align: left;
-  }
-}
-
-@media (max-width: 480px) {
-  .profile-avatar-modern {
-    width: 80px;
-    height: 80px;
-  }
-
-  .profile-name {
-    font-size: var(--font-xl);
-  }
-
-  .feature-grid {
-    grid-template-columns: 1fr;
-  }
-}

@@ -515,37 +515,4 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .email-management-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 
-  .btn-primary {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .email-accounts-table {
-    font-size: 12px;
-  }
-
-  .email-accounts-table th,
-  .email-accounts-table td {
-    padding: 12px 8px;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-  }
-
-  .modal-content {
-    width: 95%;
-    max-width: none;
-  }
-
-  .user-code {
-    font-size: 24px;
-    letter-spacing: 2px;
-  }
-}

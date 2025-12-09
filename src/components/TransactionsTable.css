@@ -171,6 +171,7 @@
 /* Suggestions dropdown */
 .suggestions-wrapper {
   position: relative;
+  z-index: 1000;
 }
 
 .suggestions-list {
@@ -178,25 +179,32 @@
   top: 44px;
   left: 0;
   right: 0;
-  background: white;
-  border: 1px solid var(--border-light);
+  background: var(--bg-primary);
+  border: 2px solid var(--primary-color);
   border-radius: 8px;
   max-height: 220px;
   overflow-y: auto;
-  box-shadow: 0 8px 24px rgba(16,24,40,0.08);
-  z-index: 50;
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.25);
+  z-index: 1001;
 }
 
 .suggestion-item {
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--text-primary);
   cursor: pointer;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
 }
 
 .suggestion-item:hover,
 .suggestion-item.active {
-  background: var(--bg-secondary);
+  background: rgba(102, 126, 234, 0.1);
+  color: var(--primary-color);
 }
 
 .search-input {
@@ -298,6 +306,7 @@
   overflow: visible !important;
   overflow-x: auto !important;
   overflow-y: visible !important;
+  position: relative;
 }
 
 .transactions-page .modern-table {
@@ -317,7 +326,33 @@
   border-collapse: collapse;
   font-size: var(--font-sm);
   background: var(--bg-card);
+  table-layout: fixed;
 }
+
+/* Desktop Column Widths - Optimized for data size */
+.modern-table th:nth-child(1),
+.modern-table td:nth-child(1) { width: 4%; }      /* SN */
+
+.modern-table th:nth-child(2),
+.modern-table td:nth-child(2) { width: 13%; }     /* Date & Time */
+
+.modern-table th:nth-child(3),
+.modern-table td:nth-child(3) { width: 18%; }     /* Player Name */
+
+.modern-table th:nth-child(4),
+.modern-table td:nth-child(4) { width: 16%; }     /* Receiver */
+
+.modern-table th:nth-child(5),
+.modern-table td:nth-child(5) { width: 18%; }     /* App Name */
+
+.modern-table th:nth-child(6),
+.modern-table td:nth-child(6) { width: 8%; }      /* App Type */
+
+.modern-table th:nth-child(7),
+.modern-table td:nth-child(7) { width: 13%; }     /* Amount */
+
+.modern-table th:nth-child(8),
+.modern-table td:nth-child(8) { width: 10%; }     /* Status */
 
 .modern-table thead {
   background: var(--primary-gradient);
@@ -326,14 +361,15 @@
 }
 
 .modern-table th {
-  padding: 8px 10px;
-  font-weight: 600;
+  padding: 10px 5px;
+  font-weight: 700;
   text-transform: uppercase;
   font-size: 10px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   cursor: pointer;
   user-select: none;
   transition: all var(--transition-fast);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .modern-table th:hover {
@@ -353,28 +389,99 @@
 }
 
 .modern-table td {
-  padding: 8px 10px;
+  padding: 12px 6px;
   border-bottom: 1px solid var(--border-light);
   color: var(--text-secondary);
   transition: all var(--transition-fast);
-  font-size: 13px;
+  font-size: 11px;
+  white-space: nowrap;
+  line-height: 1.5;
+  font-weight: 500;
 }
 
-/* Table Row Animation */
+/* Column-specific styling */
+.sn-col {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+.date-cell {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+.player-cell {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.08) 0%, rgba(102, 126, 234, 0.02) 100%);
+  padding-left: 8px;
+}
+
+.receiver-col {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.app-name-col {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.app-type-col {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.amount-cell {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Amount color matches status color */
+.amount-cell.positive {
+  color: #047857;
+}
+
+.amount-cell.negative {
+  color: #dc2626;
+}
+
+.amount-value {
+  font-size: 12px;
+  font-weight: 800;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.status-col {
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+/* Table Row Animation - Subtle alternating rows */
 .table-row-animated {
-  transition: background-color 0.15s ease;
+  transition: background-color 0.2s ease;
 }
 
 .table-row-animated:nth-child(even) {
-  background: var(--bg-table-row-even);
+  background: rgba(248, 250, 252, 0.5);
 }
 
 .table-row-animated:nth-child(odd) {
-  background: var(--bg-table-row-odd);
+  background: var(--bg-card);
 }
 
 .table-row-animated:hover {
-  background: var(--bg-table-hover) !important;
+  background: rgba(102, 126, 234, 0.06) !important;
+  transform: scale(1.002);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table-row-animated:hover td:nth-child(3) {
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.15) 0%, rgba(102, 126, 234, 0.05) 100%);
 }
 
 /* Text Alignment Utilities */
@@ -417,6 +524,126 @@
   overflow: visible; /* ensure tooltip can escape the cell */
 }
 
+/* App Type Badge - Ultra Modern Design */
+.app-type-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 50%, #475569 100%);
+  color: white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2),
+              0 1px 3px rgba(0, 0, 0, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-type-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.app-type-badge:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3),
+              0 3px 8px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.app-type-badge:hover::before {
+  left: 100%;
+}
+
+/* App Type Color Variants - 5 Distinct Modern Colors */
+
+/* CA - CashApp - Electric Bright Green */
+.app-type-badge.app-type-ca {
+  background: linear-gradient(135deg, #00ff88 0%, #00d54b 50%, #00a037 100%) !important;
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 12px rgba(0, 213, 75, 0.5),
+              0 1px 3px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+.app-type-badge.app-type-ca:hover {
+  box-shadow: 0 6px 24px rgba(0, 213, 75, 0.7),
+              0 3px 8px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* CH - Chime - Vibrant Teal/Turquoise */
+.app-type-badge.app-type-ch {
+  background: linear-gradient(135deg, #00f5d4 0%, #00d9a6 50%, #00b386 100%) !important;
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 12px rgba(0, 217, 166, 0.5),
+              0 1px 3px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+.app-type-badge.app-type-ch:hover {
+  box-shadow: 0 6px 24px rgba(0, 217, 166, 0.7),
+              0 3px 8px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* PP - PayPal - Deep Ocean Blue */
+.app-type-badge.app-type-pp {
+  background: linear-gradient(135deg, #0099ff 0%, #0070ba 50%, #003087 100%) !important;
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 12px rgba(0, 112, 186, 0.5),
+              0 1px 3px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+.app-type-badge.app-type-pp:hover {
+  box-shadow: 0 6px 24px rgba(0, 112, 186, 0.7),
+              0 3px 8px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* IHUB - iHub - Bright Cyan Blue */
+.app-type-badge.app-type-ihub {
+  background: linear-gradient(135deg, #00d4ff 0%, #00b8e6 50%, #0091cc 100%) !important;
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 12px rgba(0, 184, 230, 0.5),
+              0 1px 3px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+.app-type-badge.app-type-ihub:hover {
+  box-shadow: 0 6px 24px rgba(0, 184, 230, 0.7),
+              0 3px 8px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* NA - Not Available - Modern Slate Gray */
+.app-type-badge.app-type-na {
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 50%, #475569 100%) !important;
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 12px rgba(100, 116, 139, 0.4),
+              0 1px 3px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+.app-type-badge.app-type-na:hover {
+  box-shadow: 0 6px 24px rgba(100, 116, 139, 0.6),
+              0 3px 8px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
 .player-name {
   font-weight: 400;
   color: var(--text-primary);
@@ -424,35 +651,35 @@
   cursor: pointer;
 }
 
-/* Subject tooltip appears to the right (side) of the player name */
+/* Subject tooltip appears to the right of the player name */
 .subject-tooltip {
   position: absolute;
-  left: 50%;
-  top: calc(100% + 6px);
-  transform: translateX(-50%);
-  padding: 6px 8px;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 12px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-radius: 8px;
   font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
-  max-width: 260px;
+  max-width: 300px;
   opacity: 0;
   pointer-events: none;
   transition: all var(--transition-normal);
-  z-index: 100;
-  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.14);
+  z-index: 1000;
+  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.25);
 }
 
-.subject-tooltip::after {
+.subject-tooltip::before {
   content: '';
   position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
   border: 6px solid transparent;
-  border-bottom-color: #764ba2;
+  border-right-color: #667eea;
 }
 
 .player-name:hover .subject-tooltip {
@@ -481,32 +708,9 @@ mark.highlight {
   padding: 2px 4px;
   border-radius: 3px;
   animation: pulse 0.5s ease-out;
+  text-decoration: none;
 }
 
-/* App Name Cell */
-.app-name-cell {
-  font-weight: 500;
-}
-
-/* App Badge */
-.app-badge {
-  display: inline-block;
-  padding: 4px var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  animation: scaleIn 0.2s ease-out;
-}
-
-.app-badge-ca { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
-.app-badge-ve { background: linear-gradient(135deg, #10b981, #059669); color: white; }
-.app-badge-ch { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
-.app-badge-pp { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
-.app-badge-sk { background: linear-gradient(135deg, #ec4899, #db2777); color: white; }
-.app-badge-ihub { background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; }
-.app-badge-default { background: linear-gradient(135deg, #64748b, #475569); color: white; }
 
 /* Status Badges */
 .status-badge {
@@ -640,59 +844,293 @@ mark.highlight {
   font-style: italic;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .modern-filters {
-    grid-template-columns: 1.2fr 1fr 1.5fr 0.8fr 0.8fr auto;
-  }
-}
+/* ================================
+   RESPONSIVE MOBILE DESIGN
+   ================================ */
 
+/* Tablet Adjustments (768px - 1024px) */
 @media (max-width: 1024px) {
-  .transactions-header {
-    flex-direction: column;
+  .modern-table th,
+  .modern-table td {
+    padding: 10px 4px;
+    font-size: 10px;
   }
 
-  .header-stats {
-    width: 100%;
+  .modern-table th:nth-child(1),
+  .modern-table td:nth-child(1) { width: 4%; }
+
+  .modern-table th:nth-child(2),
+  .modern-table td:nth-child(2) { width: 12%; }
+
+  .modern-table th:nth-child(3),
+  .modern-table td:nth-child(3) { width: 17%; }
+
+  .modern-table th:nth-child(4),
+  .modern-table td:nth-child(4) { width: 15%; }
+
+  .modern-table th:nth-child(5),
+  .modern-table td:nth-child(5) { width: 18%; }
+
+  .modern-table th:nth-child(6),
+  .modern-table td:nth-child(6) { width: 9%; }
+
+  .modern-table th:nth-child(7),
+  .modern-table td:nth-child(7) { width: 14%; }
+
+  .modern-table th:nth-child(8),
+  .modern-table td:nth-child(8) { width: 11%; }
+
+  .date-time {
+    gap: 1px;
   }
 
-  .modern-filters {
-    grid-template-columns: repeat(3, 1fr);
+  .date {
+    font-size: 9px;
+  }
+
+  .time {
+    font-size: 8px;
+  }
+
+  .app-type-badge {
+    padding: 3px 6px;
+    font-size: 8px;
+    letter-spacing: 0.4px;
+  }
+
+  .status-badge {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .amount-value {
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .amount-cell {
+    font-weight: 800;
   }
 }
 
+/* Mobile Optimizations (max-width: 768px) */
 @media (max-width: 768px) {
-  .stat-value {
-    font-size: var(--font-xl);
+  .transactions-page {
+    padding: 8px;
   }
 
   .modern-filters {
     grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .filter-section {
+    gap: 4px;
+  }
+
+  .date-range {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .date-separator {
+    display: none;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .modern-table {
-    font-size: 12px;
+    font-size: 9px;
   }
 
   .modern-table th,
   .modern-table td {
-    padding: 8px 6px;
+    padding: 8px 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Compact column widths for mobile */
+  .modern-table th:nth-child(1),
+  .modern-table td:nth-child(1) { width: 35px; }      /* SN */
+
+  .modern-table th:nth-child(2),
+  .modern-table td:nth-child(2) { width: 85px; }      /* Date */
+
+  .modern-table th:nth-child(3),
+  .modern-table td:nth-child(3) { width: 100px; }     /* Player */
+
+  .modern-table th:nth-child(4),
+  .modern-table td:nth-child(4) { width: 90px; }      /* Receiver */
+
+  .modern-table th:nth-child(5),
+  .modern-table td:nth-child(5) { width: 100px; }     /* App Name */
+
+  .modern-table th:nth-child(6),
+  .modern-table td:nth-child(6) { width: 50px; }      /* Type */
+
+  .modern-table th:nth-child(7),
+  .modern-table td:nth-child(7) { width: 75px; }      /* Amount */
+
+  .modern-table th:nth-child(8),
+  .modern-table td:nth-child(8) { width: 65px; }      /* Status */
+
+  .modern-table th {
+    font-size: 8px;
+    padding: 8px 3px;
+  }
+
+  .sn-col {
+    font-size: 8px;
+  }
+
+  .date-cell {
+    font-size: 8px;
+  }
+
+  .date {
+    font-size: 8px;
+  }
+
+  .time {
+    font-size: 7px;
+  }
+
+  .player-cell {
+    font-size: 9px;
+    padding-left: 4px;
+  }
+
+  .receiver-col {
+    font-size: 9px;
+  }
+
+  .app-name-col {
+    font-size: 9px;
+  }
+
+  .app-type-col {
+    font-size: 8px;
+  }
+
+  .app-type-badge {
+    padding: 2px 5px;
+    font-size: 7px;
+    letter-spacing: 0.3px;
+    border-radius: 6px;
+  }
+
+  .amount-cell {
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .amount-value {
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .status-badge {
+    padding: 2px 5px;
+    font-size: 8px;
+    letter-spacing: 0.3px;
   }
 
   .subject-tooltip {
-    /* On small screens, keep the tooltip to the right but use smaller max width */
-    left: calc(100% + 6px);
-    top: 50%;
-    transform: translateY(-50%);
-    max-width: 220px;
-    font-size: 11px;
-    padding: 6px 10px;
-    white-space: normal;
-    word-wrap: break-word;
+    display: none;
   }
 
-  .player-name:active .subject-tooltip {
-    opacity: 1;
-    bottom: calc(100% + 12px);
+  .load-more-btn {
+    padding: 6px 16px;
+    font-size: 11px;
+  }
+
+  .total-info {
+    font-size: 11px;
+    padding: 8px 12px;
   }
 }
+
+/* Extra Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+  .transactions-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .filter-toggle-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modern-table {
+    font-size: 8px;
+  }
+
+  .modern-table th,
+  .modern-table td {
+    padding: 6px 2px;
+  }
+
+  /* Ultra compact for very small screens */
+  .modern-table th:nth-child(1),
+  .modern-table td:nth-child(1) { width: 30px; }
+
+  .modern-table th:nth-child(2),
+  .modern-table td:nth-child(2) { width: 75px; }
+
+  .modern-table th:nth-child(3),
+  .modern-table td:nth-child(3) { width: 85px; }
+
+  .modern-table th:nth-child(4),
+  .modern-table td:nth-child(4) { width: 75px; }
+
+  .modern-table th:nth-child(5),
+  .modern-table td:nth-child(5) { width: 85px; }
+
+  .modern-table th:nth-child(6),
+  .modern-table td:nth-child(6) { width: 45px; }
+
+  .modern-table th:nth-child(7),
+  .modern-table td:nth-child(7) { width: 65px; }
+
+  .modern-table th:nth-child(8),
+  .modern-table td:nth-child(8) { width: 60px; }
+
+  .modern-table th {
+    font-size: 7px;
+  }
+
+  .sn-col,
+  .date-cell,
+  .player-cell,
+  .receiver-col,
+  .app-name-col,
+  .app-type-col,
+  .status-col {
+    font-size: 8px;
+  }
+
+  .amount-cell {
+    font-size: 9px;
+    font-weight: 800;
+  }
+
+  .amount-value {
+    font-size: 9px;
+    font-weight: 800;
+  }
+
+  .app-type-badge,
+  .status-badge {
+    font-size: 7px;
+    padding: 2px 4px;
+  }
+}
+

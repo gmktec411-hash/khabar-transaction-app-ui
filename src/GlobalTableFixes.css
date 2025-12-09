@@ -1,0 +1,209 @@
+/* ============================================================
+   GLOBAL TABLE FIXES FOR SEAMLESS MOBILE/DESKTOP EXPERIENCE
+   Professional UI Design - No Overlapping, Clear & Visible
+   ============================================================ */
+
+/* Universal Table Container */
+.table-wrapper,
+.table-card,
+.dashboard-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  padding: 0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* All Tables - Auto Layout for Data-Driven Column Sizing */
+table,
+.dashboard-table,
+.modern-table,
+.report-table,
+.limits-table,
+.players-table {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+  background: var(--bg-card, #ffffff);
+  font-size: 11px;
+  min-width: 1000px; /* Ensure minimum width for proper rendering */
+}
+
+/* Table Headers - Consistent Styling */
+table thead,
+.dashboard-table thead,
+.modern-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+table th,
+.dashboard-table th,
+.modern-table th {
+  padding: 14px 10px;
+  font-weight: 800;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Body Cells - Prevent Overlap */
+table td,
+.dashboard-table td,
+.modern-table td {
+  padding: 16px 10px;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #1a202c;
+  font-weight: 500;
+}
+
+/* Remove Ellipsis - Show Full Text */
+table td,
+table th,
+.dashboard-table td,
+.dashboard-table th {
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+/* Row Hover Effects */
+table tbody tr:hover,
+.dashboard-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.08) !important;
+  transform: scale(1.001);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.12);
+  transition: all 0.2s ease;
+}
+
+/* Alternating Row Colors for Better Readability */
+table tbody tr,
+.dashboard-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+table tbody tr:nth-child(even),
+.dashboard-table tbody tr:nth-child(even) {
+  background: rgba(248, 250, 252, 0.6);
+}
+
+table tbody tr:nth-child(odd),
+.dashboard-table tbody tr:nth-child(odd) {
+  background: #ffffff;
+}
+
+/* Text Alignment Classes */
+.text-left { text-align: left !important; }
+.text-center { text-align: center !important; }
+.text-right { text-align: right !important; }
+
+/* Amount Cells - Clear Visibility */
+.amount-cell,
+.amount-received,
+.amount-sent {
+  font-weight: 700;
+  font-size: 12px;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Courier New', monospace;
+  letter-spacing: 0.3px;
+}
+
+.amount-received {
+  color: #2f855a !important;
+  text-shadow: 0 1px 2px rgba(47, 133, 90, 0.1);
+}
+
+.amount-sent {
+  color: #c53030 !important;
+  text-shadow: 0 1px 2px rgba(197, 48, 48, 0.1);
+}
+
+/* Net Balance Colors */
+.net-positive {
+  color: #2f855a !important;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(47, 133, 90, 0.1);
+}
+
+.net-negative {
+  color: #c53030 !important;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(197, 48, 48, 0.1);
+}
+
+/* Player Name Prominence */
+.player-name-cell,
+.player-cell {
+  font-weight: 700;
+  font-size: 12px;
+  color: #1a202c;
+}
+
+.player-name-text {
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.app-name-text {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* Badges - Consistent Styling */
+.status-badge,
+.app-badge {
+  display: inline-block;
+  padding: 5px 11px;
+  border-radius: 14px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Activity Badge - Smaller, positioned above names */
+.activity-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* Mobile Optimization - Ensure Proper Rendering */
+@media (max-width: 1024px) {
+  /* Let user zoom, but ensure everything is visible */
+  table,
+  .dashboard-table,
+  .modern-table {
+    min-width: 1000px;
+  }
+
+  table th,
+  table td {
+    padding: 10px 6px;
+  }
+}
+
+/* Prevent Layout Shift */
+* {
+  box-sizing: border-box;
+}

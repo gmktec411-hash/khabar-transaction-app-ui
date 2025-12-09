@@ -5,7 +5,9 @@
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "Bash(npm start)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(done)",
+      "Bash(node remove-media-queries.js:*)"
     ],
     "deny": [],
     "ask": []

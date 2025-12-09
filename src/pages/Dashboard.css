@@ -402,31 +402,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .metrics-grid {
-    grid-template-columns: 1fr;
-  }
 
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stats-row {
-    grid-template-columns: 1fr;
-  }
-
-  .metric-card {
-    padding: 20px;
-  }
-
-  .metric-value {
-    font-size: 28px;
-  }
-
-  .card-body {
-    max-height: 400px;
-  }
-}
 
 /* Scrollbar Styling */
 .card-body::-webkit-scrollbar {
@@ -489,16 +465,6 @@
 /* Hide original heavy transaction items when compact table is used */
 .transaction-list.compact-hidden { display: none }
 
-@media (max-width: 1024px) {
-  .dashboard-grid { grid-template-columns: repeat(2, 1fr) }
-  .metrics-grid { grid-template-columns: repeat(2, 1fr) }
-}
 
-@media (max-width: 768px) {
-  .metrics-grid { grid-template-columns: 1fr }
-  .dashboard-grid { grid-template-columns: 1fr }
-  .stats-row { grid-template-columns: 1fr }
-  .metric-card { padding: 14px }
-  .metric-value { font-size: 18px }
-  .card-body { max-height: 420px }
-}
+
+

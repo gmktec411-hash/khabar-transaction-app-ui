@@ -49,11 +49,24 @@ const TableRow = memo(({ tx, index, highlightText, getStatusClass, getStatusText
   const dateObj = new Date(tx.sentAt);
   const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getDate().toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
   const timeString = dateObj.toTimeString().split(" ")[0];
-  // Subject will be shown inline as a compact one-line element next to player name
+
+  // Determine amount color based on status - match status badge color
+  const getAmountClass = (status) => {
+    // Success (S) and Confirm (C) = Green (positive)
+    if (status === 'S' || status === 'C' || status === 'A') {
+      return 'positive';
+    }
+    // Failed (F) = Red (negative)
+    else if (status === 'F') {
+      return 'negative';
+    }
+    // Sent (I), Request (R), Check Email (E) = Neutral (default positive)
+    return 'positive';
+  };
 
   return (
     <tr className="table-row-animated">
-      <td className="text-center">{index + 1}</td>
+      <td className="text-center sn-col">{index + 1}</td>
       <td className="text-center date-cell">
         <div className="date-time">
           <span className="date">{formattedDate}</span>
@@ -68,17 +81,17 @@ const TableRow = memo(({ tx, index, highlightText, getStatusClass, getStatusText
           )}
         </span>
       </td>
-      <td className="text-left player-name">{tx.receiver}</td>
-      <td className="text-left app-name-cell">{highlightText(tx.appName)}</td>
-      <td className="text-center">
-        <span className={`app-badge app-badge-${tx.appType.toLowerCase()}`}>
+      <td className="text-left receiver-col">{tx.receiver}</td>
+      <td className="text-left app-name-col">{highlightText(tx.appName)}</td>
+      <td className="text-center app-type-col">
+        <span className={`app-type-badge app-type-${tx.appType.toLowerCase()}`}>
           {tx.appType}
         </span>
       </td>
-      <td className="text-right amount-cell">
+      <td className={`text-right amount-cell ${getAmountClass(tx.status)}`}>
         <span className="amount-value">${tx.amount.toFixed(2)}</span>
       </td>
-      <td className="text-center">
+      <td className="text-center status-col">
         <span className={`status-badge ${getStatusClass(tx.status)}`}>
           {getStatusText(tx.status)}
         </span>
@@ -210,15 +223,7 @@ const TransactionsTable = ({ transactions = [] }) => {
   const filteredTransactions = useMemo(() => {
     const safeTransactions = Array.isArray(transactions) ? transactions : [];
 
-    // Filter for current month only
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-
-    let filtered = safeTransactions.filter(tx => {
-      const txDate = new Date(tx.sentAt);
-      return txDate >= startOfMonth && txDate <= endOfMonth;
-    });
+    let filtered = [...safeTransactions];
 
     if (debouncedSearchTerm.trim()) {
       const term = debouncedSearchTerm.toLowerCase();
@@ -480,7 +485,7 @@ const TransactionsTable = ({ transactions = [] }) => {
                   { key: "sender", label: "Player Name" },
                   { key: "receiver", label: "Receiver" },
                   { key: "appName", label: "App Name" },
-                  { key: "appType", label: "App Type" },
+                  { key: "appType", label: "Type" },
                   { key: "amount", label: "Amount" },
                   { key: "status", label: "Status" },
                 ].map((col) => (

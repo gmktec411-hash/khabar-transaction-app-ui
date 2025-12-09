@@ -3,9 +3,9 @@
 /* Common Page Container - Compact */
 .page-container {
   width: 100%;
-  max-width: 1600px;
+
   margin: 0 auto;
-  padding: 10px 16px;
+  padding: 10px 2rem;
   min-height: calc(100vh - 60px);
   background: var(--bg-gradient);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -259,30 +259,19 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Responsive - Match navbar padding */
+@media (max-width: 1024px) {
   .page-container {
-    padding: var(--spacing-md);
-  }
-
-  .page-title {
-    font-size: var(--font-2xl);
-  }
-
-  .table-card,
-  .content-card {
-    padding: var(--spacing-lg);
-  }
-
-  .filters {
-    flex-direction: column;
-  }
-
-  .filter-input,
-  .filter-select {
-    width: 100%;
+    padding: 10px 1.5rem;
   }
 }
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 10px 1rem;
+  }
+}
+
 
 /* ===================================
    MODERN PAGE ANIMATIONS
@@ -517,12 +506,4 @@ html {
 }
 
 /* Responsive animation adjustments */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+

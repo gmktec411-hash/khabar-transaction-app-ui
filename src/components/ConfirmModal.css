@@ -49,7 +49,3 @@
 .confirm-modal-content.danger .confirm-modal-icon { background: linear-gradient(180deg,#fff1f0 0%,#fee2e2 100%); color:#b91c1c }
 .confirm-modal-content.danger .btn-primary { background: linear-gradient(135deg,#ef4444 0%, #dc2626 100%); box-shadow: 0 8px 20px rgba(220,38,38,0.12) }
 
-@media (max-width:480px) {
-  .confirm-modal-body { padding:14px; gap:12px }
-  .confirm-modal-desc { font-size:14px }
-}

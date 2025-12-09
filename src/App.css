@@ -50,7 +50,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -75,9 +74,8 @@
 
 /* Optional global page styling */
 .page-container {
-  max-width: 1200px;
   margin: 20px auto;
-  padding: 0 20px;
+  padding: 0 2rem;
 }
 
 .page-title {
@@ -87,4 +85,17 @@
   background: linear-gradient(90deg, #3b82f6, #06b6d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Match navbar padding on smaller screens */
+@media (max-width: 1024px) {
+  .page-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 0 1rem;
+  }
 }

@@ -268,33 +268,4 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .logo-circle {
-    width: 100px;
-    height: 100px;
-  }
 
-  .logo-fin {
-    font-size: 14px;
-  }
-
-  .logo-xi {
-    font-size: 26px;
-  }
-
-  .logo-sthetique {
-    font-size: 10px;
-  }
-
-  .loading-title {
-    font-size: 24px;
-  }
-
-  .loading-message {
-    font-size: 14px;
-  }
-
-  .bar {
-    height: 30px;
-  }
-}

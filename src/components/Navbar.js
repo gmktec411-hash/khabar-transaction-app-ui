@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { RotateCcw, LogOut, User, Monitor, Smartphone } from "lucide-react";
+import { RotateCcw, LogOut, User } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import AppConfig from "../config/appConfig";
 import { getAvatarUrl } from "../utils/avatarUtils";
@@ -26,37 +26,10 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useContext(AuthContext);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isDesktopView, setIsDesktopView] = useState(() => {
-    return localStorage.getItem('forceDesktopView') === 'true';
-  });
   const dropdownRef = useRef(null);
 
   const avatarUrl = user ? getAvatarUrl(user.username) : "";
-
-  // Toggle desktop view on mobile
-  const toggleDesktopView = () => {
-    const newValue = !isDesktopView;
-    setIsDesktopView(newValue);
-    localStorage.setItem('forceDesktopView', newValue.toString());
-
-    if (newValue) {
-      document.body.classList.add('force-desktop-view');
-    } else {
-      document.body.classList.remove('force-desktop-view');
-    }
-  };
-
-  // Apply desktop view class on mount if enabled
-  useEffect(() => {
-    if (isDesktopView) {
-      document.body.classList.add('force-desktop-view');
-    }
-    return () => {
-      document.body.classList.remove('force-desktop-view');
-    };
-  }, [isDesktopView]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -98,9 +71,8 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
         {role === "admin" && <Link to="/email-integration" className={`nav-link ${location.pathname === '/email-integration' ? 'active' : ''}`}>Email Integration</Link>}
         <Link to="/inactive-players" className={`nav-link ${location.pathname === '/inactive-players' ? 'active' : ''}`}>Inactive Players</Link>
 
-        <button className="refresh-btn" onClick={onRefresh}>
-          <RotateCcw size={16} style={{ marginRight: "6px" }} />
-          Refresh
+        <button className="refresh-btn" onClick={onRefresh} title="Refresh Data">
+          <RotateCcw size={18} />
         </button>
       </div>
 
@@ -116,7 +88,7 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
               <div className="user-text">
                 <span className="username">{user.username}</span>
                 <span className="user-role">
-                  {role === "admin" ? "Administrator" : "User"}
+                  {role === "admin" ? "Admin" : "User"}
                 </span>
               </div>
             </div>
@@ -128,14 +100,6 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
                   <span>Profile</span>
                 </div>
                 <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={() => {
-                  toggleDesktopView();
-                  setDropdownOpen(false);
-                }}>
-                  {isDesktopView ? <Smartphone size={16} /> : <Monitor size={16} />}
-                  <span>{isDesktopView ? 'Mobile View' : 'Desktop View'}</span>
-                </div>
-                <div className="dropdown-divider"></div>
                 <div className="dropdown-item logout" onClick={onLogout}>
                   <LogOut size={16} />
                   <span>Logout</span>
@@ -145,28 +109,6 @@ const Navbar = ({ onLogout, onRefresh, role }) => {
           </div>
         )}
       </div>
-
-      {/* Hamburger for mobile */}
-      <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-        <div className={`bar ${menuOpen ? "open" : ""}`} />
-        <div className={`bar ${menuOpen ? "open" : ""}`} />
-        <div className={`bar ${menuOpen ? "open" : ""}`} />
-      </div>
-
-      {menuOpen && (
-        <div className="mobile-menu">
-          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Home</Link>
-          {role === "admin" && <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Dashboard</Link>}
-          {role === "admin" && <Link to="/report" className={`nav-link ${location.pathname === '/report' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Report</Link>}
-          {role === "admin" && <Link to="/limits" className={`nav-link ${location.pathname === '/limits' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Limits</Link>}
-          {role === "admin" && <Link to="/email-integration" className={`nav-link ${location.pathname === '/email-integration' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Email Integration</Link>}
-          <Link to="/inactive-players" className={`nav-link ${location.pathname === '/inactive-players' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Inactive Players</Link>
-          <button className="refresh-btn" onClick={() => { onRefresh(); setMenuOpen(false); }}>
-            <RotateCcw size={16} style={{ marginRight: "6px" }} />
-            Refresh
-          </button>
-        </div>
-      )}
     </nav>
   );
 };

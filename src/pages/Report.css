@@ -3,7 +3,7 @@
 .report-container {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   padding: 10px 16px;
-  max-width: 1600px;
+  
   margin: 0 auto;
   background: var(--bg-gradient);
   min-height: calc(100vh - 60px);
@@ -479,63 +479,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .report-container {
-    padding: 1rem;
-  }
 
-  .report-header {
-    padding: 1.5rem;
-  }
-
-  .report-title {
-    font-size: 1.75rem;
-  }
-
-  .report-filter-section {
-    padding: 1.25rem;
-  }
-
-  .filter-buttons {
-    flex-direction: column;
-  }
-
-  .filter-btn {
-    width: 100%;
-  }
-
-  .custom-range-picker {
-    flex-direction: column;
-  }
-
-  .report-summary-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .report-section {
-    padding: 1.25rem;
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .report-table thead tr th,
-  .report-table tbody tr td {
-    padding: 0.875rem 1rem;
-    font-size: 0.85rem;
-  }
-
-  .sub-name {
-    padding-left: 2.5rem !important;
-  }
-
-  .sub-sub-name {
-    padding-left: 3.5rem !important;
-  }
-}
 
 /* Animation */
 @keyframes fadeInUp {
@@ -577,4 +521,21 @@
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+}
+
+/* Match navbar padding on smaller screens */
+@media (max-width: 1024px) {
+  .active-players-container,
+  .inactive-players-container,
+  .report-container {
+    padding: 1.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .active-players-container,
+  .inactive-players-container,
+  .report-container {
+    padding: 1.5rem 1rem;
+  }
 }

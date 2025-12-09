@@ -594,10 +594,10 @@ const Home = ({ transactions = [] }) => {
                           <span className="rank-badge">{index + 1}</span>
                         </td>
                         <td className="text-left player-name-cell">
-                          {player.name}
                           <span className={`activity-badge activity-${activity.level}`}>
                             {activity.label}
                           </span>
+                          <span className="player-name-text">{player.name}</span>
                         </td>
                         <td className="text-right amount-received">
                           ${player.receivedAmount.toFixed(2)}
@@ -727,10 +727,10 @@ const Home = ({ transactions = [] }) => {
                               <tr key={app.name} className="sub-row">
                                 <td className="rank-col"></td>
                                 <td className="text-left app-name-cell">
-                                  {app.name}
                                   <span className={`activity-badge activity-${appActivity.level}`}>
                                     {appActivity.label}
                                   </span>
+                                  <span className="app-name-text">{app.name}</span>
                                 </td>
                                 <td className="text-right amount-received">
                                   ${app.receivedAmount.toFixed(2)}
