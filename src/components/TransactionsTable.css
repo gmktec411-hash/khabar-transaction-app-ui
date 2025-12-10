@@ -437,49 +437,51 @@
 }
 
 .amount-cell {
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 900;
+  color: #1a202c !important;
 }
 
-/* Amount colors match status badge colors exactly */
+/* All amount colors are black for consistency */
 .amount-cell.amount-success {
-  color: #22c55e;
+  color: #1a202c !important;
   font-weight: 900;
 }
 
 .amount-cell.amount-failed {
-  color: #ef4444;
+  color: #1a202c !important;
   font-weight: 900;
 }
 
 .amount-cell.amount-confirm {
-  color: #10b981;
+  color: #1a202c !important;
   font-weight: 900;
 }
 
 .amount-cell.amount-sent {
-  color: #8b5cf6;
+  color: #1a202c !important;
   font-weight: 900;
 }
 
 .amount-cell.amount-accept {
-  color: #10b981;
+  color: #1a202c !important;
   font-weight: 900;
 }
 
 .amount-cell.amount-request {
-  color: #eab308;
+  color: #1a202c !important;
   font-weight: 900;
 }
 
 .amount-cell.amount-checkemail {
-  color: #0ea5e9;
+  color: #1a202c !important;
   font-weight: 900;
 }
 
 .amount-value {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 900;
+  color: #1a202c !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
@@ -691,15 +693,7 @@
 
 /* remove inline pill styles — tooltip below on hover */
 
-/* Amount Cell */
-.amount-cell {
-  font-weight: 600;
-  color: var(--success-color);
-}
-
-.amount-value {
-  font-size: var(--font-base);
-}
+/* Amount Cell - Duplicate removed, using main definition above */
 
 /* Highlight */
 .highlight,
@@ -851,72 +845,80 @@ mark.highlight {
    RESPONSIVE MOBILE DESIGN
    ================================ */
 
-/* Tablet Adjustments (768px - 1024px) */
+/* Tablet Adjustments (768px - 1024px) - Same Layout as Desktop */
 @media (max-width: 1024px) {
   .modern-table th,
   .modern-table td {
-    padding: 10px 4px;
-    font-size: 10px;
+    padding: 10px 3px;
+    font-size: 9px;
+    white-space: normal;
+    overflow: visible;
+    word-wrap: break-word;
   }
 
+  /* Same percentage widths as desktop */
   .modern-table th:nth-child(1),
   .modern-table td:nth-child(1) { width: 4%; }
 
   .modern-table th:nth-child(2),
-  .modern-table td:nth-child(2) { width: 12%; }
+  .modern-table td:nth-child(2) { width: 13%; }
 
   .modern-table th:nth-child(3),
-  .modern-table td:nth-child(3) { width: 17%; }
+  .modern-table td:nth-child(3) { width: 18%; }
 
   .modern-table th:nth-child(4),
-  .modern-table td:nth-child(4) { width: 15%; }
+  .modern-table td:nth-child(4) { width: 16%; }
 
   .modern-table th:nth-child(5),
   .modern-table td:nth-child(5) { width: 18%; }
 
   .modern-table th:nth-child(6),
-  .modern-table td:nth-child(6) { width: 9%; }
+  .modern-table td:nth-child(6) { width: 8%; }
 
   .modern-table th:nth-child(7),
-  .modern-table td:nth-child(7) { width: 14%; }
+  .modern-table td:nth-child(7) { width: 13%; }
 
   .modern-table th:nth-child(8),
-  .modern-table td:nth-child(8) { width: 11%; }
+  .modern-table td:nth-child(8) { width: 10%; }
 
   .date-time {
     gap: 1px;
   }
 
   .date {
-    font-size: 9px;
+    font-size: 8px;
+    line-height: 1.2;
   }
 
   .time {
-    font-size: 8px;
+    font-size: 7px;
   }
 
   .app-type-badge {
     padding: 3px 6px;
-    font-size: 8px;
-    letter-spacing: 0.4px;
+    font-size: 7px;
+    letter-spacing: 0.3px;
   }
 
   .status-badge {
     padding: 3px 6px;
-    font-size: 9px;
+    font-size: 8px;
   }
 
   .amount-value {
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 900;
+    color: #1a202c !important;
   }
 
   .amount-cell {
-    font-weight: 800;
+    font-size: 11px;
+    font-weight: 900;
+    color: #1a202c !important;
   }
 }
 
-/* Mobile Optimizations (max-width: 768px) */
+/* Mobile Optimizations (max-width: 768px) - Same Layout as Desktop */
 @media (max-width: 768px) {
   .transactions-page {
     padding: 8px;
@@ -941,107 +943,111 @@ mark.highlight {
     display: none;
   }
 
+  /* NO horizontal scroll - same percentage layout */
   .table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: visible;
+    overflow-y: visible;
   }
 
   .modern-table {
-    font-size: 9px;
+    font-size: 8px;
   }
 
   .modern-table th,
   .modern-table td {
-    padding: 8px 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 8px 2px;
+    white-space: normal;
+    overflow: visible;
+    word-wrap: break-word;
   }
 
-  /* Compact column widths for mobile */
+  /* Use same percentage widths as desktop */
   .modern-table th:nth-child(1),
-  .modern-table td:nth-child(1) { width: 35px; }      /* SN */
+  .modern-table td:nth-child(1) { width: 4%; }      /* SN */
 
   .modern-table th:nth-child(2),
-  .modern-table td:nth-child(2) { width: 85px; }      /* Date */
+  .modern-table td:nth-child(2) { width: 13%; }     /* Date & Time */
 
   .modern-table th:nth-child(3),
-  .modern-table td:nth-child(3) { width: 100px; }     /* Player */
+  .modern-table td:nth-child(3) { width: 18%; }     /* Player Name */
 
   .modern-table th:nth-child(4),
-  .modern-table td:nth-child(4) { width: 90px; }      /* Receiver */
+  .modern-table td:nth-child(4) { width: 16%; }     /* Receiver */
 
   .modern-table th:nth-child(5),
-  .modern-table td:nth-child(5) { width: 100px; }     /* App Name */
+  .modern-table td:nth-child(5) { width: 18%; }     /* App Name */
 
   .modern-table th:nth-child(6),
-  .modern-table td:nth-child(6) { width: 50px; }      /* Type */
+  .modern-table td:nth-child(6) { width: 8%; }      /* App Type */
 
   .modern-table th:nth-child(7),
-  .modern-table td:nth-child(7) { width: 75px; }      /* Amount */
+  .modern-table td:nth-child(7) { width: 13%; }     /* Amount */
 
   .modern-table th:nth-child(8),
-  .modern-table td:nth-child(8) { width: 65px; }      /* Status */
+  .modern-table td:nth-child(8) { width: 10%; }     /* Status */
 
   .modern-table th {
-    font-size: 8px;
-    padding: 8px 3px;
+    font-size: 7px;
+    padding: 8px 2px;
   }
 
   .sn-col {
-    font-size: 8px;
+    font-size: 7px;
   }
 
   .date-cell {
-    font-size: 8px;
+    font-size: 7px;
   }
 
   .date {
-    font-size: 8px;
+    font-size: 7px;
+    line-height: 1.2;
   }
 
   .time {
-    font-size: 7px;
+    font-size: 6px;
   }
 
   .player-cell {
-    font-size: 9px;
-    padding-left: 4px;
+    font-size: 8px;
+    padding-left: 2px;
   }
 
   .receiver-col {
-    font-size: 9px;
+    font-size: 8px;
   }
 
   .app-name-col {
-    font-size: 9px;
+    font-size: 8px;
   }
 
   .app-type-col {
-    font-size: 8px;
+    font-size: 7px;
   }
 
   .app-type-badge {
-    padding: 2px 5px;
-    font-size: 7px;
-    letter-spacing: 0.3px;
-    border-radius: 6px;
+    padding: 2px 4px;
+    font-size: 6px;
+    letter-spacing: 0.2px;
+    border-radius: 4px;
   }
 
   .amount-cell {
-    font-size: 10px;
-    font-weight: 800;
+    font-size: 9px;
+    font-weight: 900;
+    color: #1a202c !important;
   }
 
   .amount-value {
-    font-size: 10px;
-    font-weight: 800;
+    font-size: 9px;
+    font-weight: 900;
+    color: #1a202c !important;
   }
 
   .status-badge {
-    padding: 2px 5px;
-    font-size: 8px;
-    letter-spacing: 0.3px;
+    padding: 2px 4px;
+    font-size: 7px;
+    letter-spacing: 0.2px;
   }
 
   .subject-tooltip {
@@ -1059,7 +1065,7 @@ mark.highlight {
   }
 }
 
-/* Extra Small Mobile (max-width: 480px) */
+/* Extra Small Mobile (max-width: 480px) - Same Layout as Desktop */
 @media (max-width: 480px) {
   .transactions-header {
     flex-direction: column;
@@ -1073,67 +1079,99 @@ mark.highlight {
   }
 
   .modern-table {
-    font-size: 8px;
+    font-size: 7px;
   }
 
   .modern-table th,
   .modern-table td {
-    padding: 6px 2px;
+    padding: 6px 1px;
+    white-space: normal;
+    overflow: visible;
+    word-wrap: break-word;
   }
 
-  /* Ultra compact for very small screens */
+  /* Use same percentage widths as desktop - NO horizontal scroll */
   .modern-table th:nth-child(1),
-  .modern-table td:nth-child(1) { width: 30px; }
+  .modern-table td:nth-child(1) { width: 4%; }
 
   .modern-table th:nth-child(2),
-  .modern-table td:nth-child(2) { width: 75px; }
+  .modern-table td:nth-child(2) { width: 13%; }
 
   .modern-table th:nth-child(3),
-  .modern-table td:nth-child(3) { width: 85px; }
+  .modern-table td:nth-child(3) { width: 18%; }
 
   .modern-table th:nth-child(4),
-  .modern-table td:nth-child(4) { width: 75px; }
+  .modern-table td:nth-child(4) { width: 16%; }
 
   .modern-table th:nth-child(5),
-  .modern-table td:nth-child(5) { width: 85px; }
+  .modern-table td:nth-child(5) { width: 18%; }
 
   .modern-table th:nth-child(6),
-  .modern-table td:nth-child(6) { width: 45px; }
+  .modern-table td:nth-child(6) { width: 8%; }
 
   .modern-table th:nth-child(7),
-  .modern-table td:nth-child(7) { width: 65px; }
+  .modern-table td:nth-child(7) { width: 13%; }
 
   .modern-table th:nth-child(8),
-  .modern-table td:nth-child(8) { width: 60px; }
+  .modern-table td:nth-child(8) { width: 10%; }
 
   .modern-table th {
+    font-size: 6px;
+  }
+
+  .sn-col {
+    font-size: 6px;
+  }
+
+  .date-cell {
+    font-size: 6px;
+  }
+
+  .date {
+    font-size: 6px;
+    line-height: 1.2;
+  }
+
+  .time {
+    font-size: 5px;
+  }
+
+  .player-cell {
     font-size: 7px;
   }
 
-  .sn-col,
-  .date-cell,
-  .player-cell,
-  .receiver-col,
-  .app-name-col,
-  .app-type-col,
+  .receiver-col {
+    font-size: 7px;
+  }
+
+  .app-name-col {
+    font-size: 7px;
+  }
+
+  .app-type-col {
+    font-size: 6px;
+  }
+
   .status-col {
-    font-size: 8px;
+    font-size: 6px;
   }
 
   .amount-cell {
-    font-size: 9px;
-    font-weight: 800;
+    font-size: 8px;
+    font-weight: 900;
+    color: #1a202c !important;
   }
 
   .amount-value {
-    font-size: 9px;
-    font-weight: 800;
+    font-size: 8px;
+    font-weight: 900;
+    color: #1a202c !important;
   }
 
   .app-type-badge,
   .status-badge {
-    font-size: 7px;
-    padding: 2px 4px;
+    font-size: 6px;
+    padding: 2px 3px;
   }
 }
 

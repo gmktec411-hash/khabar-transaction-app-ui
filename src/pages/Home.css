@@ -6,6 +6,9 @@
   margin: 0 auto;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Header Section */
@@ -430,6 +433,8 @@
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow-x: visible;
+  overflow-y: visible;
 }
 
 .dashboard-table {
@@ -438,7 +443,6 @@
   background: white;
   font-size: 11px;
   table-layout: fixed;
-  min-width: 1000px;
 }
 
 .dashboard-table thead {
@@ -716,23 +720,23 @@
   box-shadow: 0 2px 6px rgba(100, 116, 139, 0.3) !important;
 }
 
-/* Amount Columns - More Visible */
+/* Amount Columns - Black and Highly Visible */
 .amount-received {
-  color: #22c55e;
+  color: #1a202c;
   font-weight: 900;
   font-size: 1.125rem;
   position: relative;
   animation: fadeIn 0.5s ease-out;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .amount-sent {
-  color: #8b5cf6;
+  color: #1a202c;
   font-weight: 900;
   font-size: 1.125rem;
   position: relative;
   animation: fadeIn 0.5s ease-out;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .count-badge {
@@ -767,19 +771,19 @@
   }
 }
 
-/* Net Balance - More Visible */
+/* Net Balance - Black and Highly Visible */
 .net-positive {
-  color: #22c55e;
+  color: #1a202c;
   font-weight: 900;
   font-size: 1.125rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .net-negative {
-  color: #ef4444;
+  color: #1a202c;
   font-weight: 900;
   font-size: 1.125rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .balance-arrow {
@@ -914,7 +918,430 @@
 }
 
 @media (max-width: 768px) {
+  /* Force box-sizing on all elements */
+  .home-container *,
+  .home-container *::before,
+  .home-container *::after {
+    box-sizing: border-box !important;
+  }
+
+  /* Prevent all horizontal scrolling */
   .home-container {
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.5rem;
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+  }
+
+  /* Make all sections fit within viewport */
+  .home-header,
+  .custom-date-picker,
+  .period-label,
+  .summary-grid,
+  .view-selector,
+  .search-container,
+  .dashboard-view {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Reduce padding on headers */
+  .home-header {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .home-title {
+    font-size: 1.25rem;
+  }
+
+  .filter-controls {
+    flex-wrap: wrap;
+  }
+
+  .date-range-select {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Summary grid responsive */
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* View selector responsive */
+  .view-selector {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .view-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Dashboard view padding */
+  .dashboard-view {
+    padding: 0.5rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .view-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .view-header h2 {
+    font-size: 1.15rem;
+  }
+
+  .view-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .export-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .export-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Table wrapper - ABSOLUTELY NO SCROLL */
+  .table-wrapper {
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 8px;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Dashboard Table - Mobile Responsive - Fit to Screen */
+  .dashboard-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    font-size: 6px;
+    table-layout: fixed !important;
+    border-collapse: collapse;
+    display: table !important;
+  }
+
+  .dashboard-table thead,
+  .dashboard-table tbody,
+  .dashboard-table tr {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: table-row-group;
+  }
+
+  .dashboard-table tr {
+    display: table-row !important;
+    width: 100% !important;
+  }
+
+  /* Force all cells to shrink and wrap */
+  .dashboard-table thead tr th {
+    padding: 4px 1px !important;
+    font-size: 5.5px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    line-height: 1.1 !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .dashboard-table tbody tr td {
+    padding: 6px 1px !important;
+    font-size: 6px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    overflow: hidden !important;
+    line-height: 1.2 !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  /* Optimized column widths based on content size */
+  .dashboard-table .rank-col {
+    width: 5% !important;  /* Smallest - just numbers */
+  }
+
+  .dashboard-table th:nth-child(2),
+  .dashboard-table td:nth-child(2) {
+    width: 25% !important;  /* Largest - player names with badges */
+  }
+
+  .dashboard-table th:nth-child(3),
+  .dashboard-table td:nth-child(3) {
+    width: 16% !important;  /* Received amounts */
+  }
+
+  .dashboard-table th:nth-child(4),
+  .dashboard-table td:nth-child(4) {
+    width: 16% !important;  /* Sent amounts */
+  }
+
+  .dashboard-table th:nth-child(5),
+  .dashboard-table td:nth-child(5) {
+    width: 14% !important;  /* Net balance */
+  }
+
+  .dashboard-table th:nth-child(6),
+  .dashboard-table td:nth-child(6) {
+    width: 8% !important;  /* Apps count - very small */
+  }
+
+  .dashboard-table th:nth-child(7),
+  .dashboard-table td:nth-child(7) {
+    width: 16% !important;  /* Last active date */
+  }
+
+  .rank-badge {
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 0.5rem !important;
+    padding: 0 !important;
+  }
+
+  .player-name-cell,
+  .app-name-cell {
+    font-size: 0.6rem !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .player-name-text,
+  .app-name-text {
+    display: block;
+    font-size: 6px !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .app-type-badge {
+    padding: 1px 2px !important;
+    font-size: 4px !important;
+    letter-spacing: 0px !important;
+    border-radius: 2px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .count-badge {
+    padding: 0px 2px !important;
+    font-size: 0.35rem !important;
+    top: 0 !important;
+    margin-left: 1px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+  }
+
+  .amount-received,
+  .amount-sent,
+  .net-positive,
+  .net-negative {
+    font-size: 0.65rem !important;
+    font-weight: 900 !important;
+  }
+
+  .activity-badge {
+    padding: 0px 2px !important;
+    font-size: 4.5px !important;
+    margin-bottom: 1px !important;
+  }
+
+  .activity-row {
+    flex-wrap: wrap !important;
+    gap: 2px !important;
+  }
+
+  .last-active-cell {
+    font-size: 0.55rem !important;
+  }
+
+  .expand-arrow {
+    font-size: 0.5rem !important;
+    margin-right: 2px !important;
+  }
+
+  .balance-arrow {
+    font-size: 0.7rem !important;
+    margin-left: 2px !important;
+  }
+
+  /* See more button */
+  .see-more-btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Force box-sizing on all elements */
+  .home-container *,
+  .home-container *::before,
+  .home-container *::after {
+    box-sizing: border-box !important;
+  }
+
+  /* Extra small mobile - ensure no horizontal scroll */
+  .home-container {
+    padding: 0.5rem 0.25rem;
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+  }
+
+  .home-header {
+    padding: 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-title {
+    font-size: 1.1rem;
+  }
+
+  .dashboard-view {
+    padding: 0.25rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .table-wrapper {
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 6px;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .dashboard-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    font-size: 5.5px;
+    table-layout: fixed !important;
+    display: table !important;
+  }
+
+  .dashboard-table thead,
+  .dashboard-table tbody,
+  .dashboard-table tr {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .dashboard-table tr {
+    display: table-row !important;
+    width: 100% !important;
+  }
+
+  .dashboard-table thead tr th {
+    padding: 3px 0.5px !important;
+    font-size: 5px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .dashboard-table tbody tr td {
+    padding: 5px 0.5px !important;
+    font-size: 5.5px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Optimized column widths - same as 768px */
+  .dashboard-table .rank-col {
+    width: 5% !important;  /* Smallest - just numbers */
+  }
+
+  .dashboard-table th:nth-child(2),
+  .dashboard-table td:nth-child(2) {
+    width: 25% !important;  /* Largest - player names with badges */
+  }
+
+  .dashboard-table th:nth-child(3),
+  .dashboard-table td:nth-child(3) {
+    width: 16% !important;  /* Received amounts */
+  }
+
+  .dashboard-table th:nth-child(4),
+  .dashboard-table td:nth-child(4) {
+    width: 16% !important;  /* Sent amounts */
+  }
+
+  .dashboard-table th:nth-child(5),
+  .dashboard-table td:nth-child(5) {
+    width: 14% !important;  /* Net balance */
+  }
+
+  .dashboard-table th:nth-child(6),
+  .dashboard-table td:nth-child(6) {
+    width: 8% !important;  /* Apps count - very small */
+  }
+
+  .dashboard-table th:nth-child(7),
+  .dashboard-table td:nth-child(7) {
+    width: 16% !important;  /* Last active date */
+  }
+
+  .rank-badge {
+    width: 14px !important;
+    height: 14px !important;
+    font-size: 0.45rem !important;
+    padding: 0 !important;
+  }
+
+  .app-type-badge {
+    padding: 1px 2px !important;
+    font-size: 4px !important;
+  }
+
+  .count-badge {
+    padding: 0px 2px !important;
+    font-size: 0.35rem !important;
+  }
+
+  .amount-received,
+  .amount-sent,
+  .net-positive,
+  .net-negative {
+    font-size: 0.6rem !important;
+  }
+
+  .activity-badge {
+    padding: 0px 2px !important;
+    font-size: 4px !important;
   }
 }
