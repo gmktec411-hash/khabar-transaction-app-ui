@@ -4,6 +4,9 @@
 /* Transactions Page Modern Design */
 .transactions-page {
   animation: fadeInUp 0.4s ease-out;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Modern Header - Compact */
@@ -291,22 +294,22 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* Table Card - Absolutely NO scroll restrictions */
+/* Table Card - Professional Responsive Design */
 .transactions-page .table-card {
   max-height: none !important;
   height: auto !important;
-  overflow: visible !important;
-  overflow-x: visible !important;
-  overflow-y: visible !important;
+  overflow: hidden !important;
+  box-sizing: border-box;
 }
 
 .transactions-page .table-wrapper {
   max-height: none !important;
   height: auto !important;
-  overflow: visible !important;
-  overflow-x: auto !important;
+  overflow-x: hidden !important;
   overflow-y: visible !important;
   position: relative;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .transactions-page .modern-table {
@@ -479,7 +482,7 @@
 }
 
 .amount-value {
-  font-size: 15px;
+  font-size: 19px;
   font-weight: 900;
   color: #1a202c !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
@@ -649,7 +652,8 @@
 }
 
 .player-name {
-  font-weight: 400;
+  font-weight: 600;
+  font-size: 1rem;
   color: var(--text-primary);
   position: relative;
   cursor: pointer;
@@ -843,59 +847,48 @@ mark.highlight {
 
 /* ================================
    RESPONSIVE MOBILE DESIGN
+   Fit all columns on screen without horizontal scroll
    ================================ */
 
-/* Tablet Adjustments (768px - 1024px) - Same Layout as Desktop */
+/* Tablet Adjustments (768px - 1024px) */
 @media (max-width: 1024px) {
-  .modern-table th,
-  .modern-table td {
-    padding: 10px 3px;
-    font-size: 9px;
-    white-space: normal;
-    overflow: visible;
-    word-wrap: break-word;
+  .transactions-page {
+    padding: 8px;
   }
 
-  /* Same percentage widths as desktop */
-  .modern-table th:nth-child(1),
-  .modern-table td:nth-child(1) { width: 4%; }
+  .modern-filters {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
 
-  .modern-table th:nth-child(2),
-  .modern-table td:nth-child(2) { width: 13%; }
+  /* Reduce padding and font sizes to fit all columns */
+  .modern-table th,
+  .modern-table td {
+    padding: 8px 3px;
+    font-size: 10px;
+  }
 
-  .modern-table th:nth-child(3),
-  .modern-table td:nth-child(3) { width: 18%; }
+  .modern-table th {
+    font-size: 8px;
+    padding: 8px 2px;
+  }
 
-  .modern-table th:nth-child(4),
-  .modern-table td:nth-child(4) { width: 16%; }
-
-  .modern-table th:nth-child(5),
-  .modern-table td:nth-child(5) { width: 18%; }
-
-  .modern-table th:nth-child(6),
-  .modern-table td:nth-child(6) { width: 8%; }
-
-  .modern-table th:nth-child(7),
-  .modern-table td:nth-child(7) { width: 13%; }
-
-  .modern-table th:nth-child(8),
-  .modern-table td:nth-child(8) { width: 10%; }
-
+  /* Date column - stack date and time */
   .date-time {
     gap: 1px;
   }
 
   .date {
     font-size: 8px;
-    line-height: 1.2;
   }
 
   .time {
     font-size: 7px;
   }
 
+  /* Smaller badges */
   .app-type-badge {
-    padding: 3px 6px;
+    padding: 3px 5px;
     font-size: 7px;
     letter-spacing: 0.3px;
   }
@@ -906,28 +899,29 @@ mark.highlight {
   }
 
   .amount-value {
-    font-size: 11px;
-    font-weight: 900;
-    color: #1a202c !important;
-  }
-
-  .amount-cell {
-    font-size: 11px;
-    font-weight: 900;
-    color: #1a202c !important;
+    font-size: 10px;
   }
 }
 
-/* Mobile Optimizations (max-width: 768px) - Same Layout as Desktop */
+/* Mobile Optimizations (max-width: 768px) - NO horizontal scroll */
 @media (max-width: 768px) {
   .transactions-page {
-    padding: 8px;
+    padding: 6px;
+  }
+
+  .transactions-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .transactions-header .page-title {
+    font-size: 1.25rem;
   }
 
   .modern-filters {
     grid-template-columns: 1fr;
-    gap: 10px;
-    padding: 12px;
+    gap: 8px;
+    padding: 10px;
   }
 
   .filter-section {
@@ -936,148 +930,20 @@ mark.highlight {
 
   .date-range {
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
 
   .date-separator {
     display: none;
   }
 
-  /* NO horizontal scroll - same percentage layout */
+  /* NO horizontal scroll - fit everything */
   .table-wrapper {
     overflow-x: visible;
-    overflow-y: visible;
+    border-radius: 8px;
   }
 
-  .modern-table {
-    font-size: 8px;
-  }
-
-  .modern-table th,
-  .modern-table td {
-    padding: 8px 2px;
-    white-space: normal;
-    overflow: visible;
-    word-wrap: break-word;
-  }
-
-  /* Use same percentage widths as desktop */
-  .modern-table th:nth-child(1),
-  .modern-table td:nth-child(1) { width: 4%; }      /* SN */
-
-  .modern-table th:nth-child(2),
-  .modern-table td:nth-child(2) { width: 13%; }     /* Date & Time */
-
-  .modern-table th:nth-child(3),
-  .modern-table td:nth-child(3) { width: 18%; }     /* Player Name */
-
-  .modern-table th:nth-child(4),
-  .modern-table td:nth-child(4) { width: 16%; }     /* Receiver */
-
-  .modern-table th:nth-child(5),
-  .modern-table td:nth-child(5) { width: 18%; }     /* App Name */
-
-  .modern-table th:nth-child(6),
-  .modern-table td:nth-child(6) { width: 8%; }      /* App Type */
-
-  .modern-table th:nth-child(7),
-  .modern-table td:nth-child(7) { width: 13%; }     /* Amount */
-
-  .modern-table th:nth-child(8),
-  .modern-table td:nth-child(8) { width: 10%; }     /* Status */
-
-  .modern-table th {
-    font-size: 7px;
-    padding: 8px 2px;
-  }
-
-  .sn-col {
-    font-size: 7px;
-  }
-
-  .date-cell {
-    font-size: 7px;
-  }
-
-  .date {
-    font-size: 7px;
-    line-height: 1.2;
-  }
-
-  .time {
-    font-size: 6px;
-  }
-
-  .player-cell {
-    font-size: 8px;
-    padding-left: 2px;
-  }
-
-  .receiver-col {
-    font-size: 8px;
-  }
-
-  .app-name-col {
-    font-size: 8px;
-  }
-
-  .app-type-col {
-    font-size: 7px;
-  }
-
-  .app-type-badge {
-    padding: 2px 4px;
-    font-size: 6px;
-    letter-spacing: 0.2px;
-    border-radius: 4px;
-  }
-
-  .amount-cell {
-    font-size: 9px;
-    font-weight: 900;
-    color: #1a202c !important;
-  }
-
-  .amount-value {
-    font-size: 9px;
-    font-weight: 900;
-    color: #1a202c !important;
-  }
-
-  .status-badge {
-    padding: 2px 4px;
-    font-size: 7px;
-    letter-spacing: 0.2px;
-  }
-
-  .subject-tooltip {
-    display: none;
-  }
-
-  .load-more-btn {
-    padding: 6px 16px;
-    font-size: 11px;
-  }
-
-  .total-info {
-    font-size: 11px;
-    padding: 8px 12px;
-  }
-}
-
-/* Extra Small Mobile (max-width: 480px) - Same Layout as Desktop */
-@media (max-width: 480px) {
-  .transactions-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .filter-toggle-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
+  /* Compact table styling */
   .modern-table {
     font-size: 7px;
   }
@@ -1085,93 +951,173 @@ mark.highlight {
   .modern-table th,
   .modern-table td {
     padding: 6px 1px;
-    white-space: normal;
-    overflow: visible;
-    word-wrap: break-word;
+    font-size: 7px;
+    white-space: nowrap;
   }
 
-  /* Use same percentage widths as desktop - NO horizontal scroll */
-  .modern-table th:nth-child(1),
-  .modern-table td:nth-child(1) { width: 4%; }
+  .modern-table th {
+    font-size: 6.5px;
+    padding: 6px 1px;
+    letter-spacing: 0.2px;
+  }
 
-  .modern-table th:nth-child(2),
-  .modern-table td:nth-child(2) { width: 13%; }
+  /* Specific column adjustments */
+  .sn-col {
+    font-size: 7px;
+  }
 
-  .modern-table th:nth-child(3),
-  .modern-table td:nth-child(3) { width: 18%; }
+  .date-cell {
+    font-size: 6.5px;
+  }
 
-  .modern-table th:nth-child(4),
-  .modern-table td:nth-child(4) { width: 16%; }
+  .date {
+    font-size: 6.5px;
+    line-height: 1.1;
+  }
 
-  .modern-table th:nth-child(5),
-  .modern-table td:nth-child(5) { width: 18%; }
+  .time {
+    font-size: 5.5px;
+  }
 
-  .modern-table th:nth-child(6),
-  .modern-table td:nth-child(6) { width: 8%; }
+  .player-cell,
+  .receiver-col,
+  .app-name-col {
+    font-size: 7px;
+    padding-left: 2px;
+  }
 
-  .modern-table th:nth-child(7),
-  .modern-table td:nth-child(7) { width: 13%; }
+  .app-type-badge {
+    padding: 2px 3px;
+    font-size: 6px;
+    letter-spacing: 0.2px;
+    border-radius: 3px;
+  }
 
-  .modern-table th:nth-child(8),
-  .modern-table td:nth-child(8) { width: 10%; }
+  .amount-cell,
+  .amount-value {
+    font-size: 8px;
+    font-weight: 900;
+  }
+
+  .status-badge {
+    padding: 2px 4px;
+    font-size: 6.5px;
+    letter-spacing: 0.2px;
+  }
+
+  /* Subject tooltip hidden on mobile */
+  .subject-tooltip {
+    display: none;
+  }
+
+  .load-more-btn {
+    padding: 6px 14px;
+    font-size: 11px;
+  }
+
+  .total-info {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+
+  .filter-toggle-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+/* Extra Small Mobile (max-width: 480px) - NO horizontal scroll */
+@media (max-width: 480px) {
+  .transactions-page {
+    padding: 4px;
+  }
+
+  .transactions-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .transactions-header .page-title {
+    font-size: 1.1rem;
+  }
+
+  .filter-toggle-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* NO horizontal scroll - ultra compact */
+  .table-wrapper {
+    overflow-x: visible;
+  }
+
+  .modern-table {
+    font-size: 6px;
+  }
+
+  .modern-table th,
+  .modern-table td {
+    padding: 5px 0.5px;
+    font-size: 6px;
+  }
 
   .modern-table th {
-    font-size: 6px;
+    font-size: 5.5px;
+    padding: 5px 0.5px;
   }
 
   .sn-col {
     font-size: 6px;
   }
 
-  .date-cell {
-    font-size: 6px;
-  }
-
   .date {
     font-size: 6px;
-    line-height: 1.2;
+    line-height: 1.1;
   }
 
   .time {
     font-size: 5px;
   }
 
-  .player-cell {
-    font-size: 7px;
+  .player-cell,
+  .player-name{
+    font-size: 4px;
   }
-
-  .receiver-col {
-    font-size: 7px;
-  }
-
+  .receiver-col,
   .app-name-col {
-    font-size: 7px;
+    font-size: 6.5px;
   }
 
-  .app-type-col {
-    font-size: 6px;
+  .app-type-badge {
+    padding: 1px 2px;
+    font-size: 5.5px;
+    border-radius: 2px;
   }
 
-  .status-col {
-    font-size: 6px;
-  }
-
-  .amount-cell {
-    font-size: 8px;
-    font-weight: 900;
-    color: #1a202c !important;
-  }
-
+  .amount-cell,
   .amount-value {
-    font-size: 8px;
+    font-size: 7px;
     font-weight: 900;
-    color: #1a202c !important;
   }
 
-  .app-type-badge,
   .status-badge {
+    padding: 1px 3px;
     font-size: 6px;
-    padding: 2px 3px;
+  }
+
+  .load-more-btn {
+    padding: 6px 12px;
+    font-size: 10px;
+  }
+
+  .total-info {
+    font-size: 10px;
+    padding: 6px 8px;
   }
 }
 

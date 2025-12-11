@@ -3,12 +3,14 @@
 /* Common Page Container - Compact */
 .page-container {
   width: 100%;
-
+  max-width: 100%;
   margin: 0 auto;
   padding: 10px 2rem;
   min-height: calc(100vh - 60px);
-  background: var(--bg-gradient);
+  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Page Header - Compact */
@@ -45,6 +47,9 @@
   box-shadow: var(--shadow-md);
   margin-bottom: 12px;
   border: 1px solid var(--border-light);
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Header Actions */
@@ -268,7 +273,25 @@ tbody tr:last-child td {
 
 @media (max-width: 768px) {
   .page-container {
-    padding: 10px 1rem;
+    padding: 8px 0.75rem;
+  }
+
+  .table-card,
+  .content-card {
+    padding: 8px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 6px 0.5rem;
+  }
+
+  .table-card,
+  .content-card {
+    padding: 6px;
+    border-radius: 6px;
   }
 }
 

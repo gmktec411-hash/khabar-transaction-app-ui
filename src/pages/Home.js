@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { Users, Package, TrendingUp, DollarSign, Calendar, Filter, BarChart2, Search, Download, FileText } from "lucide-react";
+import { Users, Package, TrendingUp, DollarSign, Calendar, Filter, BarChart2, Search, Download, FileText, ArrowUpCircle, ArrowDownCircle, Scale } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { exportToPDF, exportToCSV, formatPlayerDataForExport, formatAppDataForExport } from "../utils/exportUtils";
 import "./Home.css";
@@ -13,6 +13,7 @@ const Home = ({ transactions = [] }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [visibleCount, setVisibleCount] = useState(50);
   const [expandedAppTypes, setExpandedAppTypes] = useState({});
+  const [showFilters, setShowFilters] = useState(false);
 
   // Filter transactions by date range
   const filteredTransactions = useMemo(() => {
@@ -293,6 +294,20 @@ const Home = ({ transactions = [] }) => {
   const summaryStats = useMemo(() => {
     const totalPlayers = playerMetrics.length;
     const totalApps = appMetrics.reduce((sum, appTypeGroup) => sum + appTypeGroup.apps.length, 0);
+
+    // Calculate total received (S and C status)
+    const totalReceived = filteredTransactions
+      .filter(tx => tx.status === "S" || tx.status === "C")
+      .reduce((sum, tx) => sum + tx.amount, 0);
+
+    // Calculate total sent (I status)
+    const totalSent = filteredTransactions
+      .filter(tx => tx.status === "I")
+      .reduce((sum, tx) => sum + tx.amount, 0);
+
+    // Net balance
+    const netBalance = totalReceived - totalSent;
+
     const totalAmount = successfulTransactions.reduce((sum, tx) => sum + tx.amount, 0);
     const totalTransactions = successfulTransactions.length;
 
@@ -316,6 +331,9 @@ const Home = ({ transactions = [] }) => {
       totalPlayers,
       totalApps,
       totalAmount,
+      totalReceived,
+      totalSent,
+      netBalance,
       totalTransactions,
       avgPerTransaction: totalTransactions > 0 ? totalAmount / totalTransactions : 0,
       velocity
@@ -412,18 +430,29 @@ const Home = ({ transactions = [] }) => {
           <p className="home-subtitle">Comprehensive insights and performance metrics</p>
         </div>
 
-        <div className="filter-controls">
-          <Filter size={20} />
-          <select
-            className="date-range-select"
-            value={dateRange}
-            onChange={(e) => setDateRange(e.target.value)}
+        <div className="filter-section">
+          <button
+            className="filter-toggle-btn"
+            onClick={() => setShowFilters(!showFilters)}
           >
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="custom">Custom Range</option>
-          </select>
+            <Filter size={20} />
+            {showFilters ? 'Hide Filters' : 'Show Filters'}
+          </button>
+
+          {showFilters && (
+            <div className="filter-controls">
+              <select
+                className="date-range-select"
+                value={dateRange}
+                onChange={(e) => setDateRange(e.target.value)}
+              >
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="custom">Custom Range</option>
+              </select>
+            </div>
+          )}
         </div>
       </div>
 
@@ -457,18 +486,42 @@ const Home = ({ transactions = [] }) => {
 
       {/* Summary Cards */}
       <div className="summary-grid">
-        <div className="summary-card card-primary">
+        <div className="summary-card card-success">
           <div className="card-icon">
-            <DollarSign size={28} />
+            <ArrowUpCircle size={28} />
           </div>
           <div className="card-content">
-            <p className="card-label">Total Volume</p>
-            <h3 className="card-value">${summaryStats.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
-            <p className="card-detail">{summaryStats.totalTransactions} transactions</p>
+            <p className="card-label">Total Received</p>
+            <h3 className="card-value">${summaryStats.totalReceived.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+            <p className="card-detail">Incoming transactions</p>
           </div>
         </div>
 
-        <div className="summary-card card-success clickable-card" onClick={() => navigate('/active-players')}>
+        <div className="summary-card card-warning">
+          <div className="card-icon">
+            <ArrowDownCircle size={28} />
+          </div>
+          <div className="card-content">
+            <p className="card-label">Total Sent</p>
+            <h3 className="card-value">${summaryStats.totalSent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+            <p className="card-detail">Outgoing transactions</p>
+          </div>
+        </div>
+
+        <div className={`summary-card ${summaryStats.netBalance >= 0 ? 'card-positive' : 'card-negative'}`}>
+          <div className="card-icon">
+            <Scale size={28} />
+          </div>
+          <div className="card-content">
+            <p className="card-label">Net Balance</p>
+            <h3 className={`card-value ${summaryStats.netBalance >= 0 ? 'text-positive' : 'text-negative'}`}>
+              ${Math.abs(summaryStats.netBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </h3>
+            <p className="card-detail">{summaryStats.netBalance >= 0 ? 'Positive balance ↑' : 'Negative balance ↓'}</p>
+          </div>
+        </div>
+
+        <div className="summary-card card-primary clickable-card" onClick={() => navigate('/active-players')}>
           <div className="card-icon">
             <Users size={28} />
           </div>

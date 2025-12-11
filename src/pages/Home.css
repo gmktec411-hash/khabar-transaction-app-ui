@@ -2,10 +2,10 @@
 
 .home-container {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  padding: 1.5rem 2rem;
+  padding: 10px 16px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+  min-height: calc(100vh - 60px);
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -17,10 +17,13 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1.25rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 1.25rem 1.75rem;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .home-title {
@@ -40,10 +43,57 @@
   font-weight: 400;
 }
 
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.filter-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: 2px solid #667eea;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: white;
+  color: #667eea;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.filter-toggle-btn:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.filter-toggle-btn:active {
+  transform: translateY(0);
+}
+
 .filter-controls {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .date-range-select {
@@ -74,11 +124,14 @@
 .custom-date-picker {
   display: flex;
   gap: 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 1.25rem 2rem;
   border-radius: 12px;
   margin-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .date-input-group {
@@ -136,13 +189,16 @@
 }
 
 .summary-card {
-  background: white;
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -206,6 +262,29 @@
   color: white;
 }
 
+.card-warning .card-icon {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.card-positive .card-icon {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.card-negative .card-icon {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.text-positive {
+  color: #059669 !important;
+}
+
+.text-negative {
+  color: #dc2626 !important;
+}
+
 .card-content {
   flex: 1;
 }
@@ -237,10 +316,13 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .view-btn {
@@ -276,11 +358,14 @@
 
 /* Search Container */
 .search-container {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 1rem;
-  border-radius: 12px;
+  border-radius: 16px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .search-box {
@@ -345,10 +430,13 @@
 
 /* Dashboard View */
 .dashboard-view {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .view-header {
@@ -527,12 +615,13 @@
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
 }
 
-/* Name Cells */
+/* Name Cells - Consistent Format */
 .player-name-cell,
-.app-name-cell {
+.app-name-cell,
+.receiver-col {
   font-weight: 600;
   color: #2d3748;
-  font-size: 1rem;
+  font-size: 0.8125rem;
 }
 
 /* Inline transaction count - styled like count badge */
@@ -628,18 +717,23 @@
   0% {
     transform: rotate(0deg) scale(1);
   }
+
   50% {
     transform: rotate(45deg) scale(1.2);
   }
+
   100% {
     transform: rotate(90deg) scale(1);
   }
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -720,23 +814,27 @@
   box-shadow: 0 2px 6px rgba(100, 116, 139, 0.3) !important;
 }
 
-/* Amount Columns - Black and Highly Visible */
+/* Amount Columns - Extra Large, Bold, and Highly Visible */
 .amount-received {
-  color: #1a202c;
+  color: #000000;
   font-weight: 900;
-  font-size: 1.125rem;
+  font-size: 1.75rem;
   position: relative;
   animation: fadeIn 0.5s ease-out;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .amount-sent {
-  color: #1a202c;
+  color: #000000;
   font-weight: 900;
-  font-size: 1.125rem;
+  font-size: 1.75rem;
   position: relative;
   animation: fadeIn 0.5s ease-out;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .count-badge {
@@ -765,25 +863,30 @@
     opacity: 0;
     transform: scale(0.8) translateY(-0.3rem);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
 }
 
-/* Net Balance - Black and Highly Visible */
+/* Net Balance - Extra Large, Bold, and Highly Visible */
 .net-positive {
-  color: #1a202c;
+  color: #000000;
   font-weight: 900;
-  font-size: 1.125rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  font-size: 1.75rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .net-negative {
-  color: #1a202c;
+  color: #000000;
   font-weight: 900;
-  font-size: 1.125rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  font-size: 1.75rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .balance-arrow {
@@ -812,17 +915,32 @@
   animation-fill-mode: both;
 }
 
-.dashboard-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
-.dashboard-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
-.dashboard-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
-.dashboard-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
-.dashboard-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+.dashboard-table tbody tr:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.dashboard-table tbody tr:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.dashboard-table tbody tr:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.dashboard-table tbody tr:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.dashboard-table tbody tr:nth-child(5) {
+  animation-delay: 0.25s;
+}
 
 @keyframes slideInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -848,6 +966,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -874,6 +993,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -917,431 +1037,11 @@
   }
 }
 
-@media (max-width: 768px) {
-  /* Force box-sizing on all elements */
-  .home-container *,
-  .home-container *::before,
-  .home-container *::after {
-    box-sizing: border-box !important;
-  }
-
-  /* Prevent all horizontal scrolling */
+/* Responsive Design - Desktop Only Mode Enforced */
+@media (max-width: 1024px) {
   .home-container {
-    padding: 1rem 0.5rem;
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
-    width: 100% !important;
-  }
-
-  /* Make all sections fit within viewport */
-  .home-header,
-  .custom-date-picker,
-  .period-label,
-  .summary-grid,
-  .view-selector,
-  .search-container,
-  .dashboard-view {
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Reduce padding on headers */
-  .home-header {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .home-title {
-    font-size: 1.25rem;
-  }
-
-  .filter-controls {
-    flex-wrap: wrap;
-  }
-
-  .date-range-select {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.75rem;
-  }
-
-  /* Summary grid responsive */
-  .summary-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  /* View selector responsive */
-  .view-selector {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .view-btn {
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  /* Dashboard view padding */
-  .dashboard-view {
-    padding: 0.5rem !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  .view-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .view-header h2 {
-    font-size: 1.15rem;
-  }
-
-  .view-header-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .export-buttons {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .export-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  /* Table wrapper - ABSOLUTELY NO SCROLL */
-  .table-wrapper {
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    border-radius: 8px;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Dashboard Table - Mobile Responsive - Fit to Screen */
-  .dashboard-table {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    font-size: 6px;
-    table-layout: fixed !important;
-    border-collapse: collapse;
-    display: table !important;
-  }
-
-  .dashboard-table thead,
-  .dashboard-table tbody,
-  .dashboard-table tr {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: table-row-group;
-  }
-
-  .dashboard-table tr {
-    display: table-row !important;
-    width: 100% !important;
-  }
-
-  /* Force all cells to shrink and wrap */
-  .dashboard-table thead tr th {
-    padding: 4px 1px !important;
-    font-size: 5.5px !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    word-break: break-word !important;
-    line-height: 1.1 !important;
-    max-width: none !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-  }
-
-  .dashboard-table tbody tr td {
-    padding: 6px 1px !important;
-    font-size: 6px !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    word-break: break-word !important;
-    overflow: hidden !important;
-    line-height: 1.2 !important;
-    max-width: none !important;
-    min-width: 0 !important;
-  }
-
-  /* Optimized column widths based on content size */
-  .dashboard-table .rank-col {
-    width: 5% !important;  /* Smallest - just numbers */
-  }
-
-  .dashboard-table th:nth-child(2),
-  .dashboard-table td:nth-child(2) {
-    width: 25% !important;  /* Largest - player names with badges */
-  }
-
-  .dashboard-table th:nth-child(3),
-  .dashboard-table td:nth-child(3) {
-    width: 16% !important;  /* Received amounts */
-  }
-
-  .dashboard-table th:nth-child(4),
-  .dashboard-table td:nth-child(4) {
-    width: 16% !important;  /* Sent amounts */
-  }
-
-  .dashboard-table th:nth-child(5),
-  .dashboard-table td:nth-child(5) {
-    width: 14% !important;  /* Net balance */
-  }
-
-  .dashboard-table th:nth-child(6),
-  .dashboard-table td:nth-child(6) {
-    width: 8% !important;  /* Apps count - very small */
-  }
-
-  .dashboard-table th:nth-child(7),
-  .dashboard-table td:nth-child(7) {
-    width: 16% !important;  /* Last active date */
-  }
-
-  .rank-badge {
-    width: 16px !important;
-    height: 16px !important;
-    font-size: 0.5rem !important;
-    padding: 0 !important;
-  }
-
-  .player-name-cell,
-  .app-name-cell {
-    font-size: 0.6rem !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
-  .player-name-text,
-  .app-name-text {
-    display: block;
-    font-size: 6px !important;
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
-  }
-
-  .app-type-badge {
-    padding: 1px 2px !important;
-    font-size: 4px !important;
-    letter-spacing: 0px !important;
-    border-radius: 2px !important;
-    white-space: nowrap !important;
-    display: inline-block !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
-  .count-badge {
-    padding: 0px 2px !important;
-    font-size: 0.35rem !important;
-    top: 0 !important;
-    margin-left: 1px !important;
-    white-space: nowrap !important;
-    display: inline-block !important;
-  }
-
-  .amount-received,
-  .amount-sent,
-  .net-positive,
-  .net-negative {
-    font-size: 0.65rem !important;
-    font-weight: 900 !important;
-  }
-
-  .activity-badge {
-    padding: 0px 2px !important;
-    font-size: 4.5px !important;
-    margin-bottom: 1px !important;
-  }
-
-  .activity-row {
-    flex-wrap: wrap !important;
-    gap: 2px !important;
-  }
-
-  .last-active-cell {
-    font-size: 0.55rem !important;
-  }
-
-  .expand-arrow {
-    font-size: 0.5rem !important;
-    margin-right: 2px !important;
-  }
-
-  .balance-arrow {
-    font-size: 0.7rem !important;
-    margin-left: 2px !important;
-  }
-
-  /* See more button */
-  .see-more-btn {
-    padding: 0.6rem 1.5rem;
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Force box-sizing on all elements */
-  .home-container *,
-  .home-container *::before,
-  .home-container *::after {
-    box-sizing: border-box !important;
-  }
-
-  /* Extra small mobile - ensure no horizontal scroll */
-  .home-container {
-    padding: 0.5rem 0.25rem;
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
-    width: 100% !important;
-  }
-
-  .home-header {
-    padding: 0.5rem;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .home-title {
-    font-size: 1.1rem;
-  }
-
-  .dashboard-view {
-    padding: 0.25rem !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  .table-wrapper {
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    border-radius: 6px;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  .dashboard-table {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    font-size: 5.5px;
-    table-layout: fixed !important;
-    display: table !important;
-  }
-
-  .dashboard-table thead,
-  .dashboard-table tbody,
-  .dashboard-table tr {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .dashboard-table tr {
-    display: table-row !important;
-    width: 100% !important;
-  }
-
-  .dashboard-table thead tr th {
-    padding: 3px 0.5px !important;
-    font-size: 5px !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    word-break: break-word !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-  }
-
-  .dashboard-table tbody tr td {
-    padding: 5px 0.5px !important;
-    font-size: 5.5px !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    word-break: break-word !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-  }
-
-  /* Optimized column widths - same as 768px */
-  .dashboard-table .rank-col {
-    width: 5% !important;  /* Smallest - just numbers */
-  }
-
-  .dashboard-table th:nth-child(2),
-  .dashboard-table td:nth-child(2) {
-    width: 25% !important;  /* Largest - player names with badges */
-  }
-
-  .dashboard-table th:nth-child(3),
-  .dashboard-table td:nth-child(3) {
-    width: 16% !important;  /* Received amounts */
-  }
-
-  .dashboard-table th:nth-child(4),
-  .dashboard-table td:nth-child(4) {
-    width: 16% !important;  /* Sent amounts */
-  }
-
-  .dashboard-table th:nth-child(5),
-  .dashboard-table td:nth-child(5) {
-    width: 14% !important;  /* Net balance */
-  }
-
-  .dashboard-table th:nth-child(6),
-  .dashboard-table td:nth-child(6) {
-    width: 8% !important;  /* Apps count - very small */
-  }
-
-  .dashboard-table th:nth-child(7),
-  .dashboard-table td:nth-child(7) {
-    width: 16% !important;  /* Last active date */
-  }
-
-  .rank-badge {
-    width: 14px !important;
-    height: 14px !important;
-    font-size: 0.45rem !important;
-    padding: 0 !important;
-  }
-
-  .app-type-badge {
-    padding: 1px 2px !important;
-    font-size: 4px !important;
-  }
-
-  .count-badge {
-    padding: 0px 2px !important;
-    font-size: 0.35rem !important;
-  }
-
-  .amount-received,
-  .amount-sent,
-  .net-positive,
-  .net-negative {
-    font-size: 0.6rem !important;
-  }
-
-  .activity-badge {
-    padding: 0px 2px !important;
-    font-size: 4px !important;
+    padding: 10px 16px;
+    min-width: 1024px;
+    /* Force minimum width to prevent squishing */
   }
 }

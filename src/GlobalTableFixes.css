@@ -3,21 +3,22 @@
    Professional UI Design - No Overlapping, Clear & Visible
    ============================================================ */
 
-/* Universal Table Container */
+/* Universal Table Container - Contained within page width */
 .table-wrapper,
 .table-card,
 .dashboard-table-wrapper {
   width: 100%;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow-x: hidden;
   overflow-y: visible;
-  -webkit-overflow-scrolling: touch;
   margin: 0;
   padding: 0;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
-/* All Tables - Auto Layout for Data-Driven Column Sizing */
+/* All Tables - Responsive Layout */
 table,
 .dashboard-table,
 .modern-table,
@@ -25,11 +26,12 @@ table,
 .limits-table,
 .players-table {
   width: 100%;
-  table-layout: auto;
+  max-width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   background: var(--bg-card, #ffffff);
   font-size: 11px;
-  min-width: 1000px; /* Ensure minimum width for proper rendering */
+  box-sizing: border-box;
 }
 
 /* Table Headers - Consistent Styling */
@@ -188,18 +190,59 @@ table tbody tr:nth-child(odd),
   white-space: nowrap;
 }
 
-/* Mobile Optimization - Ensure Proper Rendering */
+/* Mobile Optimization - Fit within page width */
 @media (max-width: 1024px) {
-  /* Let user zoom, but ensure everything is visible */
+  /* Remove min-width to allow tables to fit page width */
   table,
   .dashboard-table,
-  .modern-table {
-    min-width: 1000px;
+  .modern-table,
+  .report-table,
+  .limits-table,
+  .players-table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    font-size: 9px;
   }
 
   table th,
   table td {
-    padding: 10px 6px;
+    padding: 8px 4px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 768px) {
+  table,
+  .dashboard-table,
+  .modern-table,
+  .report-table,
+  .limits-table,
+  .players-table {
+    font-size: 7px;
+  }
+
+  table th,
+  table td {
+    padding: 6px 2px;
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 480px) {
+  table,
+  .dashboard-table,
+  .modern-table,
+  .report-table,
+  .limits-table,
+  .players-table {
+    font-size: 6px;
+  }
+
+  table th,
+  table td {
+    padding: 5px 1px;
+    font-size: 6px;
   }
 }
 

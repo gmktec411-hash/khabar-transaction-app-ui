@@ -24,37 +24,70 @@
 
 /* Compact page container */
 .page-container {
-  padding: calc(var(--spacing-lg) + 4px);
-  
+  padding: 10px 16px;
+  min-height: calc(100vh - 60px);
 }
 
 /* Tables: reduce padding and font size */
-table { font-size: var(--font-sm); }
-th { padding: 8px 10px; }
-td { padding: 8px 10px; }
+table {
+  font-size: var(--font-sm);
+}
+
+th {
+  padding: 8px 10px;
+}
+
+td {
+  padding: 8px 10px;
+}
 
 /* Buttons: slightly tighter */
-.btn-primary, .btn-secondary { padding: 8px 12px; font-size: var(--font-sm); }
+.btn-primary,
+.btn-secondary {
+  padding: 8px 12px;
+  font-size: var(--font-sm);
+}
 
 /* Cards */
-.table-card, .content-card, .dashboard-card, .metric-card { padding: 10px 12px; border-radius: var(--radius-md); }
+.table-card,
+.content-card,
+.dashboard-card,
+.metric-card {
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+}
 
 /* Compact lists */
-.transaction-item, .top-item { padding: 8px; gap: 8px; }
+.transaction-item,
+.top-item {
+  padding: 8px;
+  gap: 8px;
+}
 
 /* Reduce modal paddings */
-.modal-content, .confirm-modal-content { padding: 12px; max-width: 560px; }
+.modal-content,
+.confirm-modal-content {
+  padding: 12px;
+  max-width: 560px;
+}
 
 /* Make headers slightly smaller */
-.page-title { font-size: var(--font-2xl); }
-.card-header h2 { font-size: 15px; }
+.page-title {
+  font-size: var(--font-2xl);
+}
+
+.card-header h2 {
+  font-size: 15px;
+}
 
 /* Utility: compact table rows */
-.compact-row td { padding: 6px 8px; font-size: var(--font-sm); }
+.compact-row td {
+  padding: 6px 8px;
+  font-size: var(--font-sm);
+}
 
 /* Ensure compact tables scroll smoothly */
-.compact-body { max-height: 420px; overflow-y: auto; }
-
-
-
-
+.compact-body {
+  max-height: 420px;
+  overflow-y: auto;
+}

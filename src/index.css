@@ -2,14 +2,21 @@
 
 /* CSS Variables for Unified Theme */
 :root {
-  /* Primary Colors - Purple Gradient Theme */
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-color: #667eea;
-  --primary-dark: #5568d3;
-  --primary-light: #8b9aff;
-  --secondary-color: #764ba2;
+  /* Primary Colors - Premium Purple Gradient Theme */
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  /* Slightly more vibrant Indigo-Violet */
+  --primary-color: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --secondary-color: #8b5cf6;
 
-  /* Background Colors - Slightly Darker, Modern Theme */
+  /* Glassmorphism Variables */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  --glass-blur: blur(12px);
+
+  /* Background Colors - Clean Modern Theme */
   --bg-primary: #f8fafc;
   --bg-secondary: #f1f5f9;
   --bg-tertiary: #e2e8f0;
@@ -150,29 +157,37 @@ body {
   background: var(--bg-secondary);
   color: var(--text-primary);
   line-height: 1.6;
+  min-width: 1024px;
+  overflow-x: auto;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Scrollbar Styling */
+/* Scrollbar Styling - Modern & Sleek */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-medium);
-  border-radius: 5px;
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
+  background: rgba(99, 102, 241, 0.8);
+  /* Primary color hover */
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 /* Selection */
@@ -195,6 +210,29 @@ code {
 @tailwind components;
 @tailwind utilities;
 
+/* Glassmorphism Utilities */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.glass-card-hover:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 /* ===================================
    GLOBAL MODERN ANIMATIONS
    =================================== */
@@ -204,6 +242,7 @@ code {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -214,6 +253,7 @@ code {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -225,6 +265,7 @@ code {
     opacity: 0;
     transform: translateY(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -236,6 +277,7 @@ code {
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -247,6 +289,7 @@ code {
     opacity: 0;
     transform: translateX(30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -259,6 +302,7 @@ code {
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -270,12 +314,15 @@ code {
     opacity: 0;
     transform: scale(0.3);
   }
+
   50% {
     transform: scale(1.05);
   }
+
   70% {
     transform: scale(0.9);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
@@ -288,6 +335,7 @@ code {
     transform: translateY(100%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -299,6 +347,7 @@ code {
     transform: translateY(-100%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -311,6 +360,7 @@ code {
     opacity: 0;
     transform: rotate(-200deg) scale(0.8);
   }
+
   to {
     opacity: 1;
     transform: rotate(0) scale(1);
@@ -321,6 +371,7 @@ code {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -328,10 +379,13 @@ code {
 
 /* Pulse Animations */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.8;
     transform: scale(1.05);
@@ -339,9 +393,12 @@ code {
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
   }
+
   50% {
     box-shadow: 0 0 20px 10px rgba(102, 126, 234, 0);
   }
@@ -349,9 +406,12 @@ code {
 
 /* Bounce Animations */
 @keyframes bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-20px);
   }
@@ -362,13 +422,16 @@ code {
     opacity: 0;
     transform: scale(0.3);
   }
+
   50% {
     opacity: 1;
     transform: scale(1.05);
   }
+
   70% {
     transform: scale(0.9);
   }
+
   100% {
     transform: scale(1);
   }
@@ -376,13 +439,24 @@ code {
 
 /* Shake Animation */
 @keyframes shake {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateX(0);
   }
-  10%, 30%, 50%, 70%, 90% {
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     transform: translateX(-10px);
   }
-  20%, 40%, 60%, 80% {
+
+  20%,
+  40%,
+  60%,
+  80% {
     transform: translateX(10px);
   }
 }
@@ -392,6 +466,7 @@ code {
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1000px 0;
   }
@@ -402,9 +477,11 @@ code {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -412,9 +489,12 @@ code {
 
 /* Float Animation */
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-20px);
   }
@@ -422,9 +502,12 @@ code {
 
 /* Glow Animation */
 @keyframes glow {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.5));
   }
+
   50% {
     filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.8));
   }

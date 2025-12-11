@@ -114,7 +114,7 @@ const TransactionsTable = ({ transactions = [] }) => {
   const [appTypeFilter, setAppTypeFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [visibleCount, setVisibleCount] = useState(50);
 
   // Debounced search update

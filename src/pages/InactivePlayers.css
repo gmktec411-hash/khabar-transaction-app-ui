@@ -2,11 +2,10 @@
 
 .inactive-players-page {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  padding: 1.5rem 2rem;
-  
+  padding: 10px 16px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+  min-height: calc(100vh - 60px);
 }
 
 /* Header */
@@ -291,7 +290,8 @@
 
 .amount-cell {
   font-weight: 600;
-  color: #38a169; /* Green for total amounts */
+  color: #38a169;
+  /* Green for total amounts */
   font-family: 'Courier New', monospace;
 }
 
@@ -374,17 +374,19 @@
 
 /* Match navbar padding on smaller screens */
 @media (max-width: 1024px) {
+
   .active-players-container,
   .inactive-players-container,
   .report-container {
-    padding: 1.5rem 1.5rem;
+    padding: 10px 16px;
   }
 }
 
 @media (max-width: 768px) {
+
   .active-players-container,
   .inactive-players-container,
   .report-container {
-    padding: 1.5rem 1rem;
+    padding: 10px 12px;
   }
 }

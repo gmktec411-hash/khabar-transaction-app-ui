@@ -220,7 +220,7 @@ const Dashboard = ({ transactions = [] }) => {
                       <td>{formatDate(tx.sentAt)}</td>
                       <td className="player-cell">{tx.sender}</td>
                       <td className="app-cell">{tx.appName}</td>
-                      <td className="text-right">${tx.amount.toFixed(2)}</td>
+                      <td className="text-right dashboard-amount">${tx.amount.toFixed(2)}</td>
                       <td className="text-center"><span className={`status-badge ${getStatusClass(tx.status)}`}>{getStatusText(tx.status)}</span></td>
                     </tr>
                   ))}
@@ -246,7 +246,7 @@ const Dashboard = ({ transactions = [] }) => {
                     <div className="top-rank">#{index + 1}</div>
                     <div className="top-info">
                       <p className="top-name">{player.name}</p>
-                      <p className="top-detail">{player.count} transactions • ${player.amount.toFixed(2)}</p>
+                      <p className="top-detail">{player.count} transactions • <span className="top-amount">${player.amount.toFixed(2)}</span></p>
                     </div>
                   </div>
                 ))}
@@ -271,7 +271,7 @@ const Dashboard = ({ transactions = [] }) => {
                     <div className="top-rank">#{index + 1}</div>
                     <div className="top-info">
                       <p className="top-name">{app.name}</p>
-                      <p className="top-detail">{app.count} transactions • ${app.amount.toFixed(2)}</p>
+                      <p className="top-detail">{app.count} transactions • <span className="top-amount">${app.amount.toFixed(2)}</span></p>
                     </div>
                   </div>
                 ))}

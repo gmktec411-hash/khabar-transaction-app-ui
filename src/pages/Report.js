@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from "react";
-import { FileText, Calendar, TrendingUp, TrendingDown, Users, Package, ChevronRight } from "lucide-react";
+import { FileText, Calendar, TrendingUp, TrendingDown, Users, Package, ChevronRight, Scale } from "lucide-react";
 import "./Report.css";
 
 const Report = ({ transactions = [] }) => {
-  const safeTransactions = Array.isArray(transactions)
-    ? transactions.filter(tx => !["A", "R"].includes(tx.status))
-    : [];
+  const safeTransactions = useMemo(() => {
+    return Array.isArray(transactions)
+      ? transactions.filter(tx => !["A", "R"].includes(tx.status))
+      : [];
+  }, [transactions]);
 
   const [filterOption, setFilterOption] = useState("today");
   const [customStartDate, setCustomStartDate] = useState("");
@@ -19,8 +21,8 @@ const Report = ({ transactions = [] }) => {
     const now = new Date();
     let startDate, endDate;
 
-    const startOfDay = (d) => { const date = new Date(d); date.setHours(0,0,0,0); return date; };
-    const endOfDay = (d) => { const date = new Date(d); date.setHours(23,59,59,999); return date; };
+    const startOfDay = (d) => { const date = new Date(d); date.setHours(0, 0, 0, 0); return date; };
+    const endOfDay = (d) => { const date = new Date(d); date.setHours(23, 59, 59, 999); return date; };
     const startOfWeek = (d) => { const date = new Date(d); date.setDate(date.getDate() - date.getDay()); return startOfDay(date); };
     const endOfWeek = (d) => { const start = startOfWeek(d); const end = new Date(start); end.setDate(end.getDate() + 6); return endOfDay(end); };
 
@@ -202,9 +204,9 @@ const Report = ({ transactions = [] }) => {
               onClick={() => setFilterOption(option)}
             >
               {option === "today" ? "Today" :
-               option === "yesterday" ? "Yesterday" :
-               option === "thisWeek" ? "This Week" :
-               option === "lastWeek" ? "Last Week" : "Custom Range"}
+                option === "yesterday" ? "Yesterday" :
+                  option === "thisWeek" ? "This Week" :
+                    option === "lastWeek" ? "Last Week" : "Custom Range"}
             </button>
           ))}
         </div>
@@ -238,22 +240,36 @@ const Report = ({ transactions = [] }) => {
 
       {/* Summary Stats */}
       <div className="report-summary-grid">
-        <div className="summary-stat-card stat-primary">
-          <div className="stat-icon">
-            <TrendingDown size={24} />
-          </div>
-          <div className="stat-content">
-            <p className="stat-label">Total Sent</p>
-            <h3 className="stat-value">${grandTotalsApp.sent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
-          </div>
-        </div>
         <div className="summary-stat-card stat-success">
           <div className="stat-icon">
             <TrendingUp size={24} />
           </div>
           <div className="stat-content">
             <p className="stat-label">Total Received</p>
-            <h3 className="stat-value">${grandTotalsApp.received.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+            <h3 className="summary-value">${grandTotalsApp.received.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+          </div>
+        </div>
+        <div className="summary-stat-card stat-primary">
+          <div className="stat-icon">
+            <TrendingDown size={24} />
+          </div>
+          <div className="stat-content">
+            <p className="stat-label">Total Sent</p>
+            <h3 className="summary-value">${grandTotalsApp.sent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+          </div>
+        </div>
+        <div className="summary-stat-card stat-info">
+          <div className="stat-icon">
+            <Scale size={24} />
+          </div>
+          <div className="stat-content">
+            <p className="stat-label">Net Balance</p>
+            <h3 className={`summary-value ${(grandTotalsApp.received - grandTotalsApp.sent) >= 0 ? 'text-success' : 'text-danger'}`}>
+              ${Math.abs(grandTotalsApp.received - grandTotalsApp.sent).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </h3>
+            <p className={`stat-label ${(grandTotalsApp.received - grandTotalsApp.sent) >= 0 ? 'text-success' : 'text-danger'}`} style={{ marginTop: "4px", fontSize: "0.75rem", textTransform: "none" }}>
+              {(grandTotalsApp.received - grandTotalsApp.sent) >= 0 ? 'Surplus' : 'Deficit'}
+            </p>
           </div>
         </div>
         <div className="summary-stat-card stat-info">
@@ -262,7 +278,7 @@ const Report = ({ transactions = [] }) => {
           </div>
           <div className="stat-content">
             <p className="stat-label">App Types</p>
-            <h3 className="stat-value">{Object.keys(appTypeTotals).length}</h3>
+            <h3 className="summary-value">{Object.keys(appTypeTotals).length}</h3>
           </div>
         </div>
         <div className="summary-stat-card stat-accent">
@@ -271,7 +287,7 @@ const Report = ({ transactions = [] }) => {
           </div>
           <div className="stat-content">
             <p className="stat-label">Active Players</p>
-            <h3 className="stat-value">{Object.keys(playerTotals).length}</h3>
+            <h3 className="summary-value">{Object.keys(playerTotals).length}</h3>
           </div>
         </div>
       </div>
@@ -310,11 +326,11 @@ const Report = ({ transactions = [] }) => {
                           </span>
                           <span className={`app-type-tag app-type-${type.toLowerCase()}`}>{type}</span>
                         </td>
-                        <td className="text-center amount-received">
+                        <td className="text-center report-amount-received">
                           ${data.totalReceived.toFixed(2)}
                           <span className="count-badge">{data.receivedCount}</span>
                         </td>
-                        <td className="text-center amount-sent">
+                        <td className="text-center report-amount-sent">
                           ${data.totalSent.toFixed(2)}
                           <span className="count-badge">{data.sentCount}</span>
                         </td>
@@ -329,11 +345,11 @@ const Report = ({ transactions = [] }) => {
                           return (
                             <tr key={appName} className="sub-row">
                               <td className="text-left sub-name">{appName}</td>
-                              <td className="text-center amount-received">
+                              <td className="text-center report-amount-received">
                                 ${aData.received.toFixed(2)}
                                 <span className="count-badge">{aData.receivedCount}</span>
                               </td>
-                              <td className="text-center amount-sent">
+                              <td className="text-center report-amount-sent">
                                 ${aData.sent.toFixed(2)}
                                 <span className="count-badge">{aData.sentCount}</span>
                               </td>
@@ -416,11 +432,11 @@ const Report = ({ transactions = [] }) => {
                           <span className="player-name-text">{player}</span>
                           <span className="count-badge">{data.receivedCount + data.sentCount}</span>
                         </td>
-                        <td className="text-center amount-received">
+                        <td className="text-center report-amount-received">
                           ${data.totalReceived.toFixed(2)}
                           <span className="count-badge">{data.receivedCount}</span>
                         </td>
-                        <td className="text-center amount-sent">
+                        <td className="text-center report-amount-sent">
                           ${data.totalSent.toFixed(2)}
                           <span className="count-badge">{data.sentCount}</span>
                         </td>
@@ -437,11 +453,11 @@ const Report = ({ transactions = [] }) => {
                             <React.Fragment key={appType}>
                               <tr className="sub-row level-1">
                                 <td className="text-left sub-name">{appType}</td>
-                                <td className="text-center amount-received">
+                                <td className="text-center report-amount-received">
                                   ${aData.totalReceived.toFixed(2)}
                                   <span className="count-badge">{aData.receivedCount}</span>
                                 </td>
-                                <td className="text-center amount-sent">
+                                <td className="text-center report-amount-sent">
                                   ${aData.totalSent.toFixed(2)}
                                   <span className="count-badge">{aData.sentCount}</span>
                                 </td>
